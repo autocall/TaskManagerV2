@@ -1,0 +1,16 @@
+// npm i sass@1.77.6 --save-exact
+@import "bootstrap/scss/bootstrap";
+
+[data-bs-theme="dark"] {
+    --bs-body-bg: rgb(24, 24, 24);
+    .card {
+        --bs-card-bg: rgb(35, 40, 45);
+    }
+}
+
+[data-bs-theme="light"] {
+    --bs-body-bg: rgb(248, 248, 250);
+    .card {
+        --bs-card-bg: rgb(252, 252, 252);
+    }
+}

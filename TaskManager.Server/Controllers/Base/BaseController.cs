@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TaskManager.Common.Extensions;
@@ -56,6 +57,10 @@ public abstract class BaseController : Controller {
 
     protected virtual ActionResult JsonFail(HttpStatusCode statusCode, Dictionary<string, string> errors) {
         return Result(statusCode, JsonExtension.Serialize(new { errors }));
+    }
+
+    protected virtual ActionResult JsonFail(IEnumerable<IdentityError> errors) {
+        return JsonFail(errors.FirstOrDefault()?.Description ?? "IdentityError:0");
     }
 
     protected virtual ActionResult JsonFail(Dictionary<string, string> errors) {

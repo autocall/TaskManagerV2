@@ -63,8 +63,18 @@ public class ApiTmcountController : BaseController {
             return base.JsonFail(base.GetErrors());
         }
         if (Host.UserManager.Users.Any(e => e.Email == model.Email)) {
-            var error = $"User with this name '{model.Email}' already exists";
-            return base.JsonFail(error);
+            // logins as test user
+            if (model.Email == Settings.TestUserEmail) {
+                var tmpUser = await Host.UserManager.FindByEmailAsync(model.Email);
+                await SignInManager.SignInAsync(tmpUser, new AuthenticationProperties() {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTime.UtcNow.AddYears(1)
+                });
+                return await ReturnIdentityAsync(tmpUser);
+            } else {
+                var error = $"User with this name '{model.Email}' already exists";
+                return base.JsonFail(error);
+            }
         }
 
         // Creates user
@@ -75,7 +85,7 @@ public class ApiTmcountController : BaseController {
             ModifiedDateTime = DateTime.UtcNow,
         };
 
-        var result = await Host.UserManager.CreateAsync(user, model.Password);
+        IdentityResult result = await Host.UserManager.CreateAsync(user, model.Password);
         if (result.Succeeded) {
             result = await Host.UserManager.AddToRoleAsync(user, RoleEnum.User.GetDescription());
             if (result.Succeeded) {
@@ -86,16 +96,15 @@ public class ApiTmcountController : BaseController {
                 });
                 return await ReturnIdentityAsync(user);
             } else {
-                return base.JsonFail(base.GetErrors());
+                return base.JsonFail(result.Errors);
             }
         } else {
-            return base.JsonFail(base.GetErrors());
+            return base.JsonFail(result.Errors);
         }
     }
 
     [HttpPost, AllowAnonymous]
     public async Task<ActionResult> SignIn(LoginViewModel model) {
-        Console.WriteLine(JsonExtension.Serialize(model));
 #if DEBUG
         await Task.Delay(TimeSpan.FromSeconds(0.3));
 #endif

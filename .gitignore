@@ -3,3 +3,4 @@ obj
 bin
 *.user
 /TaskManager.Common/Settings.cs
+/taskmanager.client/package-lock.json

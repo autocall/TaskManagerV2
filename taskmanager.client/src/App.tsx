@@ -98,7 +98,7 @@ const App: React.FC = () => {
                             <Link className="nav-link" to="/profile">
                                 {currentUser.Email} ({currentUser.Roles})
                             </Link>
-                            <Link className="nav-link" to="/login" onClick={logOut}>
+                            <Link id="logout" className="nav-link" to="/login" onClick={logOut}>
                                 Logout
                             </Link>
                         </Nav>

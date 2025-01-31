@@ -4,3 +4,6 @@ bin
 *.user
 /TaskManager.Common/Settings.cs
 /taskmanager.client/package-lock.json
+/TaskManager.Server/wwwroot/build
+/TaskManager.Server/appsettings.Production.json
+/TaskManager.Common/Settings.Release.cs

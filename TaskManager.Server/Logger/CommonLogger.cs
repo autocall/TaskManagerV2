@@ -60,7 +60,7 @@ public class CommonLogger : ICommonLogger {
     /// <summary>
     ///     Write Line to Console </summary>
     public void WriteLine(LogLevel level, string message, ConsoleColor color = ConsoleColor.White) {
-#if DEBUG
+#if TEST || DEBUG
         lock (_lock) {
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.Write($"{DateTime.Now:H:mm:ss} ");

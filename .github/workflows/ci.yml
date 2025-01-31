@@ -1,0 +1,98 @@
+name: TaskManager
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    env:
+     ConnectionStrings__DefaultConnection: ${{ secrets.TEST_DB_CONNECTION_STRING }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.202'
+                    
+      - name: Restore .NET dependencies
+        run: dotnet restore
+        
+      - name: Build Backend
+        run: |
+            cd TaskManager.Server
+            dotnet build --no-restore --configuration Test
+
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: '20'
+
+      # - name: Install npm dependencies
+      #   run: |
+      #       cd taskmanager.client
+      #       npm install
+
+      # - name: Build Frontend
+      #   run: |
+      #       cd taskmanager.client
+      #       npm run build
+
+      
+      # # use sleep for waiting logs to console
+      - name: Run Backend
+        run: |
+            cd TaskManager.Server
+            dotnet run --no-build --configuration Test --launch-profile "test" &
+            echo "Waiting for backend to start..."
+            sleep 5
+            
+      - name: Wait for backend to start
+        run: |
+          for i in {1..4}; do
+            if curl -s http://localhost:7080/Home/Test; then
+              echo "Backend is up!"
+              exit 0
+            fi
+            echo "Waiting for backend to start..."
+            sleep 5
+          done
+          echo "Backend did not start in time"
+          exit 1
+
+      # - name: Run Tests
+      #   run: dotnet test --no-build --configuration Test
+
+      # - name: Run Cypress Tests
+      #   run: |
+      #       cd taskmanager.client
+      #       npx cypress run
+
+      # - name: Stop Backend
+      #   run: pkill -f "dotnet"
+
+      # - name: Deploy to Ubuntu Server
+      #   env:
+      #       HOST: ${{ secrets.SERVER_HOST }}
+      #       USER: ${{ secrets.SERVER_USER }}
+      #       KEY: ${{ secrets.SERVER_SSH_KEY }}
+      #   run: |
+      #       echo "$KEY" > private_key.pem
+      #       chmod 600 private_key.pem
+      #       ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST <<EOF
+      #       cd /var/www/tm_v2/app
+      #       git pull origin main
+      #       cd /var/www/tm_v2/app/TaskManager.Server
+      #       dotnet build --no-restore --configuration Release
+      #       cd /var/www/tm_v2/app/taskmanager.client
+      #       npm install
+      #       npm run build
+      #       #pm2 restart tm_v2 || pm2 start npm --name "tm_v2" -- run start
+      #       EOF

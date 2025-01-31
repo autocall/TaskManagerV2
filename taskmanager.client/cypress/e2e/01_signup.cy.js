@@ -9,6 +9,8 @@ describe("Sign Up", () => {
       cy.get("input[name='password']").type("123456");
       cy.get("input[name='confirmPassword']").type("123456");
       cy.get("button[type='submit']").click();
-      cy.url().should("include", "/");
+      cy.url().should("eq", `${Cypress.config("baseUrl")}/`);
+      // expect <a class="nav-link" href="/profile" data-discover="true">anton@tm.com (User)</a>
+      cy.get("a.nav-link").should("contain.text", "test@tm.com");
     });
   });

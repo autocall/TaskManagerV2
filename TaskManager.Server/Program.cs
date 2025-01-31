@@ -16,14 +16,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TaskManager.Logic.Services;
+using Microsoft.Extensions.FileProviders;
+using System.Diagnostics;
 
 namespace TaskManager.Server;
 public class Program {
     public static void Main(string[] args) {
+        ILogger<Program> logger = null;
         var builder = WebApplication.CreateBuilder(args);
+
         var services = builder.Services;
 
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+        //Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
+        //Console.WriteLine($"Connection string: {connectionString}");
+
         services.AddDbContext<TmDbContext>(options =>
             options.UseSqlServer(connectionString, options => options.CommandTimeout((int)TimeSpan.FromSeconds(30).TotalSeconds)));
 
@@ -78,7 +86,10 @@ public class Program {
         });
 
         services.AddLogging(config => {
+#if TEST
+            // for output to github console
             config.ClearProviders();
+#endif
             config.AddConfiguration(builder.Configuration.GetSection("Logging"));
             config.AddEventSourceLogger();
         });
@@ -100,17 +111,24 @@ public class Program {
         var app = builder.Build();
 
         app.UseDefaultFiles();
-        //app.UseStaticFiles();
+        var resourcePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "build");
+        if (!Directory.Exists(resourcePath)) {
+            Directory.CreateDirectory(resourcePath);
+        }
+        app.UseStaticFiles(new StaticFileOptions {
+            FileProvider = new PhysicalFileProvider(resourcePath),
+        });
+        // for SPA
+        app.MapFallbackToFile("build/index.html");
         app.UseCors();
 
-        // Configure the HTTP request pipeline.
-
         if (builder.Environment.IsDevelopment()) {
-            app.UseExceptionHandler(exceptionHandlerApp => {
-                exceptionHandlerApp.Run(async context => {
-                    Console.WriteLine(context.Features.Get<IExceptionHandlerFeature>().Error);
-                });
-            });
+            app.UseDeveloperExceptionPage();
+            //app.UseExceptionHandler(exceptionHandlerApp => {
+            //    exceptionHandlerApp.Run(async context => {
+            //        _l.e("ExceptionHandler", context.Features.Get<IExceptionHandlerFeature>().Error);
+            //    });
+            //});
         } else {
             app.UseHttpsRedirection();
         }
@@ -119,23 +137,23 @@ public class Program {
 
         app.MapControllers();
 
-        app.MapFallbackToFile("/index.html");
-
-
-        using (var scope = app.Services.CreateScope()) {
-            var serviceProvider = scope.ServiceProvider;
-            var host = serviceProvider.GetService<ServicesHost>();
-            using (var unitOfWork = host.UnitOfWork) {
-                _l.Init(serviceProvider.GetService<ICommonLogger>());
-                TmDbContextSeed.SeedAsync(unitOfWork.Context, host.UserManager, host.RoleManager).Wait();
-            }
-        }
-
-        Console.WriteLine("Server started");
         try {
+            using (var scope = app.Services.CreateScope()) {
+                var serviceProvider = scope.ServiceProvider;
+                var host = serviceProvider.GetService<ServicesHost>();
+                using (var unitOfWork = host.UnitOfWork) {
+                    _l.Init(serviceProvider.GetService<ICommonLogger>());
+                    if (unitOfWork.Context.Database.GetPendingMigrations().Any()) {
+                        _l.i("Migrating database");
+                        unitOfWork.Context.Database.Migrate();
+                    }
+                    _l.i("Seeding database");
+                    TmDbContextSeed.SeedAsync(unitOfWork.Context, host.UserManager, host.RoleManager).Wait();
+                }
+            }
             app.Run();
         } catch (Exception e) {
-            Console.WriteLine(e);
+            _l.e(e.ToString());
             throw;
         }
     }

@@ -15,14 +15,6 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Test"
       }
-    },
-    "production": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5002",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
-      }
     }
   }
 }

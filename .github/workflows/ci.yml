@@ -89,14 +89,19 @@ jobs:
             ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST <<EOF
             cd /var/www/tm_v2/app
             echo "pull"
-            git pull origin main --force
+            git pull origin master
             cd /var/www/tm_v2/app/TaskManager.Server
             echo "dotnet build"
-            dotnet build --no-restore --configuration Release
+            dotnet build --configuration Release
             cd /var/www/tm_v2/app/taskmanager.client
+            echo "copy bin"
+            cp -rf /var/www/tm_v2/app/TaskManager.Server/bin/Release/net8.0/* /var/www/tm_v2/html/
+            cp -rf /var/www/tm_v2/app/TaskManager.Server/wwwroot/build /var/www/tm_v2/html/wwwroot/
             echo "npm install"
             npm install
             echo "npm run build"
             npm run build
-            #pm2 restart tm_v2 || pm2 start npm --name "tm_v2" -- run start
+            echo "copy wwwroot"
+            cp -rf /var/www/tm_v2/app/TaskManager.Server/wwwroot/build /var/www/tm_v2/html/wwwroot/
+            sudo systemctl restart kestrel-tm_v2.service
             EOF

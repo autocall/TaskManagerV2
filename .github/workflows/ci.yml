@@ -89,7 +89,8 @@ jobs:
             ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST <<EOF
             cd /var/www/tm_v2/app
             echo "pull"
-            git pull origin master
+            git config --global --add safe.directory /var/www/tm_v2/app
+            git pull origin master --force
             cd /var/www/tm_v2/app/TaskManager.Server
             echo "dotnet build"
             dotnet build --configuration Release

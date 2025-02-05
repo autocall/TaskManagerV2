@@ -30,20 +30,20 @@ jobs:
             cd TaskManager.Server
             dotnet build --no-restore --configuration Test
 
-      # - name: Set up Node.js
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: '20'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-      # - name: Install npm dependencies
-      #   run: |
-      #       cd taskmanager.client
-      #       npm install
+      - name: Install npm dependencies
+        run: |
+            cd taskmanager.client
+            npm install
 
-      # - name: Build Frontend
-      #   run: |
-      #       cd taskmanager.client
-      #       npm run build
+      - name: Build Frontend
+        run: |
+            cd taskmanager.client
+            npm run build
 
       
       # # use sleep for waiting logs to console
@@ -70,29 +70,29 @@ jobs:
       # - name: Run Tests
       #   run: dotnet test --no-build --configuration Test
 
-      # - name: Run Cypress Tests
-      #   run: |
-      #       cd taskmanager.client
-      #       npx cypress run
+      - name: Run Cypress Tests
+        run: |
+            cd taskmanager.client
+            npx cypress run
 
-      # - name: Stop Backend
-      #   run: pkill -f "dotnet"
+      - name: Stop Backend
+        run: pkill -f "dotnet"
 
-      # - name: Deploy to Ubuntu Server
-      #   env:
-      #       HOST: ${{ secrets.SERVER_HOST }}
-      #       USER: ${{ secrets.SERVER_USER }}
-      #       KEY: ${{ secrets.SERVER_SSH_KEY }}
-      #   run: |
-      #       echo "$KEY" > private_key.pem
-      #       chmod 600 private_key.pem
-      #       ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST <<EOF
-      #       cd /var/www/tm_v2/app
-      #       git pull origin main
-      #       cd /var/www/tm_v2/app/TaskManager.Server
-      #       dotnet build --no-restore --configuration Release
-      #       cd /var/www/tm_v2/app/taskmanager.client
-      #       npm install
-      #       npm run build
-      #       #pm2 restart tm_v2 || pm2 start npm --name "tm_v2" -- run start
-      #       EOF
+      - name: Deploy to Ubuntu Server
+        env:
+            HOST: ${{ secrets.SERVER_HOST }}
+            USER: ${{ secrets.SERVER_USER }}
+            KEY: ${{ secrets.SERVER_SSH_KEY }}
+        run: |
+            echo "$KEY" > private_key.pem
+            chmod 600 private_key.pem
+            ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST <<EOF
+            cd /var/www/tm_v2/app
+            git pull origin main
+            cd /var/www/tm_v2/app/TaskManager.Server
+            dotnet build --no-restore --configuration Release
+            cd /var/www/tm_v2/app/taskmanager.client
+            npm install
+            npm run build
+            #pm2 restart tm_v2 || pm2 start npm --name "tm_v2" -- run start
+            EOF

@@ -88,11 +88,15 @@ jobs:
             chmod 600 private_key.pem
             ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST <<EOF
             cd /var/www/tm_v2/app
-            git pull origin main
+            echo "pull"
+            git pull origin main --force
             cd /var/www/tm_v2/app/TaskManager.Server
+            echo "dotnet build"
             dotnet build --no-restore --configuration Release
             cd /var/www/tm_v2/app/taskmanager.client
+            echo "npm install"
             npm install
+            echo "npm run build"
             npm run build
             #pm2 restart tm_v2 || pm2 start npm --name "tm_v2" -- run start
             EOF

@@ -3,18 +3,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TaskManager.Data.Entities;
 public abstract class BaseEntity : IBaseUpdateMap {
-    [Key]
-    public Guid EntityId { get; set; }
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public int Id { get; set; }
 
     [Column(TypeName = "smalldatetime")]
     public DateTime CreatedDateTime { get; set; }
 
-    public Guid CreatedById { get; set; }
+    public int CreatedById { get; set; }
 
     [Column(TypeName = "smalldatetime")]
     public DateTime ModifiedDateTime { get; set; }
 
-    public Guid ModifiedById { get; set; }
+    public int ModifiedById { get; set; }
 
     public bool IsDeleted { get; set; }
 

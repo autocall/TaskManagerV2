@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Data.Entities;
+using TaskManager.Data.Mappings;
 
 namespace TaskManager.Data.Context;
-public class TmDbContext : IdentityDbContext<TmUser, TmRole, Guid, TmUserClaim, TmUserRole, TmUserLogin, TmRoleClaim, TmUserToken> {
+public class TmDbContext : IdentityDbContext<TmUser, TmRole, int, TmUserClaim, TmUserRole, TmUserLogin, TmRoleClaim, TmUserToken> {
     public TmDbContext(DbContextOptions<TmDbContext> options) : base(options) {
     }
 
@@ -22,5 +23,7 @@ public class TmDbContext : IdentityDbContext<TmUser, TmRole, Guid, TmUserClaim, 
         modelBuilder.Entity<TmUserLogin>().ToTable("IdentityUserLogins");
         modelBuilder.Entity<TmUserClaim>().ToTable("IdentityUserClaims");
         modelBuilder.Entity<TmUserToken>().ToTable("IdentityUserToken");
+
+        modelBuilder.ApplyConfiguration(new ProjectMap());
     }
 }

@@ -22,7 +22,6 @@ using System.Diagnostics;
 namespace TaskManager.Server;
 public class Program {
     public static void Main(string[] args) {
-        ILogger<Program> logger = null;
         var builder = WebApplication.CreateBuilder(args);
 
         var services = builder.Services;

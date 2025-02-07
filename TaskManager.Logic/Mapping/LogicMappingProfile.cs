@@ -6,5 +6,7 @@ namespace TaskManager.Logic.Mapping;
 public class LogicMappingProfile : Profile {
     public LogicMappingProfile() {
         CreateMap<TmUserDto, TmUser>().ReverseMap();
+        CreateMap<TmRoleDto, TmRole>().ReverseMap();
+        CreateMap<ProjectDto, Project>().ReverseMap();
     }
 }

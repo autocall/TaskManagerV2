@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
 namespace TaskManager.Data.Entities;
-public class TmUserClaim : IdentityUserClaim<Guid> {
+public class TmUserClaim : IdentityUserClaim<int> {
 }

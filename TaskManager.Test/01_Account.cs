@@ -17,7 +17,8 @@ public class Account_UnitTest {
         var cookieContainer = new CookieContainer();
         var httpClient = new HttpClient(
             new HttpClientHandler() {
-                CookieContainer = cookieContainer
+                CookieContainer = cookieContainer,
+                ServerCertificateCustomValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true
             }
         );
 
@@ -41,7 +42,8 @@ public class Account_UnitTest {
         var cookieContainer = new CookieContainer();
         var httpClient = new HttpClient(
             new HttpClientHandler() {
-                CookieContainer = cookieContainer
+                CookieContainer = cookieContainer,
+                ServerCertificateCustomValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true
             }
         );
 

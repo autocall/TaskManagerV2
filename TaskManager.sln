@@ -3,13 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.Server", "TaskManager.Server\TaskManager.Server.csproj", "{F9E5ECE9-FCB9-46CE-82EA-E6D9E986CD4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Server", "TaskManager.Server\TaskManager.Server.csproj", "{F9E5ECE9-FCB9-46CE-82EA-E6D9E986CD4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.Common", "TaskManager.Common\TaskManager.Common.csproj", "{F7F35B36-23D3-499A-BE28-23659D3D796E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Common", "TaskManager.Common\TaskManager.Common.csproj", "{F7F35B36-23D3-499A-BE28-23659D3D796E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.Logic", "TaskManager.Logic\TaskManager.Logic.csproj", "{42783FC2-95FA-410E-832B-8ABB6A10A76C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Logic", "TaskManager.Logic\TaskManager.Logic.csproj", "{42783FC2-95FA-410E-832B-8ABB6A10A76C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.Data", "TaskManager.Data\TaskManager.Data.csproj", "{3B18D979-3BD6-4D28-B38A-34FB91689B2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Data", "TaskManager.Data\TaskManager.Data.csproj", "{3B18D979-3BD6-4D28-B38A-34FB91689B2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.Test", "TaskManager.Test\TaskManager.Test.csproj", "{358B5369-BD2F-49FB-988C-8B1EA89F2E6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{E5CC61EF-CBDA-47B0-AC77-386DB460164B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{D50B9CAB-F163-4422-8886-539818A2D2FB}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ci.yml = .github\workflows\ci.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +42,16 @@ Global
 		{3B18D979-3BD6-4D28-B38A-34FB91689B2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B18D979-3BD6-4D28-B38A-34FB91689B2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B18D979-3BD6-4D28-B38A-34FB91689B2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{358B5369-BD2F-49FB-988C-8B1EA89F2E6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{358B5369-BD2F-49FB-988C-8B1EA89F2E6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{358B5369-BD2F-49FB-988C-8B1EA89F2E6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{358B5369-BD2F-49FB-988C-8B1EA89F2E6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D50B9CAB-F163-4422-8886-539818A2D2FB} = {E5CC61EF-CBDA-47B0-AC77-386DB460164B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0DD0E9DB-AE39-4549-8DB4-63165D0981D7}

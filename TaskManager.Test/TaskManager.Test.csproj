@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\TaskManager.Common\Extensions\EnumExtension.cs" Link="Exceptions\EnumExtension.cs" />
+    <Compile Include="..\TaskManager.Common\Extensions\JsonExtension.cs" Link="Exceptions\JsonExtension.cs" />
+    <Compile Include="..\TaskManager.Common\Extensions\StringExtension.cs" Link="Exceptions\StringExtension.cs" />
+    <Compile Include="..\TaskManager.Common\Settings.cs" Link="Settings.cs" />
+    <Compile Include="..\TaskManager.Common\Settings.Development.cs" Link="Settings.Development.cs" />
+    <Compile Include="..\TaskManager.Common\Settings.Production.cs" Link="Settings.Production.cs" />
+    <Compile Include="..\TaskManager.Common\Settings.Test.cs" Link="Settings.Test.cs" />
+    <Compile Include="..\TaskManager.Server\Models\AccountViewModel.cs" Link="Models\AccountViewModel.cs" />
+    <Compile Include="..\TaskManager.Server\Models\ProjectViewModel.cs" Link="Models\ProjectViewModel.cs" />
+    <Compile Include="..\TaskManager.Server\Models\ResponseModel.cs" Link="Models\ResponseModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit" Version="2.5.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Exceptions\" />
+  </ItemGroup>
+
+</Project>

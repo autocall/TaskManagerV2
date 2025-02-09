@@ -77,5 +77,5 @@ public abstract class BaseController : Controller {
         return errorModels;
     }
 
-    protected Guid GetUserId() => base.User.GetUserId();
+    protected int GetUserId() => base.User.GetUserId();
 }

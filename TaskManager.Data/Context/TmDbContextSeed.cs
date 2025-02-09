@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using TaskManager.Data.Entities;
 using TaskManager.Data.Enums;
+using TaskManager.Data.Helpers;
 
 namespace TaskManager.Data.Context;
 public class TmDbContextSeed {
@@ -11,9 +12,9 @@ public class TmDbContextSeed {
         foreach (var role in roles) {
             if (!await roleManager.RoleExistsAsync(role.ToString())) {
                 var id = role switch {
-                    RoleEnum.User => new Guid("DF13F33B-7101-4DD8-831F-037977D0E577"),
-                    RoleEnum.Admin => new Guid("3DD6838F-566E-4530-AD7A-0F16D3C55688"),
-                    _ => Guid.NewGuid()
+                    RoleEnum.User => 1,
+                    RoleEnum.Admin => 100,
+                    _ => DbRandomHelper.NewInt32(),
                 };
                 await roleManager.CreateAsync(new TmRole { Id = id, Name = role.ToString() });
             }

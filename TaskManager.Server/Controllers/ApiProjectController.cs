@@ -34,7 +34,7 @@ public class ApiProjectController : BaseController {
     }
 
     [HttpGet]
-    public async Task<ActionResult> Get(Guid id) {
+    public async Task<ActionResult> Get(int id) {
         var dto = await this.Service.GetAsync(id);
         return JsonSuccess(dto);
     }
@@ -45,7 +45,7 @@ public class ApiProjectController : BaseController {
             return base.JsonFail(base.GetErrors());
         }
         var inputDto = Mapper.Map<CreateProjectDto>(model);
-        var outputDto = await this.Service.CreateAsync(inputDto);
+        var outputDto = await this.Service.CreateAsync(inputDto, base.GetUserId());
         return JsonSuccess(outputDto);
     }
 
@@ -55,13 +55,13 @@ public class ApiProjectController : BaseController {
             return base.JsonFail(base.GetErrors());
         }
         var inputDto = Mapper.Map<UpdateProjectDto>(model);
-        var outputDto = await this.Service.UpdateAsync(inputDto);
+        var outputDto = await this.Service.UpdateAsync(inputDto, base.GetUserId());
         return JsonSuccess(outputDto);
     }
 
     [HttpPost]
-    public async Task<ActionResult> Delete(Guid id) {
-       var result = await this.Service.DeleteAsync(id);
+    public async Task<ActionResult> Delete(int id) {
+       var result = await this.Service.DeleteAsync(id, base.GetUserId());
         return JsonSuccess(result);
     }
 }

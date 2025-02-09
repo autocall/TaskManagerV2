@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TaskManager.Data.Entities;
 public class TmUser : IdentityUser<int> {
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public override int Id { get; set; }
+
     [Column(TypeName = "varchar(64)")]
     public string TimeZoneId { get; set; }
 

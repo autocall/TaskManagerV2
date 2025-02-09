@@ -2,16 +2,16 @@
 
 namespace TaskManager.Server.Extensions;
 public static class ClaimsPrincipalExtension {
-    public static Guid GetUserId(this ClaimsPrincipal principal) {
+    public static int GetUserId(this ClaimsPrincipal principal) {
         if (principal == null)
             throw new ArgumentNullException(nameof(principal));
 
         Claim claim = principal.FindFirst(ClaimTypes.NameIdentifier);
         if (claim == null) {
-            return Guid.Empty;
+            return default;
         }
         string userId = principal.FindFirst(ClaimTypes.NameIdentifier).Value;
-        return Guid.Parse(userId);
+        return Int32.Parse(userId);
     }
 
     public static string GetUserName(this ClaimsPrincipal principal) {

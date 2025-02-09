@@ -10,6 +10,7 @@ using TaskManager.Logic.Dtos.Identity;
 using TaskManager.Logic.Services;
 using TaskManager.Logic;
 using TaskManager.Server.Models;
+using TaskManager.Data.Helpers;
 
 namespace TaskManager.Server.Controllers;
 [ApiController]
@@ -79,6 +80,7 @@ public class ApiTmcountController : BaseController {
 
         // Creates user
         TmUser user = new TmUser {
+            Id = DbRandomHelper.NewInt32(),
             UserName = model.UserName,
             Email = model.Email,
             CreatedDateTime = DateTime.UtcNow,

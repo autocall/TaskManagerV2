@@ -12,8 +12,8 @@ using TaskManager.Data.Context;
 namespace TaskManager.Data.Migrations
 {
     [DbContext(typeof(TmDbContext))]
-    [Migration("20250129101319_Init")]
-    partial class Init
+    [Migration("20250209112910_CreateTable_Project")]
+    partial class CreateTable_Project
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,11 +25,42 @@ namespace TaskManager.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("TaskManager.Data.Entities.Project", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("smalldatetime");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ModifiedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ModifiedDateTime")
+                        .HasColumnType("smalldatetime");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.ToTable("Project", (string)null);
+                });
+
             modelBuilder.Entity("TaskManager.Data.Entities.TmRole", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -56,10 +87,7 @@ namespace TaskManager.Data.Migrations
             modelBuilder.Entity("TaskManager.Data.Entities.TmRoleClaim", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -67,8 +95,8 @@ namespace TaskManager.Data.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -79,9 +107,8 @@ namespace TaskManager.Data.Migrations
 
             modelBuilder.Entity("TaskManager.Data.Entities.TmUser", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -93,8 +120,8 @@ namespace TaskManager.Data.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("smalldatetime");
 
-                    b.Property<Guid?>("CreatedId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -115,8 +142,8 @@ namespace TaskManager.Data.Migrations
                     b.Property<DateTime>("ModifiedDateTime")
                         .HasColumnType("smalldatetime");
 
-                    b.Property<Guid?>("ModifiedId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("ModifiedId")
+                        .HasColumnType("int");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -164,10 +191,7 @@ namespace TaskManager.Data.Migrations
             modelBuilder.Entity("TaskManager.Data.Entities.TmUserClaim", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -175,8 +199,8 @@ namespace TaskManager.Data.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -196,8 +220,8 @@ namespace TaskManager.Data.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -208,11 +232,11 @@ namespace TaskManager.Data.Migrations
 
             modelBuilder.Entity("TaskManager.Data.Entities.TmUserRole", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -223,8 +247,8 @@ namespace TaskManager.Data.Migrations
 
             modelBuilder.Entity("TaskManager.Data.Entities.TmUserToken", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -238,6 +262,25 @@ namespace TaskManager.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("IdentityUserToken", (string)null);
+                });
+
+            modelBuilder.Entity("TaskManager.Data.Entities.Project", b =>
+                {
+                    b.HasOne("TaskManager.Data.Entities.TmUser", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("TaskManager.Data.Entities.TmUser", "ModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("ModifiedById")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("ModifiedBy");
                 });
 
             modelBuilder.Entity("TaskManager.Data.Entities.TmRoleClaim", b =>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskManager.Data.Context;
 
@@ -11,9 +12,11 @@ using TaskManager.Data.Context;
 namespace TaskManager.Data.Migrations
 {
     [DbContext(typeof(TmDbContext))]
-    partial class TmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250209112805_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,38 +24,6 @@ namespace TaskManager.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("TaskManager.Data.Entities.Project", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("smalldatetime");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ModifiedById")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ModifiedDateTime")
-                        .HasColumnType("smalldatetime");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("varchar(64)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ModifiedById");
-
-                    b.ToTable("Project", (string)null);
-                });
 
             modelBuilder.Entity("TaskManager.Data.Entities.TmRole", b =>
                 {
@@ -259,25 +230,6 @@ namespace TaskManager.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("IdentityUserToken", (string)null);
-                });
-
-            modelBuilder.Entity("TaskManager.Data.Entities.Project", b =>
-                {
-                    b.HasOne("TaskManager.Data.Entities.TmUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("TaskManager.Data.Entities.TmUser", "ModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("ModifiedById")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("ModifiedBy");
                 });
 
             modelBuilder.Entity("TaskManager.Data.Entities.TmRoleClaim", b =>

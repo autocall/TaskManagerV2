@@ -1,10 +1,8 @@
 export default interface IJwt {
-    UserId: string,
+    UserId: number,
     UserName: string,
     Email: string,
     Roles: string,
-    CompanyId: string,
-    CompanyName: string,
     nbf: number,
     exp: number,
     iat: number

@@ -68,9 +68,7 @@ jobs:
           exit 1
 
       - name: Run Tests
-        run: |
-            dotnet build --no-restore --configuration Test
-            dotnet test --no-build --configuration Test
+        run: dotnet test --configuration Test
 
       - name: Run Cypress Tests
         run: |

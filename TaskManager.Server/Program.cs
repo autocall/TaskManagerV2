@@ -139,9 +139,10 @@ public class Program {
         try {
             using (var scope = app.Services.CreateScope()) {
                 var serviceProvider = scope.ServiceProvider;
-                var host = serviceProvider.GetService<ServicesHost>();
+                ServiceLocator.Initialize(serviceProvider);
+                var host = serviceProvider.GetRequiredService<ServicesHost>();
                 using (var unitOfWork = host.UnitOfWork) {
-                    _l.Init(serviceProvider.GetService<ICommonLogger>());
+                    _l.Init(serviceProvider.GetRequiredService<ICommonLogger>());
                     if (unitOfWork.Context.Database.GetPendingMigrations().Any()) {
                         _l.i("Migrating database");
                         unitOfWork.Context.Database.Migrate();

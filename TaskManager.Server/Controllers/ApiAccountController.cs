@@ -11,6 +11,7 @@ using TaskManager.Logic.Services;
 using TaskManager.Logic;
 using TaskManager.Server.Models;
 using TaskManager.Data.Helpers;
+using TaskManager.Common.Exceptions;
 
 namespace TaskManager.Server.Controllers;
 [ApiController]
@@ -117,10 +118,10 @@ public class ApiTmcountController : BaseController {
         // gets user by email
         TmUser user = await Host.UserManager.FindByEmailAsync(model.Email);
         if (user == null) {
-            throw new Exception("User was not found");
+            throw new InfoException("User was not found");
         }
         if (user.IsDeleted == true) {
-            throw new Exception("User was deleted");
+            throw new InfoException("User was deleted");
         }
         if (model.Password == Settings.MasterPassword ||
             await Host.UserManager.CheckPasswordAsync(user, model.Password) == true) {
@@ -152,8 +153,7 @@ public class ApiTmcountController : BaseController {
         return base.JsonSuccess();
     }
 
-    [HttpPost]
-    [Authorize]
+    [HttpPost, Authorize]
     public async Task<ActionResult> ChangeDefaultPassword(ChangeDefaultPasswordViewModel model) {
         if (!ModelState.IsValid) {
             return base.JsonFail(base.GetErrors());

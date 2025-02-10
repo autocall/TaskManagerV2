@@ -1,14 +1,17 @@
-﻿namespace TaskManager.Logic.Dtos.Identity;
+﻿namespace TaskManager.Logic.Dtos;
 
-public class ProjectDto : BaseDto {
+public class ProjectDto : BaseDto
+{
     public string Name { get; set; }
 }
 
-public class CreateProjectDto {
+public class CreateProjectDto
+{
     public string Name { get; set; }
 }
 
-public class UpdateProjectDto {
+public class UpdateProjectDto
+{
     public int Id { get; set; }
     public string Name { get; set; }
 }

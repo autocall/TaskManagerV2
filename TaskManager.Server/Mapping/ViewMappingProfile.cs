@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using TaskManager.Logic.Dtos;
 using TaskManager.Logic.Dtos.Identity;
 using TaskManager.Server.Converters;
 using TaskManager.Server.Models;

@@ -92,7 +92,7 @@ jobs:
             sudo git pull origin master --force
             cd /var/www/tm_v2/app/TaskManager.Server
             echo "dotnet build"
-            dotnet build --configuration Release
+            sudo dotnet build --configuration Release
             sudo cd /var/www/tm_v2/app/taskmanager.client
             echo "copy bin"
             sudo cp -rf /var/www/tm_v2/app/TaskManager.Server/bin/Release/net8.0/* /var/www/tm_v2/html/

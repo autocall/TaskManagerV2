@@ -6,6 +6,7 @@ import "./App.css";
 import Home from "./components/Home";
 import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
+import Project from "./components/Project";
 import React, { useState, useEffect } from "react";
 import authService from "./services/auth.service";
 import IJwt from "./types/jwt.type";
@@ -92,6 +93,9 @@ const App: React.FC = () => {
                             <Link className="nav-link" to="/">
                                 Home
                             </Link>
+                            <Link className="nav-link" to="/project">
+                                Projects
+                            </Link>
                         </Nav>
                         <Nav>
                             {themeDropdown}
@@ -110,6 +114,7 @@ const App: React.FC = () => {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<LogIn />} />
                     <Route path="/signup" element={<SignUp />} />
+                    <Route path="/project" element={<Project />} />
                 </Routes>
             </div>
         </div>

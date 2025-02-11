@@ -1,15 +1,15 @@
 import moment from "moment";
 
 export default class BaseModel {
-    EntityId: string;
-    CreatedDate: moment.Moment;
-    ModifiedDate: moment.Moment;
+    Id: number;
+    CreatedDateTime: moment.Moment;
+    ModifiedDateTime: moment.Moment;
 
     constructor(data?: any) {
         if (data) {
-            this.EntityId = data.EntityId;
-            this.CreatedDate = moment(data.CreatedDate);
-            this.ModifiedDate = moment(data.ModifiedDate);
+            this.Id = data.Id;
+            this.CreatedDateTime = moment(data.CreatedDateTime);
+            this.ModifiedDateTime = moment(data.ModifiedDateTime);
         }
     }
 }

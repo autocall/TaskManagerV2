@@ -101,6 +101,9 @@ jobs:
             npm install
             echo "npm run build"
             npm run build
+            echo "backup wwwroot"
+            rm -rf /var/www/tm_v2/html/wwwroot_backup
+            mv /var/www/tm_v2/html/wwwroot /var/www/tm_v2/html/wwwroot_backup
             echo "copy wwwroot"
             cp -rf /var/www/tm_v2/app/TaskManager.Server/wwwroot/build /var/www/tm_v2/html/wwwroot/
             sudo systemctl restart kestrel-tm_v2.service

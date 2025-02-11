@@ -17,7 +17,6 @@ public class Account_UnitTest {
         var cookieContainer = new CookieContainer();
         var httpClient = new HttpClient(
             new HttpClientHandler() {
-                CookieContainer = cookieContainer,
                 ServerCertificateCustomValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true
             }
         );
@@ -42,7 +41,6 @@ public class Account_UnitTest {
         var cookieContainer = new CookieContainer();
         var httpClient = new HttpClient(
             new HttpClientHandler() {
-                CookieContainer = cookieContainer,
                 ServerCertificateCustomValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true
             }
         );
@@ -50,7 +48,7 @@ public class Account_UnitTest {
         var response = await httpClient.PostAsync($"{Settings.Site}/Api/Account/SignIn",
             new StringContent(
                 JsonExtension.Serialize(new LoginViewModel() {
-                    Email = Settings.TestUserEmail + "!",
+                    Email = Settings.TestUserEmail,
                     Password = Settings.DefaultPassword
                 }),
                 Encoding.UTF8, "application/json")
@@ -61,5 +59,4 @@ public class Account_UnitTest {
         Output.WriteLine($"Response: {data}");
         Assert.True(response.IsSuccessStatusCode);
     }
-
 }

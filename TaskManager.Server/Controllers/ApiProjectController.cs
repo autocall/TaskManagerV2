@@ -12,6 +12,7 @@ using TaskManager.Logic;
 using TaskManager.Server.Models;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components.Forms;
+using TaskManager.Logic.Dtos;
 
 namespace TaskManager.Server.Controllers;
 [Authorize]
@@ -39,6 +40,7 @@ public class ApiProjectController : BaseController {
         return JsonSuccess(dto);
     }
 
+
     [HttpPost]
     public async Task<ActionResult> Create([FromBody] CreateProjectViewModel model) {
         if (!ModelState.IsValid) {
@@ -61,7 +63,23 @@ public class ApiProjectController : BaseController {
 
     [HttpPost]
     public async Task<ActionResult> Delete(int id) {
-       var result = await this.Service.DeleteAsync(id, base.GetUserId());
+        var result = await this.Service.DeleteAsync(id, base.GetUserId());
         return JsonSuccess(result);
     }
+
+#if TEST || DEBUG
+
+    [HttpGet]
+    public async Task<ActionResult> GetTest() {
+        var dto = await this.Service.GetTestAsync();
+        return JsonSuccess(dto);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> DeleteTest(int id) {
+        var result = await this.Service.DeletePermanentAsync(id, base.GetUserId());
+        return JsonSuccess(result);
+    }
+
+#endif
 }

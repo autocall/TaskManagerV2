@@ -20,6 +20,8 @@
     <Compile Include="..\TaskManager.Common\Settings.cs" Link="Settings.cs" />
     <Compile Include="..\TaskManager.Common\Settings.Development.cs" Link="Settings.Development.cs" />
     <Compile Include="..\TaskManager.Common\Settings.Test.cs" Link="Settings.Test.cs" />
+    <Compile Include="..\TaskManager.Logic\Dtos\Base\BaseDto.cs" Link="Dtos\Base\BaseDto.cs" />
+    <Compile Include="..\TaskManager.Logic\Dtos\ProjectDto.cs" Link="Dtos\ProjectDto.cs" />
     <Compile Include="..\TaskManager.Server\Models\AccountViewModel.cs" Link="Models\AccountViewModel.cs" />
     <Compile Include="..\TaskManager.Server\Models\ProjectViewModel.cs" Link="Models\ProjectViewModel.cs" />
     <Compile Include="..\TaskManager.Server\Models\ResponseModel.cs" Link="Models\ResponseModel.cs" />
@@ -38,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Folder Include="Dtos\Base\" />
     <Folder Include="Exceptions\" />
   </ItemGroup>
 

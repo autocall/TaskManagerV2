@@ -1,0 +1,4 @@
+1. Layout as the stack of rows
+2. To create a task with answer
+3. To create a comment without the task
+4. daily tasks

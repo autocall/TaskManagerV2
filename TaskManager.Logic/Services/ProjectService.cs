@@ -1,13 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaskManager.Data;
 using TaskManager.Data.Entities;
-using TaskManager.Data.Helpers;
-using TaskManager.Logic.Dtos.Identity;
+using TaskManager.Logic.Dtos;
 
 namespace TaskManager.Logic.Services;
 public class ProjectService : BaseService {
@@ -22,6 +16,11 @@ public class ProjectService : BaseService {
 
     public async Task<ProjectDto> GetAsync(int id) {
         var model = await Rep.GetByIdAsync(id);
+        return Mapper.Map<ProjectDto>(model);
+    }
+
+    public async Task<ProjectDto> GetTestAsync() {
+        var model = await Rep.GetAll(true).FirstOrDefaultAsync(e => e.Name == "Test Project" || e.Name == "Test Project Updated");
         return Mapper.Map<ProjectDto>(model);
     }
 
@@ -40,5 +39,9 @@ public class ProjectService : BaseService {
 
     public async Task<int> DeleteAsync(int id, int userId) {
         return await Rep.ExecuteUpdateIsDeletedAsync(id, true, userId);
+    }
+
+    public async Task<int> DeletePermanentAsync(int id, int userId) {
+        return await Rep.ExecuteDeleteAsync(id);
     }
 }

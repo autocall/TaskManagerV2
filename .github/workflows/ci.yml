@@ -88,23 +88,31 @@ jobs:
             chmod 600 private_key.pem
             ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST <<EOF
             cd /var/www/tm_v2/app
-            echo "pull"
-            sudo git pull origin master --force
+
+            echo "Pull latest code"
+            git pull origin master --force
+
+            echo "Building .NET application"
             cd /var/www/tm_v2/app/TaskManager.Server
-            echo "dotnet build"
-            sudo dotnet build --configuration Release
-            sudo cd /var/www/tm_v2/app/taskmanager.client
-            echo "copy bin"
-            sudo cp -rf /var/www/tm_v2/app/TaskManager.Server/bin/Release/net8.0/* /var/www/tm_v2/html/
-            sudo cp -rf /var/www/tm_v2/app/TaskManager.Server/wwwroot/build /var/www/tm_v2/html/wwwroot/
+            dotnet build --configuration Release
+
+            echo "Installing npm dependencies"
+            cd /var/www/tm_v2/app/taskmanager.client
+
             echo "npm install"
             npm install
-            echo "npm run build"
-            sudo npm run build
-            echo "backup wwwroot"
+
+            echo "Building client"
+            npm run build
+
+            echo "Èackup wwwroot"
             sudo rm -rf /var/www/tm_v2/html/wwwroot_backup
             sudo mv /var/www/tm_v2/html/wwwroot /var/www/tm_v2/html/wwwroot_backup
-            echo "copy wwwroot"
+
+            echo "Copying build files"            
+            sudo cp -rf /var/www/tm_v2/app/TaskManager.Server/bin/Release/net8.0/* /var/www/tm_v2/html/
             sudo cp -rf /var/www/tm_v2/app/TaskManager.Server/wwwroot/build /var/www/tm_v2/html/wwwroot/
+
+            echo "Restarting Kestrel service"
             sudo systemctl restart kestrel-tm_v2.service
             EOF

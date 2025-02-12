@@ -95,7 +95,7 @@ jobs:
 
             echo "Building .NET application"
             cd TaskManager.Server
-            dotnet build --configuration Release
+            sudo dotnet build --configuration Release
 
             echo "Installing npm dependencies"
             cd /var/www/tm_v2/app/taskmanager.client
@@ -106,12 +106,13 @@ jobs:
             echo "Building client"
             npm run build --emptyOutDir
 
-            echo "Backup wwwroot"
-            sudo rm -rf /var/www/tm_v2/html/wwwroot_backup
-            sudo mv /var/www/tm_v2/html/wwwroot /var/www/tm_v2/html/wwwroot_backup
+            # echo "Backup wwwroot"
+            # sudo rm -rf /var/www/tm_v2/html/wwwroot_backup
+            # sudo mv /var/www/tm_v2/html/wwwroot /var/www/tm_v2/html/wwwroot_backup
 
             echo "Copying build files"            
             sudo cp -rf /var/www/tm_v2/app/TaskManager.Server/bin/Release/net8.0/* /var/www/tm_v2/html/
+            sudo rm -rf /var/www/tm_v2/html/wwwroot
             sudo cp -rf /var/www/tm_v2/app/TaskManager.Server/wwwroot/build /var/www/tm_v2/html/wwwroot/build
 
             echo "Restarting Kestrel service"

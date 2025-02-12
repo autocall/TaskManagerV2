@@ -113,7 +113,7 @@ jobs:
             echo "Copying build files"            
             sudo cp -rf /var/www/tm_v2/app/TaskManager.Server/bin/Release/net8.0/* /var/www/tm_v2/html/
             sudo rm -rf /var/www/tm_v2/html/wwwroot
-            sudo cp -rf /var/www/tm_v2/app/TaskManager.Server/wwwroot/build /var/www/tm_v2/html/wwwroot/build
+            sudo cp -rf /var/www/tm_v2/app/TaskManager.Server/wwwroot /var/www/tm_v2/html/wwwroot
 
             echo "Restarting Kestrel service"
             sudo systemctl restart kestrel-tm_v2.service

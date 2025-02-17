@@ -82,6 +82,15 @@ div.invalid div.error {
 .form-group:last-child {
   margin-bottom: 0;
 }
+.modal-footer > .form-group * {
+  margin: calc(var(--bs-modal-footer-gap) * 0.5);
+}
 .btn {
   min-width: 80px;
+}
+/* Forcibly adding the right border */
+.table.table-bordered {
+  border-right-width: 1px;
+  border-right-style: solid;
+  /*border-right-color: var(--bs-border-color);*/
 }

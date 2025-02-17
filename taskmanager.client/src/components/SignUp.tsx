@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import authService from "../services/auth.service";
@@ -12,6 +12,7 @@ import { SignUpState, submittedSignUpAction, submittingSignUpAction } from "../s
 import { AppState } from "../states/store";
 
 const SingUp: React.FC = () => {
+    const { search } = useLocation();
     const navigate: NavigateFunction = useNavigate();
     const dispatch = useDispatch();
     const state = useSelector((s: AppState) => s.signUpState);
@@ -38,9 +39,11 @@ const SingUp: React.FC = () => {
     });
 
     const handleSubmit = async (model: SignUpState) => {
-        const service = new authService();
+        let queryParams = new URLSearchParams(search);
+        let error = queryParams.get("error");
+        let service = new authService(error);
         dispatch(submittingSignUpAction());
-        const response = await service.register(model.username, model.email, model.password);
+        let response = await service.register(model.username, model.email, model.password);
         dispatch(submittedSignUpAction(response));
         if (response.success) {
             navigate("/");
@@ -72,7 +75,7 @@ const SingUp: React.FC = () => {
                                     <Field name="confirmPassword" type="password" placeholder="Confirm Password" className="form-control" />
                                 </FormGroup>
                                 <FormGroup error={state.error}>
-                                    <Button type="submit" className="btn btn-primary w-100" disabled={state.submitting}>
+                                    <Button type="submit" variant="primary" disabled={state.submitting}>
                                         {state.submitting && <span className="spinner-border spinner-border-sm"></span>}
                                         {!state.submitting && <span>Register</span>}
                                     </Button>

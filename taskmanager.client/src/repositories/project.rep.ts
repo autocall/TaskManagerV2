@@ -4,32 +4,62 @@ import authHeader from "./../services/auth-header";
 const API_URL = "/api/project/";
 
 export default class projectRepository {
-    public getAll () {
-        return axios.get(`${API_URL}getall`, { headers: authHeader() });
-    }
-    
-    public get (id: number) {
-        return axios.get(`${API_URL}get/${id}`, { headers: authHeader() });
+    private errorHeader: string | null = null;
+    private errorsHeader: { [key: string]: string } = {};
+
+    public addErrorHeader(error: string) {
+        this.errorHeader = error;
     }
 
-    public create (name: string) {
-        return axios.post(`${API_URL}/create`, {
-            name,
-        }, { headers: authHeader() });
+    public addErrorsHeader(field: string, error: string) {
+        this.errorsHeader[field] = error;
     }
 
-    public update (id: number, name: string) {
-        return axios.put(`${API_URL}/update`, {
-            id,
-            name,
-        }, { headers: authHeader() });
+    private generateHeaders(): { Authorization: string; error: string | null; errors: string | null } {
+        let headers: { Authorization: string; error: string | null; errors: string | null } = {
+            ...authHeader(),
+            error: null,
+            errors: null,
+        };
+        if (this.errorHeader) {
+            headers = { ...headers, error: this.errorHeader };
+        }
+        if (Object.keys(this.errorsHeader).length > 0) {
+            headers = { ...headers, errors: JSON.stringify(this.errorsHeader) };
+        }
+        return headers;
     }
 
-    public delete (id: number) {
-        return axios.delete(`${API_URL}/delete/${id}`, { headers: authHeader() });
+    public getAll() {
+        return axios.get(`${API_URL}getall`, { headers: this.generateHeaders() });
     }
 
-    public deleteTest (id: number) {
-        return axios.delete(`${API_URL}/deletetest/${id}`, { headers: authHeader() });
+    public get(id: number) {
+        return axios.get(`${API_URL}get/${id}`, { headers: this.generateHeaders() });
     }
-};
+
+    public create(name: string) {
+        return axios.post(
+            `${API_URL}create`,
+            {
+                name,
+            },
+            { headers: this.generateHeaders() },
+        );
+    }
+
+    public update(id: number, name: string) {
+        return axios.put(
+            `${API_URL}update`,
+            {
+                id,
+                name,
+            },
+            { headers: this.generateHeaders() },
+        );
+    }
+
+    public delete(id: number) {
+        return axios.delete(`${API_URL}delete/${id}`, { headers: this.generateHeaders() });
+    }
+}

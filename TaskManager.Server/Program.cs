@@ -131,6 +131,8 @@ public class Program {
         } else {
             app.UseHttpsRedirection();
         }
+        app.UseExceptionHandler(options => { });
+        app.UseMiddleware<ErrorFromHeaderMiddleware>();
 
         app.UseAuthorization();
 

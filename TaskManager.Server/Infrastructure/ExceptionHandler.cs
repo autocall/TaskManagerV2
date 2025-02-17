@@ -11,10 +11,30 @@ public class ExceptionHandler : IExceptionHandler {
         if (exception is InfoException == false) {
             _l.e("ExceptionHandler", exception);
         }
-        httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-        httpContext.Response.ContentType = "application/json";
-        var result = JsonExtension.Serialize(new { error = exception.Message });
-        await httpContext.Response.WriteAsync(result);
-        return false;
+        // The Exception for Testings
+        if (exception is ErrorFromHeaderException errorFromHeaderException) {
+            httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            httpContext.Response.ContentType = "application/json";
+            var result = JsonExtension.Serialize(new { error = errorFromHeaderException.Message });
+            await httpContext.Response.WriteAsync(result);
+            return true;
+        }
+        // The Exception for Testings
+        if (exception is ErrorsFromHeaderException errorsFromHeaderException) {
+            httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            httpContext.Response.ContentType = "application/json";
+            var result = JsonExtension.Serialize(new {
+                errors = errorsFromHeaderException.Errors
+            });
+            await httpContext.Response.WriteAsync(result);
+            return true;
+        }
+        {
+            httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            httpContext.Response.ContentType = "application/json";
+            var result = JsonExtension.Serialize(new { error = exception.Message });
+            await httpContext.Response.WriteAsync(result);
+            return false;
+        }
     }
 }

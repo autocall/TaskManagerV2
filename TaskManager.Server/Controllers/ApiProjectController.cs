@@ -34,12 +34,11 @@ public class ApiProjectController : BaseController {
         return JsonSuccess(dtos);
     }
 
-    [HttpGet]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> Get(int id) {
         var dto = await this.Service.GetAsync(id);
         return JsonSuccess(dto);
     }
-
 
     [HttpPost]
     public async Task<ActionResult> Create([FromBody] CreateProjectViewModel model) {
@@ -51,7 +50,7 @@ public class ApiProjectController : BaseController {
         return JsonSuccess(outputDto);
     }
 
-    [HttpPost]
+    [HttpPut]
     public async Task<ActionResult> Update([FromBody] UpdateProjectViewModel model) {
         if (!ModelState.IsValid) {
             return base.JsonFail(base.GetErrors());
@@ -61,25 +60,9 @@ public class ApiProjectController : BaseController {
         return JsonSuccess(outputDto);
     }
 
-    [HttpPost]
+    [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id) {
         var result = await this.Service.DeleteAsync(id, base.GetUserId());
         return JsonSuccess(result);
     }
-
-#if TEST || DEBUG
-
-    [HttpGet]
-    public async Task<ActionResult> GetTest() {
-        var dto = await this.Service.GetTestAsync();
-        return JsonSuccess(dto);
-    }
-
-    [HttpPost]
-    public async Task<ActionResult> DeleteTest(int id) {
-        var result = await this.Service.DeletePermanentAsync(id, base.GetUserId());
-        return JsonSuccess(result);
-    }
-
-#endif
 }

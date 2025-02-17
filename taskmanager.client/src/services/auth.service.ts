@@ -6,8 +6,19 @@ import Response from "./models/response";
 export default class authService {
     private rep: authRepository = new authRepository();
 
+    constructor(error: string | null = null) {
+        if (error) {
+            this.rep.addErrorHeader(error);
+        }
+    }
+
+    public addErrorHeader(error: string) {
+        this.rep.addErrorHeader(error);
+    }
+
     public register(username: string, email: string, password: string) {
-        return this.rep.register(username, email, password)
+        return this.rep
+            .register(username, email, password)
             .then((response) => {
                 localStorage.setItem("token", response.data.Token);
                 return Response.success<string>(response.data.Token);
@@ -18,7 +29,8 @@ export default class authService {
     }
 
     public login(email: string, password: string): Promise<Response<string>> {
-        return this.rep.login(email, password)
+        return this.rep
+            .login(email, password)
             .then((response) => {
                 localStorage.setItem("token", response.data.Token);
                 return Response.success<string>(response.data.Token);
@@ -29,7 +41,8 @@ export default class authService {
     }
 
     public identity(): Promise<Response<any>> {
-        return this.rep.identity()
+        return this.rep
+            .identity()
             .then((response) => {
                 return Response.success<any>(response.data.Token);
             })

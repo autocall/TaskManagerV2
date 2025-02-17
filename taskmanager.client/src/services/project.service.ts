@@ -4,6 +4,14 @@ import Response from "./models/response";
 
 export default class projectService {
     private rep: projectRepository = new projectRepository();
+    
+    public addErrorHeader(error: string) {
+        this.rep.addErrorHeader(error);
+    }
+
+    public addErrorsHeader(field: string, error: string) {
+        this.rep.addErrorsHeader(field, error);
+    }
 
     public getAll(): Promise<Response<ProjectModel[]>> {
         return this.rep
@@ -54,17 +62,6 @@ export default class projectService {
     public delete(id: number) {
         return this.rep
             .delete(id)
-            .then((response) => {
-                return Response.success<any>(response.data);
-            })
-            .catch((exception) => {
-                return Response.fail<any>(exception);
-            });
-    }
-
-    public deleteTest(id: number) {
-        return this.rep
-            .deleteTest(id)
             .then((response) => {
                 return Response.success<any>(response.data);
             })

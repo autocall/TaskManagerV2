@@ -6,12 +6,13 @@ import "./App.css";
 import Home from "./components/Home";
 import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
-import Project from "./components/Project";
+import Projects from "./components/Projects";
 import React, { useState, useEffect } from "react";
 import authService from "./services/auth.service";
 import IJwt from "./types/jwt.type";
 import { NavDropdown, Spinner } from "react-bootstrap";
 import { ThemeEnum } from "./enums/theme.enum";
+import useAsyncEffect from "use-async-effect";
 
 const App: React.FC = () => {
     const service = new authService();
@@ -20,24 +21,21 @@ const App: React.FC = () => {
     const [currentUser, setCurrentUser] = useState<IJwt | undefined>(undefined);
     const [theme, setTheme] = useState<string>(localStorage.getItem("theme") || ThemeEnum.Light);
 
-    useEffect(() => {
-        (async function () {
-            const jwt = service.getCurrentUser();
-            if (jwt) {
-                setCurrentUser(jwt);
-                const response = await service.identity();
-                if (response.success) {
-                    // successed
-                } else {
-                    if (response.status === 401) {
-                        service.logout();
-                        setCurrentUser(undefined);
-                        navigate("/login");
-                    }
+    useAsyncEffect(async () => {
+        let jwt = service.getCurrentUser();
+        if (jwt) {
+            setCurrentUser(jwt);
+            let response = await service.identity();
+            if (response.success) {
+                // successed
+            } else {
+                if (response.status === 401) {
+                    service.logout();
+                    setCurrentUser(undefined);
+                    navigate("/login");
                 }
             }
-        })();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }
     }, []);
 
     useEffect(() => {
@@ -114,7 +112,7 @@ const App: React.FC = () => {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<LogIn />} />
                     <Route path="/signup" element={<SignUp />} />
-                    <Route path="/project" element={<Project />} />
+                    <Route path="/project" element={<Projects />} />
                 </Routes>
             </div>
         </div>

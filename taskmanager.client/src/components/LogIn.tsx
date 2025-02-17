@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import authService from "../services/auth.service";
@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../states/store";
 
 const LogIn: React.FC = () => {
+    const { search } = useLocation();
     const navigate: NavigateFunction = useNavigate();
     const dispatch = useDispatch();
     const state = useSelector((s: AppState) => s.loginState);
@@ -22,7 +23,9 @@ const LogIn: React.FC = () => {
     });
 
     const handleSubmit = async (model: LoginState) => {
-        const service = new authService();
+            let queryParams = new URLSearchParams(search);
+            let error = queryParams.get("error");
+            let service = new authService(error);
         dispatch(submittingLoginAction());
         const response = await service.login(model.email, model.password);
         dispatch(submittedLoginAction(response));
@@ -49,7 +52,7 @@ const LogIn: React.FC = () => {
                                 </FormGroup>
 
                                 <FormGroup error={state.error}>
-                                    <Button type="submit" className="btn btn-primary w-100" disabled={state.submitting}>
+                                    <Button type="submit" variant="primary" disabled={state.submitting}>
                                         {state.submitting && <span className="spinner-border spinner-border-sm"></span>}
                                         {!state.submitting && <span>Login</span>}
                                     </Button>

@@ -79,9 +79,7 @@ public class Project_UnitTest {
         }
 
         if (dto != null) {
-            var response = await httpClient.PostAsync($"{Settings.Site}/Api/Project/DeleteTest?Id={dto.Id}",
-                new StringContent(String.Empty, Encoding.UTF8, "application/json")
-            );
+            var response = await httpClient.DeleteAsync($"{Settings.Site}/Api/Project/DeleteTest?Id={dto.Id}");
             var data = await response.Content.ReadAsStringAsync();
 
             Output.WriteLine($"--- Delete Project ---");
@@ -89,7 +87,7 @@ public class Project_UnitTest {
             Output.WriteLine($"Response: {data}");
             Assert.True(response.IsSuccessStatusCode);
             Assert.Equal(1, JsonExtension.Deserialize<int>(data));
-        } 
+        }
         
         { 
             var response = await httpClient.PostAsync($"{Settings.Site}/Api/Project/Create",
@@ -109,7 +107,7 @@ public class Project_UnitTest {
         }
 
         {
-            var response = await httpClient.PostAsync($"{Settings.Site}/Api/Project/Update",
+            var response = await httpClient.PutAsync($"{Settings.Site}/Api/Project/Update",
                 new StringContent(
                     JsonExtension.Serialize(new UpdateProjectViewModel() {
                         Id = dto.Id,
@@ -126,9 +124,7 @@ public class Project_UnitTest {
         }
 
         {
-            var response = await httpClient.PostAsync($"{Settings.Site}/Api/Project/DeleteTest?Id={dto.Id}",
-                new StringContent(String.Empty, Encoding.UTF8, "application/json")
-            );
+            var response = await httpClient.DeleteAsync($"{Settings.Site}/Api/Project/DeleteTest?Id={dto.Id}");
             var data = await response.Content.ReadAsStringAsync();
 
             Output.WriteLine($"--- Delete Project ---");

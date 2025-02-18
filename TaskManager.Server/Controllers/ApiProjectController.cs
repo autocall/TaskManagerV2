@@ -65,4 +65,21 @@ public class ApiProjectController : BaseController {
         var result = await this.Service.DeleteAsync(id, base.GetUserId());
         return JsonSuccess(result);
     }
+
+
+#if TEST || DEBUG
+
+    [HttpGet]
+    public async Task<ActionResult> GetTest() {
+        var dto = await this.Service.GetTestAsync();
+        return JsonSuccess(dto);
+    }
+
+    [HttpDelete]
+    public async Task<ActionResult> DeleteTest(int id) {
+        var result = await this.Service.DeletePermanentAsync(id, base.GetUserId());
+        return JsonSuccess(result);
+    }
+
+#endif
 }

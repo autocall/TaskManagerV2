@@ -20,7 +20,7 @@ public class ProjectService : BaseService {
     }
 
     public async Task<ProjectDto> GetTestAsync() {
-        var model = await Rep.GetAll(true).FirstOrDefaultAsync(e => e.Name == "Test Project" || e.Name == "Test Project Updated");
+        var model = await Rep.GetAll(true).FirstOrDefaultAsync(e => e.Name.StartsWith("Test "));
         return Mapper.Map<ProjectDto>(model);
     }
 

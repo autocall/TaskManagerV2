@@ -57,6 +57,6 @@ export default class projectRepository {
 
     public delete(id: number) {
         let action = "delete";
-        return axios.delete(`${API_URL}${action}//${id}`, { headers: this.generateHeaders(action) });
+        return axios.delete(`${API_URL}${action}/${id}`, { headers: this.generateHeaders(action) });
     }
 }

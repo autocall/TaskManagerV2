@@ -1,51 +1,54 @@
 import axios from "axios";
 import authHeader from "./../services/auth-header";
+import { testContainer } from "../helpers/test.helper";
 
 const API_URL = "/api/account/";
 
 export default class authRepository {
-    private errorHeader: string | null = null;
-    private errorsHeader: { [key: string]: string } = {};
+    private testContainer: testContainer | null;
 
-    public addErrorHeader(error: string) {
-        this.errorHeader = error;
+    public constructor(test: testContainer | null) {
+        this.testContainer = test;
     }
 
-    public addErrorsHeader(field: string, error: string) {
-        this.errorsHeader[field] = error;
-    }
-    
-    private generateHeaders(): { error: string | null; errors: string | null } {
-        let headers: { error: string | null; errors: string | null } = {
-            ...authHeader(),
-            error: null,
-            errors: null,
-        };
-        if (this.errorHeader) {
-            headers = { ...headers, error: this.errorHeader };
+    private generateHeaders(action: string): any {
+        if (this.testContainer && this.testContainer.action === action) {
+            return {
+                ...authHeader(),
+                error: this.testContainer.error,
+                errors: JSON.stringify(this.testContainer.errors),
+            };
         }
-        if (Object.keys(this.errorsHeader).length > 0) {
-            headers = { ...headers, errors: JSON.stringify(this.errorsHeader) };
-        }
-        return headers;
+        return authHeader();
     }
 
-    public register (username: string, email: string, password: string) {
-        return axios.post(API_URL + "signup", {
-            username,
-            email,
-            password,
-        }, { headers: this.generateHeaders() });
+    public register(username: string, email: string, password: string) {
+        let action = "signup";
+        return axios.post(
+            API_URL + action,
+            {
+                username,
+                email,
+                password,
+            },
+            { headers: this.generateHeaders(action) },
+        );
     }
 
-    public login (email: string, password: string) {
-        return axios.post(API_URL + "signin", {
-            email,
-            password,
-        }, { headers: this.generateHeaders() });
+    public login(email: string, password: string) {
+        let action = "signin";
+        return axios.post(
+            API_URL + action,
+            {
+                email,
+                password,
+            },
+            { headers: this.generateHeaders(action) },
+        );
     }
 
-    public identity ()  {
-        return axios.get(API_URL + "identity", { headers: authHeader() });
-    }    
-};
+    public identity() {
+        let action = "identity";
+        return axios.get(API_URL + action, { headers: this.generateHeaders(action) });
+    }
+}

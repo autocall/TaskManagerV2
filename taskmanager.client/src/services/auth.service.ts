@@ -2,18 +2,13 @@ import { jwtDecode } from "jwt-decode";
 import IJwt from "../types/jwt.type";
 import authRepository from "./../repositories/auth.rep";
 import Response from "./models/response";
+import { testContainer } from "../helpers/test.helper";
 
 export default class authService {
-    private rep: authRepository = new authRepository();
+    private rep: authRepository;
 
-    constructor(error: string | null = null) {
-        if (error) {
-            this.rep.addErrorHeader(error);
-        }
-    }
-
-    public addErrorHeader(error: string) {
-        this.rep.addErrorHeader(error);
+    constructor(test: testContainer | null) {
+        this.rep = new authRepository(test);
     }
 
     public register(username: string, email: string, password: string) {

@@ -1,65 +1,62 @@
 import axios from "axios";
 import authHeader from "./../services/auth-header";
+import { testContainer } from "../helpers/test.helper";
 
 const API_URL = "/api/project/";
 
 export default class projectRepository {
-    private errorHeader: string | null = null;
-    private errorsHeader: { [key: string]: string } = {};
+    private testContainer: testContainer | null;
 
-    public addErrorHeader(error: string) {
-        this.errorHeader = error;
+    public constructor(test: testContainer | null) {
+        this.testContainer = test;
     }
 
-    public addErrorsHeader(field: string, error: string) {
-        this.errorsHeader[field] = error;
-    }
-
-    private generateHeaders(): { Authorization: string; error: string | null; errors: string | null } {
-        let headers: { Authorization: string; error: string | null; errors: string | null } = {
-            ...authHeader(),
-            error: null,
-            errors: null,
-        };
-        if (this.errorHeader) {
-            headers = { ...headers, error: this.errorHeader };
+    private generateHeaders(action: string): any {
+        if (this.testContainer && this.testContainer.action === action) {
+            return {
+                ...authHeader(),
+                error: this.testContainer.error,
+                errors: JSON.stringify(this.testContainer.errors),
+            };
         }
-        if (Object.keys(this.errorsHeader).length > 0) {
-            headers = { ...headers, errors: JSON.stringify(this.errorsHeader) };
-        }
-        return headers;
+        return authHeader();
     }
 
     public getAll() {
-        return axios.get(`${API_URL}getall`, { headers: this.generateHeaders() });
+        let action = "getall";
+        return axios.get(`${API_URL}${action}`, { headers: this.generateHeaders(action) });
     }
 
     public get(id: number) {
-        return axios.get(`${API_URL}get/${id}`, { headers: this.generateHeaders() });
+        let action = "get";
+        return axios.get(`${API_URL}${action}/${id}`, { headers: this.generateHeaders(action) });
     }
 
     public create(name: string) {
+        let action = "create";
         return axios.post(
-            `${API_URL}create`,
+            `${API_URL}${action}/`,
             {
                 name,
             },
-            { headers: this.generateHeaders() },
+            { headers: this.generateHeaders(action) },
         );
     }
 
     public update(id: number, name: string) {
+        let action = "update";
         return axios.put(
-            `${API_URL}update`,
+            `${API_URL}${action}/`,
             {
                 id,
                 name,
             },
-            { headers: this.generateHeaders() },
+            { headers: this.generateHeaders(action) },
         );
     }
 
     public delete(id: number) {
-        return axios.delete(`${API_URL}delete/${id}`, { headers: this.generateHeaders() });
+        let action = "delete";
+        return axios.delete(`${API_URL}${action}//${id}`, { headers: this.generateHeaders(action) });
     }
 }

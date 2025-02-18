@@ -7,9 +7,11 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import FormGroup from "./shared/form-group";
-import {  submittingLoginAction, submittedLoginAction, LoginState } from "../states/login.state";
+import { submittingLoginAction, submittedLoginAction, LoginState } from "../states/login.state";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../states/store";
+import test from "node:test";
+import { testHelper } from "../helpers/test.helper";
 
 const LogIn: React.FC = () => {
     const { search } = useLocation();
@@ -18,16 +20,14 @@ const LogIn: React.FC = () => {
     const state = useSelector((s: AppState) => s.loginState);
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email("This is not a valid email.").required("This field is required!"),
-        password: Yup.string().required("This field is required!"),
+        Email: Yup.string().email("This is not a valid email.").required("This field is required!"),
+        Password: Yup.string().required("This field is required!"),
     });
 
     const handleSubmit = async (model: LoginState) => {
-            let queryParams = new URLSearchParams(search);
-            let error = queryParams.get("error");
-            let service = new authService(error);
+        let service = new authService(testHelper.getTestContainer(search));
         dispatch(submittingLoginAction());
-        const response = await service.login(model.email, model.password);
+        const response = await service.login(model.Email, model.Password);
         dispatch(submittedLoginAction(response));
         if (response.success) {
             navigate("/");
@@ -43,15 +43,15 @@ const LogIn: React.FC = () => {
                     <Formik initialValues={state} validationSchema={validationSchema} onSubmit={handleSubmit}>
                         {({ handleSubmit, handleChange, values, touched, errors }) => (
                             <Form onSubmit={handleSubmit}>
-                                <FormGroup error={touched.email && (errors.email ?? state.errors.email)}>
-                                    <Field name="email" type="email" placeholder="Email" className="form-control" />
+                                <FormGroup error={touched.Email && (errors.Email ?? state.errors.Email)}>
+                                    <Field name="Email" type="email" placeholder="Email" className="form-control" />
                                 </FormGroup>
 
-                                <FormGroup error={touched.password && (errors.password ?? state.errors.password)}>
-                                    <Field name="password" type="password" placeholder="Password" className="form-control" />
+                                <FormGroup error={touched.Password && (errors.Password ?? state.errors.Password)}>
+                                    <Field name="Password" type="password" placeholder="Password" className="form-control" />
                                 </FormGroup>
 
-                                <FormGroup error={state.error}>
+                                <FormGroup error={state.error} className="d-grid">
                                     <Button type="submit" variant="primary" disabled={state.submitting}>
                                         {state.submitting && <span className="spinner-border spinner-border-sm"></span>}
                                         {!state.submitting && <span>Login</span>}

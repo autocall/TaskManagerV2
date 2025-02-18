@@ -1,17 +1,14 @@
+import { testContainer } from "../helpers/test.helper";
 import projectRepository from "../repositories/project.rep";
 import ProjectModel from "./models/project.model";
 import Response from "./models/response";
 
 export default class projectService {
-    private rep: projectRepository = new projectRepository();
+    private rep: projectRepository;
     
-    public addErrorHeader(error: string) {
-        this.rep.addErrorHeader(error);
-    }
-
-    public addErrorsHeader(field: string, error: string) {
-        this.rep.addErrorsHeader(field, error);
-    }
+        constructor(test: testContainer | null) {
+            this.rep = new projectRepository(test);
+        }
 
     public getAll(): Promise<Response<ProjectModel[]>> {
         return this.rep

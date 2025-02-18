@@ -2,16 +2,16 @@ import Response from "../services/models/response";
 
 export interface LoginState {
     readonly submitting: boolean;
-    readonly email: string;
-    readonly password: string;
+    readonly Email: string;
+    readonly Password: string;
     readonly error: string | null;
     readonly errors: { [key: string]: string };
 }
 
 const initialState: LoginState = {
     submitting: false,
-    email: "",
-    password: "",
+    Email: "",
+    Password: "",
     error: null,
     errors: {},
 };

@@ -18,6 +18,7 @@ import useAsyncEffect from "use-async-effect";
 import projectService from "../services/project.service";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { testHelper } from "../helpers/test.helper";
 
 interface ProjectModalProps {
     modalData: ProjectModel | null;
@@ -25,15 +26,14 @@ interface ProjectModalProps {
 }
 
 const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
+    const { search } = useLocation();
     let dispatch = useDispatch();
     const state = useSelector((s: AppState) => s.projectState);
 
     useAsyncEffect(async () => {
         if (modalData != null) {
             if (modalData.Id) {
-                let service: projectService = new projectService();
-
-                //service.addErrorHeader("Error getting project");
+                let service: projectService = new projectService(testHelper.getTestContainer(search));
                 dispatch(gettingProjectAction());
                 let response = await service.get(modalData.Id);
                 dispatch(gotProjectAction(response));
@@ -54,9 +54,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
     });
 
     const handleSubmit = async (model: ProjectState) => {
-        let service: projectService = new projectService();
-        //service.addErrorHeader("Error getting handleSubmit");
-        service.addErrorsHeader("Name", "Name Error");
+        let service: projectService = new projectService(testHelper.getTestContainer(search));
         if (modalData?.Id) {
             dispatch(submittingProjectAction());
             let response = await service.update(modalData.Id, model.Name);

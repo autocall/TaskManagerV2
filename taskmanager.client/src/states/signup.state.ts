@@ -2,20 +2,20 @@ import Response from "../services/models/response";
 
 export interface SignUpState {
     readonly submitting: boolean;
-    readonly username: string;
-    readonly email: string;
-    readonly password: string;
-    readonly confirmPassword: string
+    readonly UserName: string;
+    readonly Email: string;
+    readonly Password: string;
+    readonly ConfirmPassword: string
     readonly error: string | null;
     readonly errors: { [key: string]: string };
 }
 
 const initialState: SignUpState = {
     submitting: false,
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    UserName: "",
+    Email: "",
+    Password: "",
+    ConfirmPassword: "",
     error: null,
     errors: {},
 };

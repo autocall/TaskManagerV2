@@ -1,5 +1,5 @@
 import { Alert, Button, Container, Modal, Spinner, Table } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { css } from "@emotion/react";
 import useAsyncEffect from "use-async-effect";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,8 +10,10 @@ import ProjectModal from "./Project.Modal";
 import ProjectModel from "../services/models/project.model";
 import { gettingProjectsAction, gotProjectsAction, deletingProjectAction, deletedProjectAction } from "../states/projects.state";
 import { useConfirm } from "./shared/confirm";
+import { testHelper } from "../helpers/test.helper";
 
 const Projects: React.FC = () => {
+    const { search } = useLocation();
     let dispatch = useDispatch();
     let state = useSelector((s: AppState) => s.projectsState);
     const [modalData, setModalData] = useState<ProjectModel | null>(null);
@@ -22,7 +24,7 @@ const Projects: React.FC = () => {
     }, [dispatch]);
 
     const load = async () => {
-        let service: projectService = new projectService();
+        let service: projectService = new projectService(testHelper.getTestContainer(search));
         dispatch(gettingProjectsAction());
         let response = await service.getAll();
         dispatch(gotProjectsAction(response));
@@ -31,7 +33,7 @@ const Projects: React.FC = () => {
     const handleEdit = (model: ProjectModel) => setModalData(model);
     const handleDelete = async (model: ProjectModel) => {
         if (await confirm("Delete Project", `Are you sure you want to delete the project '${model.Name}'?`)) {
-            let service: projectService = new projectService();
+            let service: projectService = new projectService(testHelper.getTestContainer(search));
             dispatch(deletingProjectAction());
             let response = await service.delete(model.Id);
             dispatch(deletedProjectAction(response));

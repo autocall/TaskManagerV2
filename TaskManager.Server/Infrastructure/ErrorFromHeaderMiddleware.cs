@@ -18,6 +18,7 @@ public class ErrorFromHeaderMiddleware {
             throw new ErrorFromHeaderException(errorMessage.ToString());
         }
         if (context.Request.Headers.TryGetValue("errors", out var errorsJson)) {
+            Console.WriteLine("** ErrorFromHeaderMiddleware **");
             Console.WriteLine(errorsJson);
             // {"Name":"Name Error"}
             var errors = JsonExtension.Deserialize<Dictionary<string, string>>(errorsJson);

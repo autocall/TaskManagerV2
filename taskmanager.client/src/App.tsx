@@ -15,7 +15,7 @@ import { ThemeEnum } from "./enums/theme.enum";
 import useAsyncEffect from "use-async-effect";
 
 const App: React.FC = () => {
-    const service = new authService();
+    const service = new authService(null);
     const navigate: NavigateFunction = useNavigate();
 
     const [currentUser, setCurrentUser] = useState<IJwt | undefined>(undefined);
@@ -91,7 +91,7 @@ const App: React.FC = () => {
                             <Link className="nav-link" to="/">
                                 Home
                             </Link>
-                            <Link className="nav-link" to="/project">
+                            <Link className="nav-link" to="/projects">
                                 Projects
                             </Link>
                         </Nav>
@@ -112,7 +112,7 @@ const App: React.FC = () => {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<LogIn />} />
                     <Route path="/signup" element={<SignUp />} />
-                    <Route path="/project" element={<Projects />} />
+                    <Route path="/projects" element={<Projects />} />
                 </Routes>
             </div>
         </div>

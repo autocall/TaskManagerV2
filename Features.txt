@@ -5,3 +5,4 @@
 5. Pending to close
 
 !. Check axios.defaults
+!. Attention. For example: testing a query index

@@ -4,12 +4,14 @@ import { loginReducer, LoginState } from "./login.state";
 import { signUpReducer, SignUpState } from "./signup.state";
 import { projectReducer, ProjectState } from "./project.state";
 import { projectsReducer, ProjectsState } from "./projects.state";
+import { calendarReducer, CalendarState } from "./calendar.state";
 
 export interface AppState {
     readonly loginState: LoginState;
     readonly signUpState: SignUpState;
     readonly projectsState: ProjectsState;
     readonly projectState: ProjectState;
+    readonly calendarState: CalendarState;
 }
 
 const rootReducer = combineReducers<AppState>({
@@ -17,6 +19,7 @@ const rootReducer = combineReducers<AppState>({
     signUpState: signUpReducer,
     projectsState: projectsReducer,
     projectState: projectReducer,
+    calendarState: calendarReducer,
 });
 
 export const store = configureStore({

@@ -1,9 +1,8 @@
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import { Routes, Route, Link, NavigateFunction, useNavigate } from "react-router-dom";
+import { Routes, Route, Link, NavigateFunction, useNavigate, NavLink } from "react-router-dom";
 import "./App.css";
-import Home from "./components/Home";
 import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
 import Projects from "./components/Projects";
@@ -13,6 +12,7 @@ import IJwt from "./types/jwt.type";
 import { NavDropdown, Spinner } from "react-bootstrap";
 import { ThemeEnum } from "./enums/theme.enum";
 import useAsyncEffect from "use-async-effect";
+import Overview from "./components/Overview";
 
 const App: React.FC = () => {
     const service = new authService(null);
@@ -77,29 +77,29 @@ const App: React.FC = () => {
                         <Nav className="flex-grow-1"></Nav>
                         <Nav>
                             {themeDropdown}
-                            <Link className="nav-link" to="/login">
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/login">
                                 Login
-                            </Link>
-                            <Link className="nav-link" to="/signup">
+                            </NavLink>
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/signup">
                                 Sign Up
-                            </Link>
+                            </NavLink>
                         </Nav>
                     </Container>
                 ) : (
                     <Container>
                         <Nav className="flex-grow-1">
-                            <Link className="nav-link" to="/">
-                                Home
-                            </Link>
-                            <Link className="nav-link" to="/projects">
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/">
+                                Overview
+                            </NavLink>
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/projects">
                                 Projects
-                            </Link>
+                            </NavLink>
                         </Nav>
                         <Nav>
                             {themeDropdown}
-                            <Link className="nav-link" to="/profile">
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/profile">
                                 {currentUser.Email} ({currentUser.Roles})
-                            </Link>
+                            </NavLink>
                             <Link id="logout" className="nav-link" to="/login" onClick={logOut}>
                                 Logout
                             </Link>
@@ -107,14 +107,14 @@ const App: React.FC = () => {
                     </Container>
                 )}
             </Navbar>
-            <div className="container mt-3">
+            <Container className="mt-3" fluid>
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/" element={<Overview />} />
                     <Route path="/login" element={<LogIn />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/projects" element={<Projects />} />
                 </Routes>
-            </div>
+            </Container>
         </div>
     );
 };

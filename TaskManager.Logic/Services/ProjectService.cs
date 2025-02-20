@@ -19,11 +19,6 @@ public class ProjectService : BaseService {
         return Mapper.Map<ProjectDto>(model);
     }
 
-    public async Task<ProjectDto> GetTestAsync() {
-        var model = await Rep.GetAll(true).FirstOrDefaultAsync(e => e.Name.StartsWith("Test "));
-        return Mapper.Map<ProjectDto>(model);
-    }
-
     public async Task<ProjectDto> CreateAsync(CreateProjectDto dto, int userId) {
         var model = new Project();
         Mapper.Map(dto, model);

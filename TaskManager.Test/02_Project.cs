@@ -67,19 +67,20 @@ public class Project_UnitTest {
 
         ProjectDto dto;
         {
-            var response = await httpClient.GetAsync($"{Settings.Site}/Api/Project/GetTest");
+            var response = await httpClient.GetAsync($"{Settings.Site}/Api/Project/GetAll");
             var data = await response.Content.ReadAsStringAsync();
 
-            Output.WriteLine($"--- Get Project ---");
+            Output.WriteLine($"--- Get Projects ---");
             Output.WriteLine($"StatusCode: {response.StatusCode}");
             Output.WriteLine($"Response: {data}");
             Assert.True(response.IsSuccessStatusCode);
 
-            dto = JsonExtension.Deserialize<ProjectDto>(data);
+            var dtos = JsonExtension.Deserialize<List<ProjectDto>>(data);
+            dto = dtos.FirstOrDefault(e => e.Name.StartsWith("Test "));
         }
 
         if (dto != null) {
-            var response = await httpClient.DeleteAsync($"{Settings.Site}/Api/Project/DeleteTest?Id={dto.Id}");
+            var response = await httpClient.DeleteAsync($"{Settings.Site}/Api/Project/Delete/{dto.Id}");
             var data = await response.Content.ReadAsStringAsync();
 
             Output.WriteLine($"--- Delete Project ---");
@@ -124,7 +125,7 @@ public class Project_UnitTest {
         }
 
         {
-            var response = await httpClient.DeleteAsync($"{Settings.Site}/Api/Project/DeleteTest?Id={dto.Id}");
+            var response = await httpClient.DeleteAsync($"{Settings.Site}/Api/Project/Delete/{dto.Id}");
             var data = await response.Content.ReadAsStringAsync();
 
             Output.WriteLine($"--- Delete Project ---");

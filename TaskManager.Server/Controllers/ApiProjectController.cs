@@ -62,24 +62,14 @@ public class ApiProjectController : BaseController {
 
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id) {
+#if DEBUG || TEST
+        var dto = await this.Service.GetAsync(id);
+        if (dto.Name.StartsWith("Test ")) {
+            var temp = await this.Service.DeletePermanentAsync(id, base.GetUserId());
+            return JsonSuccess(temp);
+        }
+#endif
         var result = await this.Service.DeleteAsync(id, base.GetUserId());
         return JsonSuccess(result);
     }
-
-
-#if TEST || DEBUG
-
-    [HttpGet]
-    public async Task<ActionResult> GetTest() {
-        var dto = await this.Service.GetTestAsync();
-        return JsonSuccess(dto);
-    }
-
-    [HttpDelete]
-    public async Task<ActionResult> DeleteTest(int id) {
-        var result = await this.Service.DeletePermanentAsync(id, base.GetUserId());
-        return JsonSuccess(result);
-    }
-
-#endif
 }

@@ -1,118 +1,125 @@
-import { error } from "console";
 import Response from "../services/models/response";
-import ProjectModel from "../services/models/project.model";
+import EventModel, { EventData, ExtendedEventData, IEventData, IExtendedEventData } from "../services/models/event.model";
+import stringExtension from "../extensions/string.extension";
 
-export interface ProjectState {
+export interface EventState extends IExtendedEventData {
     readonly submitting: boolean;
     readonly loading: boolean;
     readonly loaded: boolean;
+    readonly DateString: string;
+    readonly Date: Date;
     readonly Name: string;
+    readonly Description: string;
+    readonly RepeatType: number;
+    readonly RepeatValue: number;
+    readonly Birthday: boolean;
+    readonly Holiday: boolean;
     readonly error: string | null;
     readonly errors: { [key: string]: string };
 }
 
-const initialState: ProjectState = {
+const initialState: EventState = {
     loading: true, // prevents reinitialization of fields
     loaded: false,
     submitting: false,
-    Name: "",
+    ...(new ExtendedEventData() as IExtendedEventData),
     error: null,
     errors: {},
 };
 
-export const GETTINGPROJECT = "GettingProject";
-export const gettingProjectAction = () =>
+export const GETTINGEVENT = "GettingEvent";
+export const gettingEventAction = () =>
     ({
-        type: GETTINGPROJECT,
+        type: GETTINGEVENT,
     }) as const;
 
-export const GOTPROJECT = "GotProject";
-export const gotProjectAction = (response: Response<ProjectModel>) =>
+export const GOTEVENT = "GotEvent";
+export const gotEventAction = (response: Response<EventModel>) =>
     ({
-        type: GOTPROJECT,
-        Name: response.data?.Name ?? initialState.Name,
+        type: GOTEVENT,
+        ...new ExtendedEventData(response.data),
         error: response.error ?? initialState.error,
         errors: response.errors ?? initialState.errors,
     }) as const;
 
-export const CREATEPROJECT = "CreateProject";
-export const createProjectAction = () =>
+export const CREATEEVENT = "CreateEvent";
+export const createEventAction = (date: Date) =>
     ({
-        type: CREATEPROJECT,
-        Name: initialState.Name,
+        type: CREATEEVENT,
+        ...ExtendedEventData.fromDate(date),
         error: initialState.error,
         errors: initialState.errors,
     }) as const;
 
-export const SUBMITTINGPROJECT = "SubmittingProject";
-export const submittingProjectAction = () =>
+export const SUBMITTINGEVENT = "SubmittingEvent";
+export const submittingEventAction = () =>
     ({
-        type: SUBMITTINGPROJECT,
+        type: SUBMITTINGEVENT,
         error: initialState.error,
         errors: initialState.errors,
     }) as const;
 
-export const SUBMITTEDPROJECT = "SubmittedProject";
-export const submittedProjectAction = (response: Response<ProjectModel>) =>
+export const SUBMITTEDEVENT = "SubmittedEvent";
+export const submittedEventAction = (response: Response<EventModel>) =>
     ({
-        type: SUBMITTEDPROJECT,
+        type: SUBMITTEDEVENT,
         error: response.error ?? initialState.error,
         errors: response.errors ?? initialState.errors,
     }) as const;
 
-export const CLOSEPROJECT = "CloseProject";
-export const closeProjectAction = () =>
+export const CLOSEEVENT = "CloseEvent";
+export const closeEventAction = () =>
     ({
-        type: CLOSEPROJECT,
-        Name: initialState.Name,
+        type: CLOSEEVENT,
+        ...new ExtendedEventData(),
         error: initialState.error,
         errors: initialState.errors,
     }) as const;
 
-type ProjectActions =
-    | ReturnType<typeof gettingProjectAction>
-    | ReturnType<typeof gotProjectAction>
-    | ReturnType<typeof createProjectAction>
-    | ReturnType<typeof submittingProjectAction>
-    | ReturnType<typeof submittedProjectAction>
-    | ReturnType<typeof closeProjectAction>;
+type EventActions =
+    | ReturnType<typeof gettingEventAction>
+    | ReturnType<typeof gotEventAction>
+    | ReturnType<typeof createEventAction>
+    | ReturnType<typeof submittingEventAction>
+    | ReturnType<typeof submittedEventAction>
+    | ReturnType<typeof closeEventAction>;
 
-export const projectReducer: any = (state: ProjectState = initialState, action: ProjectActions) => {
+export const eventReducer: any = (state: EventState = initialState, action: EventActions) => {
     switch (action.type) {
-        case GETTINGPROJECT:
+        case GETTINGEVENT:
             return {
                 ...state,
                 ...action,
                 loading: true,
                 loaded: false,
             };
-        case GOTPROJECT:
+        case GOTEVENT:
             return {
                 ...state,
                 ...action,
                 loading: false,
                 loaded: action.error ? false : true,
             };
-        case CREATEPROJECT:
+        case CREATEEVENT:
             return {
                 ...state,
                 ...action,
                 loading: false,
                 loaded: true,
             };
-        case SUBMITTINGPROJECT:
+        case SUBMITTINGEVENT:
             return {
                 ...state,
                 ...action,
                 submitting: true,
             };
-        case SUBMITTEDPROJECT:
+        case SUBMITTEDEVENT:
             return {
                 ...state,
                 ...action,
                 submitting: false,
             };
-        case CLOSEPROJECT:
+        case CLOSEEVENT:
             return {
                 ...state,
                 ...action,

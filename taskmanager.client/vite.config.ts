@@ -50,6 +50,10 @@ export default defineConfig({
     },
     server: {
         proxy: {
+            '^/settings.js' : {
+                target: target,
+                secure: false
+            },
             '^/api': {
                 target,
                 secure: false

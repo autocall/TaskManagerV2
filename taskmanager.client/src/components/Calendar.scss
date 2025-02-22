@@ -1,0 +1,42 @@
+.cal-month,
+.cal-days,
+.cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    align-items: center;
+}
+.cal-month-name {
+    grid-column-start: 2;
+    grid-column-end: 7;
+    text-align: center;
+}
+.cal-weekday,
+.btn.cal-btn {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    height: 2rem;
+    padding: 0;
+    min-width: auto;
+}
+
+.placeholder.cal-placeholder {
+    display: block;
+    margin: 1.0rem 0;
+}
+.placeholder.cal-placeholder:last-child, .placeholder.cal-placeholder:first-child {
+    margin: 0.5rem 0;
+}
+.cal-btn:hover:not(.btn-success),
+.cal-btn:focus:not(.btn-success) {
+    background-color: var(--bs-secondary-bg);
+}
+.cal-btn {
+    font-weight: 500;
+    color: var(--bs-emphasis-color);
+}
+.secondary.cal-btn {
+    border: 0;
+    opacity: 0.5;
+}

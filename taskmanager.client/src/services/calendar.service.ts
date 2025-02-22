@@ -1,6 +1,6 @@
 import { testContainer } from "../helpers/test.helper";
 import calendarRepository from "../repositories/calendar.rep";
-import CalendarDayModel from "./models/calendar.day.model";
+import CalendarModel from "./models/calendar.day.models";
 import Response from "./models/response";
 
 export default class calendarService {
@@ -10,15 +10,15 @@ export default class calendarService {
         this.rep = new calendarRepository(test);
     }
 
-    public getCurrent(): Promise<Response<CalendarDayModel[]>> {
+    public getCurrent(): Promise<Response<CalendarModel>> {
         return this.rep
             .getCurrent()
             .then((response) => {
-                let models = (response.data as any[]).map((e: any) => new CalendarDayModel(e));
-                return Response.success<CalendarDayModel[]>(models);
+                let model = new CalendarModel(response.data);
+                return Response.success<CalendarModel>(model);
             })
             .catch((exception) => {
-                return Response.fail<CalendarDayModel[]>(exception);
+                return Response.fail<CalendarModel>(exception);
             });
     }
 }

@@ -24,8 +24,8 @@ export const GOTPROJECTS = "GotProjects";
 export const gotProjectsAction = (response: Response<ProjectModel[]>) =>
     ({
         type: GOTPROJECTS,
-        projects: response.data,
-        error: response.error,
+        projects: response.data ?? initialState.projects,
+        error: response.error ?? initialState.error,
     }) as const;
 
 export const DELETINGPROJECT = "DeletingProject";
@@ -38,8 +38,8 @@ export const DELETEDPROJECT = "DeletedProject";
 export const deletedProjectAction = (response: Response<any>) =>
     ({
         type: DELETEDPROJECT,
-        projects: response.data,
-        error: response.error,
+        projects: response.data ?? initialState.projects,
+        error: response.error ?? initialState.error,
     }) as const;
 
 type ProjectsActions =
@@ -53,28 +53,26 @@ export const projectsReducer: any = (state: ProjectsState = initialState, action
         case GETTINGPROJECTS:
             return {
                 ...state,
+                ...action,
                 loading: true,
-                projects: initialState.projects,
-                error: initialState.error,
             };
         case GOTPROJECTS:
             return {
                 ...state,
+                ...action,
                 loading: false,
-                projects: action.projects,
-                error: action.error,
             };
         case DELETINGPROJECT:
             return {
                 ...state,
+                ...action,
                 loading: true,
-                error: initialState.error,
             };
         case DELETEDPROJECT:
             return {
                 ...state,
+                ...action,
                 loading: false,
-                error: action.error,
             };
         default:
             return state;

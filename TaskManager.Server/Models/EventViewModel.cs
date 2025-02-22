@@ -1,7 +1,11 @@
-﻿namespace TaskManager.Logic.Dtos;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class ProjectDto : BaseDto {
+namespace TaskManager.Server.Models;
+
+public class CreateEventViewModel {
+    [Required]
     public DateOnly Date { get; set; }
+    [Required, MinLength(2)]
     public string Name { get; set; }
     public string Description { get; set; }
 
@@ -12,22 +16,12 @@ public class ProjectDto : BaseDto {
     public bool Holiday { get; set; }
 }
 
-public class CreateProjectDto {
-    public DateOnly Date { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-
-    public int RepeatType { get; set; }
-    public int RepeatValue { get; set; }
-
-    public bool Birthday { get; set; }
-    public bool Holiday { get; set; }
-}
-
-public class UpdateProjectDto {
+public class UpdateEventViewModel {
+    [Required]
     public int Id { get; set; }
-
+    [Required]
     public DateOnly Date { get; set; }
+    [Required, MinLength(2)]
     public string Name { get; set; }
     public string Description { get; set; }
 

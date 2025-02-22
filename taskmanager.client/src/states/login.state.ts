@@ -26,8 +26,8 @@ export const SUBMITTEDLOGIN = "SubmittedLogin";
 export const submittedLoginAction = (response: Response<any>) =>
     ({
         type: SUBMITTEDLOGIN,
-        error: response.error,
-        errors: response.errors,
+        error: response.error ?? initialState.error,
+        errors: response.errors ?? initialState.errors,
     }) as const;
 
 type LoginActions = ReturnType<typeof submittingLoginAction> | ReturnType<typeof submittedLoginAction>;
@@ -37,16 +37,14 @@ export const loginReducer: any = (state: LoginState = initialState, action: Logi
         case SUBMITTINGLOGIN:
             return {
                 ...state,
+                ...action,
                 submitting: true,
-                error: initialState.error,
-                errors: initialState.errors,
             };
         case SUBMITTEDLOGIN:
             return {
                 ...state,
+                ...action,
                 submitting: false,
-                error: action.error,
-                errors: action.errors ?? initialState.errors,
             };
         default:
             return state;

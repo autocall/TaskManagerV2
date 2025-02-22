@@ -1,20 +1,23 @@
-import { Button, Card, Col, Container, Dropdown, Row, Spinner } from "react-bootstrap";
+import { Card, Container, Placeholder } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import CalendarDayModel from "../services/models/calendar.day.model";
-import { useState } from "react";
 import useAsyncEffect from "use-async-effect";
 import { AppState } from "../states/store";
-import calendarService from "../services/Calendar.service";
+import calendarService from "../services/calendar.service";
 import { testHelper } from "../helpers/test.helper";
 import { useLocation } from "react-router-dom";
 import { gettingCurrentCalendarAction, gotCurrentCalendarAction } from "../states/calendar.state";
+import "./Calendar.scss";
+import "../../settings";
+import { useState } from "react";
+import EventModel from "../services/models/event.model";
+import EventModal from "./Event.Modal";
 
 const Calendar: React.FC = () => {
     const { search } = useLocation();
     let dispatch = useDispatch();
     let state = useSelector((s: AppState) => s.calendarState);
-    const [modalData, setModalData] = useState<CalendarDayModel | null>(null);
+    const [eventModalData, setEventModalData] = useState<EventModel | null>(null);
 
     useAsyncEffect(async () => {
         await load();
@@ -27,42 +30,73 @@ const Calendar: React.FC = () => {
         dispatch(gotCurrentCalendarAction(response));
     };
 
+    const handleManageDay = (day: any) => async () => {
+        handleAddEvent(day.Date);
+    };
+
+    const handleAddEvent = (date: Date) => {
+        setEventModalData(new EventModel({ Date: date }));
+    };
+
+    const handleEditEvent = () => {};
+
+    const handleClose = async (reload: boolean) => {
+        setEventModalData(null);
+        if (reload) {
+            await load();
+        }
+    };
+
     return (
         <Container fluid>
-            {state.loading ? (
-                <Spinner animation="border" />
-            ) : (
-                // process loaded
-                <Card>
-                    <Card.Body>
-                        <Container fluid>
-                            <Row>
-                                <Col>
-                                    <div className="cal-month">
-                                        <strong className="cal-month-name">June</strong>
-                                    </div>
-                                    <div className="cal-weekdays text-body-secondary">
-                                        <div className="cal-weekday">Mon</div>
-                                        <div className="cal-weekday">Tue</div>
-                                        <div className="cal-weekday">Wed</div>
-                                        <div className="cal-weekday">Thu</div>
-                                        <div className="cal-weekday">Fri</div>
-                                        <div className="cal-weekday">Sat</div>
-                                        <div className="cal-weekday">Sun</div>
-                                    </div>
-                                    <div className="cal-days">
-                                        {state.days?.map((day) => (
-                                            <button key={day.Date} className="btn cal-btn" type="button">
-                                                {day.Day}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Card.Body>
-                </Card>
-            )}
+            <EventModal modalData={eventModalData} onClose={handleClose} />
+            <Card>
+                <Card.Body>
+                    {/* Month */}
+                    <div className="cal-month">
+                        <strong className="cal-month-name">
+                            {state.loading ? (
+                                <Placeholder animation="glow">
+                                    <Placeholder xs={6} />
+                                </Placeholder>
+                            ) : (
+                                state.calendar?.MonthName
+                            )}
+                        </strong>
+                    </div>
+                    {/* Weekdays */}
+                    <div className="cal-weekdays text-body-secondary">
+                        {state.calendar?.WeekNames.map((w, i) => (
+                            <span key={i} className="cal-weekday">
+                                {w}
+                            </span>
+                        ))}
+                    </div>
+                    {/* Days */}
+                    {state.loading ? (
+                        <Placeholder animation="glow">
+                            {Array.from({ length: window.settings.CurrentCalendarWeeks }, (_, w) => (
+                                <Placeholder className="cal-placeholder" key={w} />
+                            ))}
+                        </Placeholder>
+                    ) : (
+                        <div className="cal-days">
+                            {state.calendar?.Days.map((day) => (
+                                <button
+                                    key={day.Date.toISOString()}
+                                    className={
+                                        "btn cal-btn" +
+                                        (state.calendar?.Month != day.Month ? " secondary" : "") +
+                                        (day.IsCurrentDay ? " btn-success" : "")
+                                    }
+                                    onClick={handleManageDay(day)}>
+                                    {day.Day}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </Card.Body>
+            </Card>
         </Container>
     );
 };

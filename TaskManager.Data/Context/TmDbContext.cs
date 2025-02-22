@@ -25,5 +25,6 @@ public class TmDbContext : IdentityDbContext<TmUser, TmRole, int, TmUserClaim, T
         modelBuilder.Entity<TmUserToken>().ToTable("IdentityUserToken");
 
         modelBuilder.ApplyConfiguration(new ProjectMap());
+        modelBuilder.ApplyConfiguration(new EventMap());
     }
 }

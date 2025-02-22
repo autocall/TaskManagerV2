@@ -30,8 +30,8 @@ export const SUBMITTEDSIGNUP = "SubmittedSignUp";
 export const submittedSignUpAction = (response: Response<any>) =>
     ({
         type: SUBMITTEDSIGNUP,
-        error: response.error,
-        errors: response.errors,
+        error: response.error ?? initialState.error,
+        errors: response.errors ?? initialState.errors,
     }) as const;
 
 type SignUpActions = ReturnType<typeof submittingSignUpAction> | ReturnType<typeof submittedSignUpAction>;
@@ -41,16 +41,14 @@ export const signUpReducer: any = (state: SignUpState = initialState, action: Si
         case SUBMITTINGSIGNUP:
             return {
                 ...state,
+                ...action,
                 submitting: true,
-                error: initialState.error,
-                errors: initialState.errors,
             };
         case SUBMITTEDSIGNUP:
             return {
                 ...state,
+                ...action,
                 submitting: false,
-                error: action.error,
-                errors: action.errors ?? initialState.errors,
             };
         default:
             return state;

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskManager.Data.Context;
 
@@ -11,9 +12,11 @@ using TaskManager.Data.Context;
 namespace TaskManager.Data.Migrations
 {
     [DbContext(typeof(TmDbContext))]
-    partial class TmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250221112304_CreateTable_Event")]
+    partial class CreateTable_Event
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,10 +60,10 @@ namespace TaskManager.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("varchar(64)");
 
-                    b.Property<byte>("RepeatType")
+                    b.Property<byte?>("RepeatType")
                         .HasColumnType("tinyint");
 
-                    b.Property<short>("RepeatValue")
+                    b.Property<short?>("RepeatValue")
                         .HasColumnType("smallint");
 
                     b.HasKey("Id");

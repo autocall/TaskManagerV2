@@ -1,11 +1,11 @@
 import { error } from "console";
 import Response from "../services/models/response";
-import CalendarDayModel from "../services/models/calendar.day.model";
+import CalendarModel from "../services/models/calendar.day.models";
 
 export interface CalendarState {
     readonly loading: boolean;
     readonly loaded: boolean;
-    readonly days: CalendarDayModel[] | null;
+    readonly calendar: CalendarModel | null;
     readonly error: string | null;
     readonly errors: { [key: string]: string };
 }
@@ -13,7 +13,7 @@ export interface CalendarState {
 const initialState: CalendarState = {
     loading: false,
     loaded: false,
-    days: [],
+    calendar: null,
     error: null,
     errors: {},
 };
@@ -25,10 +25,10 @@ export const gettingCurrentCalendarAction = () =>
     }) as const;
 
 export const GOTCURRENTCALENDAR = "GotCurrentCalendar";
-export const gotCurrentCalendarAction = (response: Response<CalendarDayModel[]>) =>
+export const gotCurrentCalendarAction = (response: Response<CalendarModel>) =>
     ({
         type: GOTCURRENTCALENDAR,
-        days: response.data,
+        calendar: response.data,
         error: response.error,
     }) as const;
 
@@ -42,7 +42,7 @@ export const calendarReducer: any = (state: CalendarState = initialState, action
             return {
                 ...state,
                 loading: true,
-                days: initialState.days,
+                calendar: initialState.calendar,
                 error: initialState.error,
             };
         case GOTCURRENTCALENDAR:
@@ -50,7 +50,7 @@ export const calendarReducer: any = (state: CalendarState = initialState, action
                 ...state,
                 loading: false,
                 loaded: action.error ? false : true,
-                days: action.days,
+                calendar: action.calendar,
                 error: action.error,
             };
         default:

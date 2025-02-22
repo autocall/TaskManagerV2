@@ -30,8 +30,10 @@ public class ApiCalendarController : BaseController {
 
     [HttpGet]
     public async Task<ActionResult> GetCurrent() {
-        await Task.Delay(TimeSpan.FromSeconds(0.3));
-        var dtos = await this.Service.GetCurrentAsync();
-        return JsonSuccess(dtos);
+#if DEBUG
+        await Task.Delay(TimeSpan.FromSeconds(0.5));
+#endif
+        var dto = await this.Service.GetCurrentAsync();
+        return JsonSuccess(dto);
     }
 }

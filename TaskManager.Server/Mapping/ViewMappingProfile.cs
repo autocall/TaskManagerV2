@@ -12,5 +12,8 @@ public class ViewMappingProfile : Profile {
         CreateMap<ModelStateDictionary, Dictionary<string, string>>().ConvertUsing<ModelState2ErrorsConverter>();
         CreateMap<CreateProjectViewModel, CreateProjectDto>();
         CreateMap<UpdateProjectViewModel, UpdateProjectDto>();
+
+        CreateMap<CreateEventViewModel, CreateEventDto>();
+        CreateMap<UpdateEventViewModel, UpdateEventDto>();
     }
 }

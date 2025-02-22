@@ -22,6 +22,7 @@
     <Compile Include="..\TaskManager.Common\Settings.Test.cs" Link="Settings.Test.cs" />
     <Compile Include="..\TaskManager.Logic\Dtos\Base\BaseDto.cs" Link="Dtos\Base\BaseDto.cs" />
     <Compile Include="..\TaskManager.Logic\Dtos\CalendarDtos.cs" Link="Dtos\CalendarDtos.cs" />
+    <Compile Include="..\TaskManager.Logic\Dtos\EventDtos.cs" Link="Dtos\EventDtos.cs" />
     <Compile Include="..\TaskManager.Logic\Dtos\ProjectDtos.cs" Link="Dtos\ProjectDtos.cs" />
     <Compile Include="..\TaskManager.Server\Models\AccountViewModel.cs" Link="Models\AccountViewModel.cs" />
     <Compile Include="..\TaskManager.Server\Models\ProjectViewModel.cs" Link="Models\ProjectViewModel.cs" />

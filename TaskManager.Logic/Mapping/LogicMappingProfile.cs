@@ -9,9 +9,13 @@ public class LogicMappingProfile : Profile {
         CreateMap<TmUserDto, TmUser>().ReverseMap();
         CreateMap<TmRoleDto, TmRole>().ReverseMap();
         CreateMap<ProjectDto, Project>().ReverseMap();
+        CreateMap<EventDto, Event>().ReverseMap();
 
         CreateMap<CreateProjectDto, Project>();
         CreateMap<UpdateProjectDto, Project>();
+
+        CreateMap<CreateEventDto, Event>();
+        CreateMap<UpdateEventDto, Event>();
 
     }
 }

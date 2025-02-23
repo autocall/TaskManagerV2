@@ -75,23 +75,37 @@ export class EventData implements IEventData {
             this.Holiday = data.Holiday;
         }
     }
+
+    static defaultWithDate(date: Date): EventData {
+        let data = new EventData();
+        data.Date = date;
+        return data;
+    }
 }
 
 export class ExtendedEventData extends EventData implements IExtendedEventData {
-    get DateString(): string {
-        return stringExtension.dateToString(this.Date);
-    }
-    set DateString(value: string) {
-        this.Date = new Date(value);
-    }
+    DateString: string;
 
     constructor(data: any = null) {
         super(data);
+        if (data) {
+            this.DateString = data.DateString;
+        }
+    }
+}
+
+export class EventDataFactory {
+    /// Adds a DateString from Date
+    static toExtend(data: IEventData): IExtendedEventData {
+        let event = new ExtendedEventData(data);
+        event.DateString = stringExtension.dateToString(event.Date);
+        return event;
     }
 
-    static fromDate(date: Date): ExtendedEventData {
-        let data = new ExtendedEventData();
-        data.DateString = stringExtension.dateToString(date);
-        return data;
+    /// Removes DateString and converts to Date
+    static fromExtend(data: IExtendedEventData) : IEventData {
+        let event = new EventData(data);
+        event.Date = new Date(data.DateString);
+        return event;
     }
 }

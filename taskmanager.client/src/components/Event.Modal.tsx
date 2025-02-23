@@ -1,5 +1,5 @@
 import { Button, Modal, Spinner } from "react-bootstrap";
-import EventModel, { EventData } from "../services/models/event.model";
+import EventModel, { EventData, EventDataFactory, ExtendedEventData } from "../services/models/event.model";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import Form from "react-bootstrap/Form";
@@ -38,7 +38,7 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                 let response = await service.get(modalData.Id);
                 dispatch(gotEventAction(response));
             } else {
-                dispatch(createEventAction(modalData.Date));
+                dispatch(createEventAction(modalData));
             }
         }
     }, [modalData, dispatch]);

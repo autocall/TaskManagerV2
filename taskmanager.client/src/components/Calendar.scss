@@ -23,9 +23,10 @@
 
 .placeholder.cal-placeholder {
     display: block;
-    margin: 1.0rem 0;
+    margin: 1rem 0;
 }
-.placeholder.cal-placeholder:last-child, .placeholder.cal-placeholder:first-child {
+.placeholder.cal-placeholder:last-child,
+.placeholder.cal-placeholder:first-child {
     margin: 0.5rem 0;
 }
 .cal-btn:hover:not(.btn-success),
@@ -39,4 +40,17 @@
 .secondary.cal-btn {
     border: 0;
     opacity: 0.5;
+}
+
+.today.cal-btn {
+    // blue color
+    --bs-btn-border-color: #0d6efd;
+    --bs-btn-hover-border-color: #0d6efd;
+    --bs-btn-active-border-color: #0d6efd;
+    --bs-btn-disabled-border-color: #0d6efd;
+    // grey color
+    // --bs-btn-border-color: #6c757d;
+    // --bs-btn-hover-border-color: #6c757d;
+    // --bs-btn-active-border-color: #6c757d;
+    // --bs-btn-disabled-border-color: #6c757d;
 }

@@ -10,7 +10,7 @@ import { gettingCurrentCalendarAction, gotCurrentCalendarAction } from "../state
 import "./Calendar.scss";
 import "../../settings";
 import { useState } from "react";
-import EventModel from "../services/models/event.model";
+import EventModel, { EventData } from "../services/models/event.model";
 import EventModal from "./Event.Modal";
 
 const Calendar: React.FC = () => {
@@ -35,7 +35,7 @@ const Calendar: React.FC = () => {
     };
 
     const handleAddEvent = (date: Date) => {
-        setEventModalData(new EventModel({ Date: date }));
+        setEventModalData(new EventModel(EventData.defaultWithDate(date)));
     };
 
     const handleEditEvent = () => {};
@@ -87,7 +87,10 @@ const Calendar: React.FC = () => {
                                     className={
                                         "btn cal-btn" +
                                         (state.calendar?.Month != day.Month ? " secondary" : "") +
-                                        (day.IsCurrentDay ? " btn-success" : "")
+                                        (day.IsCurrentDay ? " today" : "") + 
+                                        (day.Events.find(e => e.Birthday) ? " btn-success" : "") +
+                                        (day.Events.find(e => e.Holiday) ? " btn-info" : "") +
+                                        (day.Events.find(e => !e.Holiday && !e.Birthday) ? " btn-primary" : "")
                                     }
                                     onClick={handleManageDay(day)}>
                                     {day.Day}

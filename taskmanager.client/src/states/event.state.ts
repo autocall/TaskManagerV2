@@ -1,5 +1,5 @@
 import Response from "../services/models/response";
-import EventModel, { EventData, ExtendedEventData, IEventData, IExtendedEventData } from "../services/models/event.model";
+import EventModel, { EventData, EventDataFactory, ExtendedEventData, IEventData, IExtendedEventData } from "../services/models/event.model";
 import stringExtension from "../extensions/string.extension";
 
 export interface EventState extends IExtendedEventData {
@@ -43,10 +43,10 @@ export const gotEventAction = (response: Response<EventModel>) =>
     }) as const;
 
 export const CREATEEVENT = "CreateEvent";
-export const createEventAction = (date: Date) =>
+export const createEventAction = (data: IEventData) =>
     ({
         type: CREATEEVENT,
-        ...ExtendedEventData.fromDate(date),
+        ...EventDataFactory.toExtend(data),
         error: initialState.error,
         errors: initialState.errors,
     }) as const;

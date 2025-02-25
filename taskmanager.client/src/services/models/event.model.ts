@@ -1,15 +1,16 @@
+import { EventRepeatEnum } from "../../enums/event.repeat.enum";
+import { EventTypeEnum } from "../../enums/event.type.enum";
 import stringExtension from "../../extensions/string.extension";
 import BaseModel from "./base.model";
 
 export default class EventModel extends BaseModel implements IEventData {
-    Date: Date;
+    Date: string;
     Name: string;
     Description: string;
 
-    RepeatType: number;
+    RepeatType: EventRepeatEnum;
     RepeatValue: number;
-    Birthday: boolean;
-    Holiday: boolean;
+    Type: EventTypeEnum;
 
     constructor(data?: any) {
         super(data);
@@ -21,48 +22,42 @@ export default class EventModel extends BaseModel implements IEventData {
             this.RepeatType = data.RepeatType;
             this.RepeatValue = data.RepeatValue;
 
-            this.Birthday = data.Birthday;
-            this.Holiday = data.Holiday;
+            this.Type = data.Type;
         }
     }
 }
 
 export interface IEventData {
-    Date: Date;
+    Date: string;
     Name: string;
     Description: string;
 
-    RepeatType: number;
+    RepeatType: EventRepeatEnum;
     RepeatValue: number;
-    Birthday: boolean;
-    Holiday: boolean;
-}
 
-export interface IExtendedEventData extends IEventData {
-    DateString: string;
+    Type: EventTypeEnum;
 }
 
 export class EventData implements IEventData {
-    Date: Date;
+    Date: string;
     Name: string;
     Description: string;
 
-    RepeatType: number;
+    RepeatType: EventRepeatEnum;
     RepeatValue: number;
-    Birthday: boolean;
-    Holiday: boolean;
+
+    Type: EventTypeEnum;
 
     constructor(data: any = null) {
         if (!data) {
-            this.Date = new Date();
+            this.Date = stringExtension.dateToString(new Date());
             this.Name = "";
             this.Description = "";
 
-            this.RepeatType = 0;
+            this.RepeatType = EventRepeatEnum.Default;
             this.RepeatValue = 0;
 
-            this.Birthday = false;
-            this.Holiday = false;
+            this.Type = EventTypeEnum.Default;
         } else {
             this.Date = data.Date;
             this.Name = data.Name;
@@ -71,41 +66,13 @@ export class EventData implements IEventData {
             this.RepeatType = data.RepeatType;
             this.RepeatValue = data.RepeatValue;
 
-            this.Birthday = data.Birthday;
-            this.Holiday = data.Holiday;
+            this.Type = data.Type;
         }
     }
 
     static defaultWithDate(date: Date): EventData {
         let data = new EventData();
-        data.Date = date;
+        data.Date = stringExtension.dateToString(date);
         return data;
-    }
-}
-
-export class ExtendedEventData extends EventData implements IExtendedEventData {
-    DateString: string;
-
-    constructor(data: any = null) {
-        super(data);
-        if (data) {
-            this.DateString = data.DateString;
-        }
-    }
-}
-
-export class EventDataFactory {
-    /// Adds a DateString from Date
-    static toExtend(data: IEventData): IExtendedEventData {
-        let event = new ExtendedEventData(data);
-        event.DateString = stringExtension.dateToString(event.Date);
-        return event;
-    }
-
-    /// Removes DateString and converts to Date
-    static fromExtend(data: IExtendedEventData) : IEventData {
-        let event = new EventData(data);
-        event.Date = new Date(data.DateString);
-        return event;
     }
 }

@@ -1,7 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using TaskManager.Common;
+using TaskManager.Common.Extensions;
 using TaskManager.Data;
 using TaskManager.Data.Entities;
 using TaskManager.Logic.Dtos;
+using TaskManager.Logic.Enums;
 
 namespace TaskManager.Logic.Services;
 public class EventService : BaseService {
@@ -15,8 +19,66 @@ public class EventService : BaseService {
     }
 
     public async Task<List<EventDto>> GetRangeAsync(DateOnly startDate, DateOnly endDate) {
-        var models = await Rep.GetAll(false).Where(x => x.Date >= startDate && x.Date <= endDate).ToListAsync();
-        return Mapper.Map<List<EventDto>>(models);
+        var models = await Rep.GetAll(false).ToListAsync();
+        var dtos = Mapper.Map<List<EventDto>>(models);
+        return this.GenerateRange(dtos, startDate, endDate).ToList();
+    }
+
+    private IEnumerable<EventDto> GenerateRange(List<EventDto> events, DateOnly startDate, DateOnly endDate) {
+        foreach (var e in events) {
+            var tm = e.Clone();
+            if (e.RepeatType != EventRepeatEnum.Default && e.RepeatValue <= 0) {
+                var error = "Repeat value should be greater than 0";
+                e.Clone();
+                e.Description = error;
+                _l.e(error);
+                yield return e;
+                continue;
+            }
+            switch (e.RepeatType) {
+                case EventRepeatEnum.Default:
+                    if (e.Date >= startDate && e.Date <= endDate) {
+                        yield return e;
+                    }
+                    break;
+                case EventRepeatEnum.Days:
+                    for (var date = e.Date; date <= endDate; date = date.AddDays(e.RepeatValue)) {
+                        if (date >= startDate) {
+                            var clone = e.Clone();
+                            clone.Date = date;
+                            yield return clone;
+                        }
+                    }
+                    break;
+                case EventRepeatEnum.Weeks:
+                    for (var date = e.Date; date <= endDate; date = date.AddDays(e.RepeatValue * 7)) {
+                        if (date >= startDate) {
+                            var clone = e.Clone();
+                            clone.Date = date;
+                            yield return clone;
+                        }
+                    }
+                    break;
+                case EventRepeatEnum.Months:
+                    for (var date = e.Date; date <= endDate; date = date.AddMonths(e.RepeatValue)) {
+                        if (date >= startDate) {
+                            var clone = e.Clone();
+                            clone.Date = date;
+                            yield return clone;
+                        }
+                    }
+                    break;
+                case EventRepeatEnum.Years:
+                    for (var date = e.Date; date <= endDate; date = date.AddYears(e.RepeatValue)) {
+                        if (date >= startDate) {
+                            var clone = e.Clone();
+                            clone.Date = date;
+                            yield return clone;
+                        }
+                    }
+                    break;
+            }
+        }
     }
 
     public async Task<EventDto> GetAsync(int id) {

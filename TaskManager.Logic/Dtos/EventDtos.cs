@@ -1,39 +1,54 @@
-﻿namespace TaskManager.Logic.Dtos;
+﻿using TaskManager.Common;
+using TaskManager.Logic.Enums;
 
-public class EventDto : BaseDto {
+namespace TaskManager.Logic.Dtos;
+
+public interface IEnumEventDtoMap {
+    public EventRepeatEnum RepeatType { get; set; }
+    public EventTypeEnum Type { get; set; }
+}
+
+public class EventDto : BaseDto, IEnumEventDtoMap, IDeepCloneable<EventDto> {
     public DateOnly Date { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
 
-    public byte RepeatType { get; set; }
+    public EventRepeatEnum RepeatType { get; set; }
     public short RepeatValue { get; set; }
 
-    public bool Birthday { get; set; }
-    public bool Holiday { get; set; }
+    public EventTypeEnum Type { get; set; }
+
+    public override EventDto Clone() {
+        var dto = (EventDto)base.Clone();
+        dto.Date = Date;
+        dto.Name = Name;
+        dto.Description = Description;
+        dto.RepeatType = RepeatType;
+        dto.RepeatValue = RepeatValue;
+        return dto;
+    }
 }
 
-public class CreateEventDto {
+public class CreateEventDto : IEnumEventDtoMap {
     public DateOnly Date { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
 
-    public byte RepeatType { get; set; }
+    public EventRepeatEnum RepeatType { get; set; }
     public short RepeatValue { get; set; }
 
-    public bool Birthday { get; set; }
-    public bool Holiday { get; set; }
+    public EventTypeEnum Type { get; set; }
 }
 
-public class UpdateEventDto {
+public class UpdateEventDto : IEnumEventDtoMap {
     public int Id { get; set; }
 
     public DateOnly Date { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
 
-    public byte RepeatType { get; set; }
+    public EventRepeatEnum RepeatType { get; set; }
     public short RepeatValue { get; set; }
 
-    public bool Birthday { get; set; }
-    public bool Holiday { get; set; }
+    public EventTypeEnum Type { get; set; }
 }

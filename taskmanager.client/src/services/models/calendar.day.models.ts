@@ -1,4 +1,6 @@
 import moment from "moment";
+import { EventTypeEnum } from "../../enums/event.type.enum";
+import calendarService from "../calendar.service";
 
 export class CalendarDayModel {
     Date: Date;
@@ -29,8 +31,7 @@ export class CalendarEventModel {
     Date: Date;
     RepeatType: number;
     RepeatValue: number;
-    Birthday: boolean;
-    Holiday: boolean;
+    Type: EventTypeEnum;
 
     constructor(data: any) {
         this.Id = data.Id;
@@ -39,8 +40,7 @@ export class CalendarEventModel {
         this.Date = new Date(data.Date);
         this.RepeatType = data.RepeatType;
         this.RepeatValue = data.RepeatValue;
-        this.Birthday = data.Birthday;
-        this.Holiday = data.Holiday;
+        this.Type = data.Type;
     }
 }
 
@@ -56,6 +56,7 @@ export default class CalendarModel {
         this.Month = data.Month;
         this.Year = data.Year;
 
+        let firstDayOfWeek = calendarService.getFirstDayOfWeek();
         this.MonthName = moment()
             .month(this.Month - 1)
             .format("MMMM");
@@ -63,8 +64,8 @@ export default class CalendarModel {
             { length: 7 },
             (_, w) =>
                 moment()
-                    .weekday(w + 1)
-                    .format("dd")[0],
+                    .weekday(w + firstDayOfWeek)
+                    .format("dd"),
         );
     }
 }

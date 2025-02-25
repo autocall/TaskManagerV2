@@ -1,19 +1,18 @@
 import Response from "../services/models/response";
-import EventModel, { EventData, EventDataFactory, ExtendedEventData, IEventData, IExtendedEventData } from "../services/models/event.model";
-import stringExtension from "../extensions/string.extension";
+import EventModel, { EventData, IEventData } from "../services/models/event.model";
+import { EventTypeEnum } from "../enums/event.type.enum";
+import { EventRepeatEnum } from "../enums/event.repeat.enum";
 
-export interface EventState extends IExtendedEventData {
+export interface EventState extends IEventData {
     readonly submitting: boolean;
     readonly loading: boolean;
     readonly loaded: boolean;
-    readonly DateString: string;
-    readonly Date: Date;
+    readonly Date: string;
     readonly Name: string;
     readonly Description: string;
-    readonly RepeatType: number;
+    readonly RepeatType: EventRepeatEnum;
     readonly RepeatValue: number;
-    readonly Birthday: boolean;
-    readonly Holiday: boolean;
+    readonly Type: EventTypeEnum;
     readonly error: string | null;
     readonly errors: { [key: string]: string };
 }
@@ -22,7 +21,7 @@ const initialState: EventState = {
     loading: true, // prevents reinitialization of fields
     loaded: false,
     submitting: false,
-    ...(new ExtendedEventData() as IExtendedEventData),
+    ...new EventData(),
     error: null,
     errors: {},
 };
@@ -37,7 +36,7 @@ export const GOTEVENT = "GotEvent";
 export const gotEventAction = (response: Response<EventModel>) =>
     ({
         type: GOTEVENT,
-        ...new ExtendedEventData(response.data),
+        ...new EventData(response.data),
         error: response.error ?? initialState.error,
         errors: response.errors ?? initialState.errors,
     }) as const;
@@ -46,7 +45,7 @@ export const CREATEEVENT = "CreateEvent";
 export const createEventAction = (data: IEventData) =>
     ({
         type: CREATEEVENT,
-        ...EventDataFactory.toExtend(data),
+        ...data,
         error: initialState.error,
         errors: initialState.errors,
     }) as const;
@@ -71,7 +70,7 @@ export const CLOSEEVENT = "CloseEvent";
 export const closeEventAction = () =>
     ({
         type: CLOSEEVENT,
-        ...new ExtendedEventData(),
+        ...new EventData(),
         error: initialState.error,
         errors: initialState.errors,
     }) as const;

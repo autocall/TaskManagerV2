@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TaskManager.Logic.Enums;
 
 namespace TaskManager.Server.Models;
 
@@ -9,11 +10,10 @@ public class CreateEventViewModel {
     public string Name { get; set; }
     public string Description { get; set; }
 
-    public int RepeatType { get; set; }
-    public int RepeatValue { get; set; }
+    public EventRepeatEnum RepeatType { get; set; }
+    public short RepeatValue { get; set; }
 
-    public bool Birthday { get; set; }
-    public bool Holiday { get; set; }
+    public EventTypeEnum Type { get; set; }
 }
 
 public class UpdateEventViewModel {
@@ -25,9 +25,8 @@ public class UpdateEventViewModel {
     public string Name { get; set; }
     public string Description { get; set; }
 
-    public int RepeatType { get; set; }
-    public int RepeatValue { get; set; }
+    public EventRepeatEnum RepeatType { get; set; }
+    public short RepeatValue { get; set; }
 
-    public bool Birthday { get; set; }
-    public bool Holiday { get; set; }
+    public EventTypeEnum Type { get; set; }
 }

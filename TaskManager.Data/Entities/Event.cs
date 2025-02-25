@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TaskManager.Data.Entities;
-public class Event : BaseEntity, IEventUpdateMap {
+public class Event : BaseEntity, IEventUpdateMap, IEnumEventMap {
     [Column(TypeName = "Date")]
     public DateOnly Date { get; set; }
     [Column(TypeName = "varchar(64)")]
@@ -12,8 +12,12 @@ public class Event : BaseEntity, IEventUpdateMap {
     public byte RepeatType { get; set; }
     public short RepeatValue { get; set; }
 
-    public bool Birthday { get; set; }
-    public bool Holiday { get; set; }
+    public byte Type { get; set; }
+}
+
+public interface IEnumEventMap {
+    public byte RepeatType { get; set; }
+    public byte Type { get; set; }
 }
 
 public interface IEventUpdateMap : IBaseUpdateMap {
@@ -24,6 +28,5 @@ public interface IEventUpdateMap : IBaseUpdateMap {
     public byte RepeatType { get; set; }
     public short RepeatValue { get; set; }
 
-    public bool Birthday { get; set; }
-    public bool Holiday { get; set; }
+    public byte Type { get; set; }
 }

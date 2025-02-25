@@ -1,5 +1,5 @@
-import { Button, Modal, Spinner } from "react-bootstrap";
-import EventModel, { EventData, EventDataFactory, ExtendedEventData } from "../services/models/event.model";
+import { Button, Col, Modal, Row, Spinner } from "react-bootstrap";
+import EventModel, { EventData } from "../services/models/event.model";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import Form from "react-bootstrap/Form";
@@ -19,6 +19,8 @@ import eventService from "../services/event.service";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { testHelper } from "../helpers/test.helper";
+import { EventTypeEnum } from "../enums/event.type.enum";
+import { EventRepeatEnum } from "../enums/event.repeat.enum";
 
 interface EventModalProps {
     modalData: EventModel | null;
@@ -44,6 +46,7 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
     }, [modalData, dispatch]);
 
     const validationSchema = Yup.object().shape({
+        Date: Yup.string().required("This field is required!"),
         Name: Yup.string()
             .test(
                 "len",
@@ -51,6 +54,10 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                 (val: any) => val && val.toString().length >= 2 && val.toString().length <= 64,
             )
             .required("This field is required!"),
+        RepeatValue: Yup.number().when("RepeatType", {
+            is: (val: EventRepeatEnum) => val !== EventRepeatEnum.Default,
+            then: (schema) => schema.min(1, "This field is required!"),
+        }),
     });
 
     const handleSubmit = async (model: EventState) => {
@@ -60,15 +67,26 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
             let response = await service.update(modalData.Id, new EventData(model));
             dispatch(submittedEventAction(response));
             if (response.success) {
-                onClose(true);
+                handleClose(true);
             }
         } else {
             dispatch(submittingEventAction());
             let response = await service.create(new EventData(model));
             dispatch(submittedEventAction(response));
             if (response.success) {
-                onClose(true);
+                handleClose(true);
             }
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!modalData?.Id) return;
+        let service: eventService = new eventService(testHelper.getTestContainer(search));
+        dispatch(submittingEventAction());
+        let response = await service.delete(modalData.Id);
+        dispatch(submittedEventAction(response));
+        if (response.success) {
+            handleClose(true);
         }
     };
 
@@ -93,23 +111,66 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                             <fieldset disabled={state.loaded == false}>
                                 <Modal.Body>
                                     <FormGroup error={touched.Date && (errors.Date ?? state.errors.Date)}>
-                                        <Field type="Date" name="DateString" placeholder="Date" className="form-control" />
+                                        <Form.Label>Date</Form.Label>
+                                        <Field type="Date" name="Date" placeholder="Date" className="form-control" />
+                                    </FormGroup>
+                                    <FormGroup error={touched.Type && (errors.Type ?? state.errors.Type)}>
+                                        <Form.Label>Type</Form.Label>
+                                        <Field as="select" name="Type" className="form-control">
+                                            <option value={EventTypeEnum.Default}>Default</option>
+                                            <option value={EventTypeEnum.Task}>Task</option>
+                                            <option value={EventTypeEnum.Birthday}>Birthday</option>
+                                            <option value={EventTypeEnum.Holiday}>Holiday</option>
+                                        </Field>
                                     </FormGroup>
                                     <FormGroup error={touched.Name && (errors.Name ?? state.errors.Name)}>
+                                        <Form.Label>Name</Form.Label>
                                         <Field name="Name" placeholder="Name" className="form-control" />
                                     </FormGroup>
+                                    <FormGroup error={touched.Description && (errors.Description ?? state.errors.Description)}>
+                                        <Form.Label>Description</Form.Label>
+                                        <Field as="textarea" name="Description" placeholder="Description" className="form-control" />
+                                    </FormGroup>
+                                    <Row>
+                                        <Form.Label>Repeat</Form.Label>
+                                        <FormGroup as={Col} error={touched.RepeatType && (errors.RepeatType ?? state.errors.RepeatType)}>
+                                            <Field as="select" name="RepeatType" className="form-control">
+                                                <option value={EventRepeatEnum.Default}>Default</option>
+                                                <option value={EventRepeatEnum.Days}>Days</option>
+                                                <option value={EventRepeatEnum.Weeks}>Weeks</option>
+                                                <option value={EventRepeatEnum.Months}>Months</option>
+                                                <option value={EventRepeatEnum.Years}>Years</option>
+                                            </Field>
+                                        </FormGroup>
+                                        <FormGroup as={Col} error={touched.RepeatValue && (errors.RepeatValue ?? state.errors.RepeatValue)}>
+                                            <Field
+                                                type="number"
+                                                name="RepeatValue"
+                                                placeholder="RepeatValue"
+                                                className="form-control"
+                                                disabled={values.RepeatType == EventRepeatEnum.Default}
+                                            />
+                                        </FormGroup>
+                                    </Row>
                                 </Modal.Body>
-
-                                <Modal.Footer>
-                                    <FormGroup error={state.error} className="text-end">
-                                        <Button variant="secondary" onClick={() => handleClose(false)}>
+                                <Modal.Footer className="d-flex">
+                                    {modalData?.Id && (
+                                        <Button variant="danger" onClick={() => handleDelete()} disabled={state.submitting}>
+                                            Delete
+                                        </Button>
+                                    )}
+                                    <div className="ms-auto">
+                                        <Button variant="secondary" onClick={() => handleClose(false)} disabled={state.submitting}>
                                             Cancel
                                         </Button>
-                                        <Button variant="primary" type="submit" disabled={state.submitting}>
-                                            {state.submitting && <span className="spinner-border spinner-border-sm"></span>}
-                                            {!state.submitting && <span>Save</span>}
+                                        <Button variant="primary" type="submit" disabled={state.submitting} className="ms-2">
+                                            {state.submitting ? (
+                                                <span className="spinner-border spinner-border-sm"></span>
+                                            ) : (
+                                                <span>Save</span>
+                                            )}
                                         </Button>
-                                    </FormGroup>
+                                    </div>
                                 </Modal.Footer>
                             </fieldset>
                         </Form>

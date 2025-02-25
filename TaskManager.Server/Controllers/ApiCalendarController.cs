@@ -13,6 +13,7 @@ using TaskManager.Server.Models;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components.Forms;
 using TaskManager.Logic.Dtos;
+using Microsoft.VisualBasic;
 
 namespace TaskManager.Server.Controllers;
 [Authorize]
@@ -29,11 +30,11 @@ public class ApiCalendarController : BaseController {
     #endregion [ .ctor ]
 
     [HttpGet]
-    public async Task<ActionResult> GetCurrent() {
+    public async Task<ActionResult> GetCurrent(DayOfWeek firstDayOfWeek) {
 #if DEBUG
-        await Task.Delay(TimeSpan.FromSeconds(0.5));
+        await Task.Delay(TimeSpan.FromSeconds(0.1));
 #endif
-        var dto = await this.Service.GetCurrentAsync();
+        var dto = await this.Service.GetCurrentAsync(firstDayOfWeek);
         return JsonSuccess(dto);
     }
 }

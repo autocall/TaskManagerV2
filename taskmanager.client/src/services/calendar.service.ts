@@ -10,9 +10,14 @@ export default class calendarService {
         this.rep = new calendarRepository(test);
     }
 
+    public static getFirstDayOfWeek() {
+        let opt = new Intl.DateTimeFormat(navigator.language, { weekday: "long" }).resolvedOptions();
+        return (opt as any).firstDay || 0;
+    }
+
     public getCurrent(): Promise<Response<CalendarModel>> {
         return this.rep
-            .getCurrent()
+            .getCurrent(calendarService.getFirstDayOfWeek())
             .then((response) => {
                 let model = new CalendarModel(response.data);
                 return Response.success<CalendarModel>(model);

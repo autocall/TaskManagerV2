@@ -3,13 +3,14 @@ import Form from "react-bootstrap/Form";
 
 interface Props {
     children: React.ReactNode;
+    as?: React.ElementType;
     className?: string;
     error?: any;
 }
 
-const FormGroup = ({ children, className, error }: Props) => {
+const FormGroup = ({ children, as, className, error }: Props) => {
     return (
-        <Form.Group className={"form-group " + (className ? `${className} ` : "") + (error ? "invalid" : "")}>
+        <Form.Group as={as} className={"form-group " + (className ? `${className} ` : "") + (error ? "invalid" : "")}>
             {children}
             {error && <div className="error p-0">{error}</div>}
         </Form.Group>

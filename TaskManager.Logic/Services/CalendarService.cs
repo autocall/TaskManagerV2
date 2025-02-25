@@ -8,16 +8,16 @@ public class CalendarService : BaseService {
 
     public CalendarService(ServicesHost host) : base(host) { }
 
-    public async Task<CalendarDto> GetCurrentAsync() {
+    public async Task<CalendarDto> GetCurrentAsync(DayOfWeek firstDayOfWeek) {
         var days = new List<CalendarDayDto>();
         // TODO: use timezone
         var date = DateOnly.FromDateTime(DateTime.Now);
         var dto = new CalendarDto(date.Month, date.Year, days);
-        var nowWeekOfYear = this.GetWeekOfYear(date);
+        var nowWeekOfYear = this.GetWeekOfYear(date, firstDayOfWeek);
         for (int i = 0; i < Settings.CurrentCalendarWeeks; i++) {
-            var weekOfYear = this.GetWeekOfYear(date);
+            var weekOfYear = this.GetWeekOfYear(date, firstDayOfWeek);
             // adds days
-            days.AddRange(this.CreateWeek(weekOfYear, date.Year));
+            days.AddRange(this.CreateWeek(weekOfYear, date.Year, firstDayOfWeek));
             // next week
             date = DateOnly.FromDateTime(CultureInfo.CurrentCulture.Calendar.AddWeeks(date.ToDateTime(default), 1));
         }
@@ -27,46 +27,46 @@ public class CalendarService : BaseService {
         foreach (var day in days) {
             day.Events = events.Where(x => x.Date == day.Date).ToList();
         }
-
         return dto;
     }
 
     #region [ Generator ]
 
-    private int GetWeekOfYear(DateOnly date) {
-        return CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date.ToDateTime(default), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+    private int GetWeekOfYear(DateOnly date, DayOfWeek firstDayOfWeek) {
+        return CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date.ToDateTime(default), CalendarWeekRule.FirstDay, firstDayOfWeek);
     }
 
-    private DateOnly GetFirstDayOfWeek(int weekOfYear, int year) {
+    private DateOnly GetFirstDateOfWeek(int weekOfYear, int year, DayOfWeek firstDayOfWeek) {
         DateOnly jan1 = new DateOnly(year, 1, 1);
-        int daysOffset = (int)DayOfWeek.Monday - (int)jan1.DayOfWeek;
-        DateOnly firstMonday = jan1.AddDays(daysOffset < 0 ? daysOffset + 7 : daysOffset);
-        DateOnly firstDayOfWeek = firstMonday.AddDays((weekOfYear - 1) * 7);
-        return firstDayOfWeek;
+        int jan1DayOfWeek = (int)jan1.DayOfWeek; // Get the day of the week for January 1st
+        int offset = (jan1DayOfWeek - (int)firstDayOfWeek + 7) % 7; // Calculate the offset to the first desired weekday
+
+        DateOnly firstWeekStart = jan1.AddDays(-offset); // Find the first occurrence of the specified weekday
+        return firstWeekStart.AddDays((weekOfYear - 1) * 7); // Return the first date of the given week number
     }
 
-    private CalendarDayDto CreateFirstDayOfWeek(int weekOfYear, int year) {
-        var date = this.GetFirstDayOfWeek(weekOfYear, year);
-        return this.CreateDay(date);
+    private CalendarDayDto CreateFirstDateOfWeek(int weekOfYear, int year, DayOfWeek firstDayOfWeek) {
+        var date = this.GetFirstDateOfWeek(weekOfYear, year, firstDayOfWeek);
+        return this.CreateDate(date);
     }
 
-    private CalendarDayDto CreateNextDay(CalendarDayDto day) {
+    private CalendarDayDto CreateNextDate(CalendarDayDto day) {
         var next = day.Date.AddDays(1);
-        return CreateDay(next);
+        return CreateDate(next);
     }
 
-    private CalendarDayDto CreateDay(DateOnly date) {
+    private CalendarDayDto CreateDate(DateOnly date) {
         return new CalendarDayDto(date) {
             // TODO: use timezone
             IsCurrentDay = date == DateOnly.FromDateTime(DateTime.Now)
         };
     }
 
-    private IEnumerable<CalendarDayDto> CreateWeek(int weekOfYear, int year) {
-        var day = this.CreateFirstDayOfWeek(weekOfYear, year);
+    private IEnumerable<CalendarDayDto> CreateWeek(int weekOfYear, int year, DayOfWeek firstDayOfWeek) {
+        var day = this.CreateFirstDateOfWeek(weekOfYear, year, firstDayOfWeek);
         yield return day;
         for (int i = 0; i < 6; i++) {
-            day = this.CreateNextDay(day);
+            day = this.CreateNextDate(day);
             yield return day;
         }
     }

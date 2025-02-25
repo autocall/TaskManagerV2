@@ -17,6 +17,7 @@
     <Compile Include="..\TaskManager.Common\Extensions\EnumExtension.cs" Link="Exceptions\EnumExtension.cs" />
     <Compile Include="..\TaskManager.Common\Extensions\JsonExtension.cs" Link="Exceptions\JsonExtension.cs" />
     <Compile Include="..\TaskManager.Common\Extensions\StringExtension.cs" Link="Exceptions\StringExtension.cs" />
+    <Compile Include="..\TaskManager.Common\Interfaces\IDeepCloneable.cs" Link="Interfaces\IDeepCloneable.cs" />
     <Compile Include="..\TaskManager.Common\Settings.cs" Link="Settings.cs" />
     <Compile Include="..\TaskManager.Common\Settings.Development.cs" Link="Settings.Development.cs" />
     <Compile Include="..\TaskManager.Common\Settings.Test.cs" Link="Settings.Test.cs" />
@@ -24,6 +25,8 @@
     <Compile Include="..\TaskManager.Logic\Dtos\CalendarDtos.cs" Link="Dtos\CalendarDtos.cs" />
     <Compile Include="..\TaskManager.Logic\Dtos\EventDtos.cs" Link="Dtos\EventDtos.cs" />
     <Compile Include="..\TaskManager.Logic\Dtos\ProjectDtos.cs" Link="Dtos\ProjectDtos.cs" />
+    <Compile Include="..\TaskManager.Logic\Enums\EventRepeatEnum.cs" Link="Enums\EventRepeatEnum.cs" />
+    <Compile Include="..\TaskManager.Logic\Enums\EventTypeEnum.cs" Link="Enums\EventTypeEnum.cs" />
     <Compile Include="..\TaskManager.Server\Models\AccountViewModel.cs" Link="Models\AccountViewModel.cs" />
     <Compile Include="..\TaskManager.Server\Models\ProjectViewModel.cs" Link="Models\ProjectViewModel.cs" />
     <Compile Include="..\TaskManager.Server\Models\ResponseModel.cs" Link="Models\ResponseModel.cs" />
@@ -44,6 +47,8 @@
   <ItemGroup>
     <Folder Include="Dtos\Base\" />
     <Folder Include="Exceptions\" />
+    <Folder Include="Enums\" />
+    <Folder Include="Interfaces\" />
   </ItemGroup>
 
 </Project>

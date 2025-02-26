@@ -30,3 +30,8 @@ public class UpdateEventViewModel {
 
     public EventTypeEnum Type { get; set; }
 }
+
+public class CompleteEventViewModel {
+    [Required]
+    public int Id { get; set; }
+}

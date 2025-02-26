@@ -27,6 +27,12 @@ public class EventDto : BaseDto, IEnumEventDtoMap, IDeepCloneable<EventDto> {
         dto.RepeatValue = RepeatValue;
         return dto;
     }
+
+    public EventDto Clone(DateOnly date) {
+        var dto = this.Clone();
+        dto.Date = date;
+        return dto;
+    }
 }
 
 public class CreateEventDto : IEnumEventDtoMap {

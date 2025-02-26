@@ -38,7 +38,7 @@ export default class eventRepository {
         return axios.post(
             `${API_URL}${action}/`,
             {
-                ...data
+                ...data,
             },
             { headers: this.generateHeaders(action) },
         );
@@ -50,7 +50,18 @@ export default class eventRepository {
             `${API_URL}${action}/`,
             {
                 id,
-                ...data
+                ...data,
+            },
+            { headers: this.generateHeaders(action) },
+        );
+    }
+
+    public completeEvent(id: number): Promise<any> {
+        let action = "complete";
+        return axios.put(
+            `${API_URL}${action}`,
+            {
+                id,
             },
             { headers: this.generateHeaders(action) },
         );

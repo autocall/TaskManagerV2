@@ -56,6 +56,17 @@ export default class eventService {
             });
     }
 
+    public completeEvent(eventId: number) {
+        return this.rep
+            .completeEvent(eventId)
+            .then((response) => {
+                return Response.success<any>(response.data);
+            })
+            .catch((exception) => {
+                return Response.fail<any>(exception);
+            });
+    }
+
     public delete(id: number) {
         return this.rep
             .delete(id)

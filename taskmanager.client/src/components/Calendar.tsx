@@ -5,7 +5,7 @@ import useAsyncEffect from "use-async-effect";
 import { AppState } from "../states/store";
 import calendarService from "../services/calendar.service";
 import { testHelper } from "../helpers/test.helper";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { gettingCurrentCalendarAction, gotCurrentCalendarAction } from "../states/calendar.state";
 import "./Calendar.scss";
 import "../../settings";
@@ -14,6 +14,8 @@ import EventModel, { EventData } from "../services/models/event.model";
 import EventModal from "./Event.Modal";
 import { EventTypeEnum } from "../enums/event.type.enum";
 import { CalendarDayModel, CalendarEventModel } from "../services/models/calendar.day.models";
+import eventService from "../services/event.service";
+import { useConfirm } from "./shared/confirm";
 
 const Calendar: React.FC = () => {
     const { search } = useLocation();
@@ -22,6 +24,7 @@ const Calendar: React.FC = () => {
     const [eventModalData, setEventModalData] = useState<EventModel | null>(null);
     const [showManageDay, setShowManageDay] = useState<CalendarDayModel | null>(null);
     const [targetManageDay, setTargetDay] = useState(null);
+    const { confirm, ConfirmDialog } = useConfirm();
 
     useAsyncEffect(async () => {
         await load();
@@ -54,9 +57,19 @@ const Calendar: React.FC = () => {
         setEventModalData(new EventModel(EventData.defaultWithDate(date)));
     };
 
-    const handleEditEvent = (event: CalendarEventModel) => {
+    const handleEditEvent = (model: CalendarEventModel) => {
         setShowManageDay(null);
-        setEventModalData(new EventModel(event));
+        setEventModalData(new EventModel(model));
+    };
+
+    const handleCompleteEvent = async (model: CalendarEventModel) => {
+        setShowManageDay(null);
+        if (await confirm("Complete Event", `Are you sure you want to complete the event '${model.Name}'?`)) {
+            let service: eventService = new eventService(testHelper.getTestContainer(search));
+            dispatch(gettingCurrentCalendarAction());
+            await service.completeEvent(model.Id);
+            await load();
+        }
     };
 
     const handleClose = async (reload: boolean) => {
@@ -68,6 +81,7 @@ const Calendar: React.FC = () => {
 
     return (
         <Container fluid>
+            {ConfirmDialog}
             <EventModal modalData={eventModalData} onClose={handleClose} />
             <Card>
                 <Card.Body>
@@ -158,6 +172,17 @@ const Calendar: React.FC = () => {
                                             {showManageDay?.Events.map((e, i) => (
                                                 <ListGroup.Item key={e.Id} action onClick={() => handleEditEvent(e)}>
                                                     <b>{e.Name}</b>
+                                                    {e.Type == EventTypeEnum.Task ? (
+                                                        <Link
+                                                            to="#"
+                                                            className="ms-2"
+                                                            onClick={(event) => {
+                                                                handleCompleteEvent(e);
+                                                                event.stopPropagation();
+                                                            }}>
+                                                            Complete
+                                                        </Link>
+                                                    ) : null}
                                                     <div>{e.Description}</div>
                                                 </ListGroup.Item>
                                             ))}

@@ -11,7 +11,8 @@ public class CalendarService : BaseService {
     public async Task<CalendarDto> GetCurrentAsync(DayOfWeek firstDayOfWeek) {
         var days = new List<CalendarDayDto>();
         // TODO: use timezone
-        var date = DateOnly.FromDateTime(DateTime.Now);
+        var now = DateOnly.FromDateTime(DateTime.Now);
+        var date = now;
         var dto = new CalendarDto(date.Month, date.Year, days);
         var nowWeekOfYear = this.GetWeekOfYear(date, firstDayOfWeek);
         for (int i = 0; i < Settings.CurrentCalendarWeeks; i++) {
@@ -23,7 +24,7 @@ public class CalendarService : BaseService {
         }
 
         // attaches events
-        var events = await this.EventService.GetRangeAsync(days.Min(x => x.Date), days.Max(x => x.Date));
+        var events = await this.EventService.GetRangeAsync(now, days.Min(x => x.Date), days.Max(x => x.Date));
         foreach (var day in days) {
             day.Events = events.Where(x => x.Date == day.Date).ToList();
         }

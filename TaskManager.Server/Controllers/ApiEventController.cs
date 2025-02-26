@@ -60,6 +60,15 @@ public class ApiEventController : BaseController {
         return JsonSuccess(outputDto);
     }
 
+    [HttpPut]
+    public async Task<ActionResult> Complete([FromBody] CompleteEventViewModel model) {
+        if (!ModelState.IsValid) {
+            return base.JsonFail(base.GetErrors());
+        }
+        var outputDto = await this.Service.CompleteAsync(model.Id, base.GetUserId());
+        return JsonSuccess(outputDto);
+    }
+
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id) {
         var result = await this.Service.DeletePermanentAsync(id, base.GetUserId());

@@ -4,9 +4,9 @@ namespace TaskManager.Data.Entities;
 public class Event : BaseEntity, IEventUpdateMap, IEventUpdateDateMap, IEnumEventMap {
     [Column(TypeName = "Date")]
     public DateOnly Date { get; set; }
-    [Column(TypeName = "varchar(64)")]
+    [Column(TypeName = "nvarchar(64)")]
     public string Name { get; set; }
-    [Column(TypeName = "varchar(1024)")]
+    [Column(TypeName = "nvarchar(1024)")]
     public string Description { get; set; }
 
     public byte RepeatType { get; set; }

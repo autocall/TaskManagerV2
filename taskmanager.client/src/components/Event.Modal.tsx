@@ -1,6 +1,6 @@
 import { Button, Col, Modal, Row, Spinner } from "react-bootstrap";
-import EventModel, { EventData } from "../services/models/event.model";
-import { Formik, Field } from "formik";
+import EventModel, { EventData, IEventData } from "../services/models/event.model";
+import { Formik, Field, useFormikContext, FormikProps } from "formik";
 import * as Yup from "yup";
 import Form from "react-bootstrap/Form";
 import FormGroup from "./shared/form-group";
@@ -22,6 +22,7 @@ import { testHelper } from "../helpers/test.helper";
 import { EventTypeEnum } from "../enums/event.type.enum";
 import { EventRepeatEnum } from "../enums/event.repeat.enum";
 import { useConfirm } from "./shared/confirm";
+import { useRef } from "react";
 
 interface EventModalProps {
     modalData: EventModel | null;
@@ -29,6 +30,7 @@ interface EventModalProps {
 }
 
 const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
+    const formikRef = useRef<FormikProps<EventState>>(null);
     const { search } = useLocation();
     const { confirm, ConfirmDialog } = useConfirm();
     let dispatch = useDispatch();
@@ -99,6 +101,14 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
         onClose(reload);
     };
 
+    const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        let type = parseInt(e.target.value);
+        if (type == EventTypeEnum.Birthday) {
+            formikRef.current?.setFieldValue("RepeatType", EventRepeatEnum.Years);
+            formikRef.current?.setFieldValue("RepeatValue", 1);
+        }
+    };
+
     return (
         <Modal show={modalData != null} onHide={() => handleClose(false)}>
             {ConfirmDialog}
@@ -110,7 +120,7 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                     <Spinner animation="border" />
                 </div>
             ) : (
-                <Formik initialValues={state} validationSchema={validationSchema} onSubmit={handleSubmit}>
+                <Formik innerRef={formikRef} initialValues={state} validationSchema={validationSchema} onSubmit={handleSubmit}>
                     {({ handleSubmit, handleChange, values, touched, errors }) => (
                         <Form onSubmit={handleSubmit}>
                             <fieldset disabled={state.loaded == false}>
@@ -121,7 +131,7 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                                     </FormGroup>
                                     <FormGroup error={touched.Type && (errors.Type ?? state.errors.Type)}>
                                         <Form.Label>Type</Form.Label>
-                                        <Field as="select" name="Type" className="form-control">
+                                        <Field as="select" name="Type" className="form-control" onChange={handleTypeChange}>
                                             <option value={EventTypeEnum.Default}>Default</option>
                                             <option value={EventTypeEnum.Task}>Task</option>
                                             <option value={EventTypeEnum.Birthday}>Birthday</option>

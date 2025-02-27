@@ -2,7 +2,7 @@
 
 namespace TaskManager.Data.Entities;
 public class Project : BaseEntity, IProjectUpdateMap {
-    [Column(TypeName = "varchar(64)")]
+    [Column(TypeName = "nvarchar(64)")]
     public string Name { get; set; }
 }
 

@@ -28,6 +28,7 @@
     <Compile Include="..\TaskManager.Logic\Enums\EventRepeatEnum.cs" Link="Enums\EventRepeatEnum.cs" />
     <Compile Include="..\TaskManager.Logic\Enums\EventTypeEnum.cs" Link="Enums\EventTypeEnum.cs" />
     <Compile Include="..\TaskManager.Server\Models\AccountViewModel.cs" Link="Models\AccountViewModel.cs" />
+    <Compile Include="..\TaskManager.Server\Models\EventViewModel.cs" Link="Models\EventViewModel.cs" />
     <Compile Include="..\TaskManager.Server\Models\ProjectViewModel.cs" Link="Models\ProjectViewModel.cs" />
     <Compile Include="..\TaskManager.Server\Models\ResponseModel.cs" Link="Models\ResponseModel.cs" />
   </ItemGroup>

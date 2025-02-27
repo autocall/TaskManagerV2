@@ -99,12 +99,13 @@ public class Project_UnitTest {
                     Encoding.UTF8, "application/json")
             );
             var data = await response.Content.ReadAsStringAsync();
-            dto = JsonExtension.Deserialize<ProjectDto>(data);
 
             Output.WriteLine($"--- Create Project ---");
             Output.WriteLine($"StatusCode: {response.StatusCode}");
             Output.WriteLine($"Response: {data}");
             Assert.True(response.IsSuccessStatusCode);
+
+            dto = JsonExtension.Deserialize<ProjectDto>(data);
         }
 
         {
@@ -134,8 +135,5 @@ public class Project_UnitTest {
             Assert.True(response.IsSuccessStatusCode);
             Assert.Equal(1, JsonExtension.Deserialize<int>(data));
         }
-
-
     }
-
 }

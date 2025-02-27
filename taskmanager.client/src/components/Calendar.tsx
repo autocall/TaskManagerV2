@@ -1,4 +1,4 @@
-import { Button, Card, Container, ListGroup, Overlay, OverlayTrigger, Placeholder, Popover, Tooltip } from "react-bootstrap";
+import { Alert, Button, Card, Container, ListGroup, Overlay, OverlayTrigger, Placeholder, Popover, Tooltip } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import useAsyncEffect from "use-async-effect";
@@ -34,10 +34,10 @@ const Calendar: React.FC = () => {
         setShowManageDay(null);
         let service: calendarService = new calendarService(testHelper.getTestContainer(search));
         dispatch(gettingCurrentCalendarAction());
-        const start = performance.now();
+        //const start = performance.now();
         let response = await service.getCurrent();
-        const end = performance.now();
-        console.log(`Execution time: ${end - start} ms`);
+        //const end = performance.now();
+        //console.log(`Execution time: ${end - start} ms`);
         dispatch(gotCurrentCalendarAction(response));
     };
 
@@ -192,6 +192,7 @@ const Calendar: React.FC = () => {
                             </Overlay>
                         </div>
                     )}
+                {state.error && <Alert variant="danger">{state.error}</Alert>}
                 </Card.Body>
             </Card>
         </Container>

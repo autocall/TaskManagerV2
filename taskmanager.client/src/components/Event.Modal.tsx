@@ -21,6 +21,7 @@ import { useLocation } from "react-router-dom";
 import { testHelper } from "../helpers/test.helper";
 import { EventTypeEnum } from "../enums/event.type.enum";
 import { EventRepeatEnum } from "../enums/event.repeat.enum";
+import { useConfirm } from "./shared/confirm";
 
 interface EventModalProps {
     modalData: EventModel | null;
@@ -29,6 +30,7 @@ interface EventModalProps {
 
 const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
     const { search } = useLocation();
+    const { confirm, ConfirmDialog } = useConfirm();
     let dispatch = useDispatch();
     const state = useSelector((s: AppState) => s.eventState);
 
@@ -81,12 +83,14 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
 
     const handleDelete = async () => {
         if (!modalData?.Id) return;
-        let service: eventService = new eventService(testHelper.getTestContainer(search));
-        dispatch(submittingEventAction());
-        let response = await service.delete(modalData.Id);
-        dispatch(submittedEventAction(response));
-        if (response.success) {
-            handleClose(true);
+        if (await confirm("Delete Event", `Are you sure you want to delete the event '${modalData.Name}'?`)) {
+            let service: eventService = new eventService(testHelper.getTestContainer(search));
+            dispatch(submittingEventAction());
+            let response = await service.delete(modalData.Id);
+            dispatch(submittedEventAction(response));
+            if (response.success) {
+                handleClose(true);
+            }
         }
     };
 
@@ -97,6 +101,7 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
 
     return (
         <Modal show={modalData != null} onHide={() => handleClose(false)}>
+            {ConfirmDialog}
             <Modal.Header closeButton>
                 <Modal.Title>{modalData?.Id ? "Edit" : "Add"} Event</Modal.Title>
             </Modal.Header>
@@ -154,23 +159,29 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                                     </Row>
                                 </Modal.Body>
                                 <Modal.Footer className="d-flex">
-                                    {modalData?.Id && (
-                                        <Button variant="danger" onClick={() => handleDelete()} disabled={state.submitting}>
-                                            Delete
-                                        </Button>
-                                    )}
-                                    <div className="ms-auto">
-                                        <Button variant="secondary" onClick={() => handleClose(false)} disabled={state.submitting}>
-                                            Cancel
-                                        </Button>
-                                        <Button variant="primary" type="submit" disabled={state.submitting} className="ms-2">
-                                            {state.submitting ? (
-                                                <span className="spinner-border spinner-border-sm"></span>
-                                            ) : (
-                                                <span>Save</span>
-                                            )}
-                                        </Button>
-                                    </div>
+                                    <FormGroup error={state.error} className="text-end">
+                                        {modalData?.Id && (
+                                            <Button variant="danger" onClick={() => handleDelete()} disabled={state.submitting}>
+                                                {state.submitting ? (
+                                                    <span className="spinner-border spinner-border-sm"></span>
+                                                ) : (
+                                                    <span>Delete</span>
+                                                )}
+                                            </Button>
+                                        )}
+                                        <div className="ms-auto">
+                                            <Button variant="secondary" onClick={() => handleClose(false)} disabled={state.submitting}>
+                                                Cancel
+                                            </Button>
+                                            <Button variant="primary" type="submit" disabled={state.submitting} className="ms-2">
+                                                {state.submitting ? (
+                                                    <span className="spinner-border spinner-border-sm"></span>
+                                                ) : (
+                                                    <span>Save</span>
+                                                )}
+                                            </Button>
+                                        </div>
+                                    </FormGroup>
                                 </Modal.Footer>
                             </fieldset>
                         </Form>

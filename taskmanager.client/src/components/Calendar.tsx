@@ -33,7 +33,7 @@ const Calendar: React.FC = () => {
 
     return (
         <Container fluid>
-            <div className="row">
+            <div className="row secondary-transparent-bg">
                 {state.calendars &&
                     state.calendars.length > 0 &&
                     state.calendars.map((calendar) => (

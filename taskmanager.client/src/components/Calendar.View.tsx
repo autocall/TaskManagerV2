@@ -75,7 +75,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ loading, calendar, load }) 
                                 <Placeholder xs={6} />
                             </Placeholder>
                         ) : (
-                            calendar?.MonthName
+                            `${calendar?.MonthName} ${calendar?.Year}`
                         )}
                     </strong>
                 </div>
@@ -121,12 +121,12 @@ const CalendarView: React.FC<CalendarViewProps> = ({ loading, calendar, load }) 
                                         (day.IsCurrentDay ? " today" : "") +
                                         (day.Events.find((e) => e.Type == EventTypeEnum.Task)
                                             ? " btn-danger"
-                                            : day.Events.find((e) => e.Type == EventTypeEnum.Birthday)
-                                              ? " btn-success"
-                                              : day.Events.find((e) => e.Type == EventTypeEnum.Holiday)
+                                            : day.Events.find((e) => e.Type == EventTypeEnum.Default)
+                                              ? " btn-primary"
+                                              : day.Events.find((e) => e.Type == EventTypeEnum.Birthday)
                                                 ? " btn-success"
-                                                : day.Events.find((e) => e.Type == EventTypeEnum.Default)
-                                                  ? " btn-primary"
+                                                : day.Events.find((e) => e.Type == EventTypeEnum.Holiday)
+                                                  ? " btn-success"
                                                   : "")
                                     }
                                     onClick={(e) => handleManageDay(e, day)}>

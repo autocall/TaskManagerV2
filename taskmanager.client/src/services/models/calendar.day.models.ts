@@ -52,7 +52,7 @@ export default class CalendarModel {
     WeekNames: string[];
 
     constructor(data: any) {
-        this.Days = data.Days?.map((e: any) => new CalendarDayModel(e));
+        this.Days = data.Days?.map((e: any) => new CalendarDayModel(e)) ?? [];
         this.Month = data.Month;
         this.Year = data.Year;
         let firstDayOfWeek = calendarService.getFirstDayOfWeek();

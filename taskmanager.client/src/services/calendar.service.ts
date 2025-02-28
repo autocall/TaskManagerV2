@@ -26,4 +26,16 @@ export default class calendarService {
                 return Response.fail<CalendarModel>(exception);
             });
     }
+
+    public getYear(): Promise<Response<CalendarModel[]>> {
+        return this.rep
+            .getYear(calendarService.getFirstDayOfWeek())
+            .then((response) => {
+                let models = response.data.map((x: any) => new CalendarModel(x));
+                return Response.success<CalendarModel[]>(models);
+            })
+            .catch((exception) => {
+                return Response.fail<CalendarModel[]>(exception);
+            });
+    }
 }

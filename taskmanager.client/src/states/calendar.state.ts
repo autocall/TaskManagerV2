@@ -6,22 +6,24 @@ export interface CalendarState {
     readonly loading: boolean;
     readonly loaded: boolean;
     readonly calendar: CalendarModel | null;
+    readonly calendars: CalendarModel[] | null;
     readonly error: string | null;
     readonly errors: { [key: string]: string };
 }
 
 const initialState: CalendarState = {
-    loading: false,
+    loading: true,
     loaded: false,
     calendar: null,
+    calendars: Array.from({ length: window.settings.YearMonths }, (i, w) => new CalendarModel({ Month: w })), // to show spinners
     error: null,
     errors: {},
 };
 
-export const GETTINGCURRERNTCALENDAR  = "GettingCurrentCalendar";
-export const gettingCurrentCalendarAction = () =>
+export const GETTINGCALENDAR  = "GettingCalendar";
+export const gettingCalendarAction = () =>
     ({
-        type: GETTINGCURRERNTCALENDAR,
+        type: GETTINGCALENDAR,
     }) as const;
 
 export const GOTCURRENTCALENDAR = "GotCurrentCalendar";
@@ -32,17 +34,27 @@ export const gotCurrentCalendarAction = (response: Response<CalendarModel>) =>
         error: response.error,
     }) as const;
 
+export const GOTYEARCALENDAR = "GotYearCalendar";
+export const gotYearCalendarAction = (response: Response<CalendarModel[]>) =>
+    ({
+        type: GOTYEARCALENDAR,
+        calendars: response.data,
+        error: response.error,
+    }) as const;
+
 type CalendarActions =
-    | ReturnType<typeof gettingCurrentCalendarAction>
-    | ReturnType<typeof gotCurrentCalendarAction>;
+| ReturnType<typeof gettingCalendarAction>
+| ReturnType<typeof gotCurrentCalendarAction>
+| ReturnType<typeof gotYearCalendarAction>;
 
 export const calendarReducer: any = (state: CalendarState = initialState, action: CalendarActions) => {
     switch (action.type) {
-        case GETTINGCURRERNTCALENDAR:
+        case GETTINGCALENDAR:
             return {
                 ...state,
                 loading: true,
                 calendar: initialState.calendar,
+                calendars: initialState.calendars,
                 error: initialState.error,
             };
         case GOTCURRENTCALENDAR:
@@ -51,6 +63,14 @@ export const calendarReducer: any = (state: CalendarState = initialState, action
                 loading: false,
                 loaded: action.error ? false : true,
                 calendar: action.calendar,
+                error: action.error,
+            };
+        case GOTYEARCALENDAR:
+            return {
+                ...state,
+                loading: false,
+                loaded: action.error ? false : true,
+                calendars: action.calendars,
                 error: action.error,
             };
         default:

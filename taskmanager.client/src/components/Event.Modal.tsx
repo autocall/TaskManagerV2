@@ -102,10 +102,12 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
     };
 
     const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        if (!formikRef.current) return;
         let type = parseInt(e.target.value);
+        formikRef.current.setFieldValue("Type", type);
         if (type == EventTypeEnum.Birthday) {
-            formikRef.current?.setFieldValue("RepeatType", EventRepeatEnum.Years);
-            formikRef.current?.setFieldValue("RepeatValue", 1);
+            formikRef.current.setFieldValue("RepeatType", EventRepeatEnum.Years);
+            formikRef.current.setFieldValue("RepeatValue", 1);
         }
     };
 
@@ -121,7 +123,7 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                 </div>
             ) : (
                 <Formik innerRef={formikRef} initialValues={state} validationSchema={validationSchema} onSubmit={handleSubmit}>
-                    {({ handleSubmit, handleChange, values, touched, errors }) => (
+                    {({ handleSubmit, handleChange, setFieldValue, values, touched, errors }) => (
                         <Form onSubmit={handleSubmit}>
                             <fieldset disabled={state.loaded == false}>
                                 <Modal.Body>
@@ -169,7 +171,7 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                                     </Row>
                                 </Modal.Body>
                                 <Modal.Footer className="d-flex">
-                                    <FormGroup error={state.error} className="text-end">
+                                    <FormGroup error={state.error}>
                                         {modalData?.Id && (
                                             <Button variant="danger" onClick={() => handleDelete()} disabled={state.submitting}>
                                                 {state.submitting ? (

@@ -30,6 +30,15 @@ public class ApiCalendarController : BaseController {
     #endregion [ .ctor ]
 
     [HttpGet]
+    public async Task<ActionResult> GetYear(DayOfWeek firstDayOfWeek) {
+#if DEBUG
+        await Task.Delay(TimeSpan.FromSeconds(0.1));
+#endif
+        var dtos = await this.Service.GetYearAsync(firstDayOfWeek);
+        return JsonSuccess(dtos);
+    }
+
+    [HttpGet]
     public async Task<ActionResult> GetCurrent(DayOfWeek firstDayOfWeek) {
 #if DEBUG
         await Task.Delay(TimeSpan.FromSeconds(0.1));

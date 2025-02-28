@@ -26,4 +26,9 @@ export default class calendarRepository {
         let action = "getcurrent";
         return axios.get(`${API_URL}${action}?firstDayOfWeek=${firstDayOfWeek}`, { headers: this.generateHeaders(action) });
     }
+
+    public getYear(firstDayOfWeek: number): Promise<any> {
+        let action = "getyear";
+        return axios.get(`${API_URL}${action}?firstDayOfWeek=${firstDayOfWeek}`, { headers: this.generateHeaders(action) });
+    }
 }

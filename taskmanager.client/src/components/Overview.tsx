@@ -1,5 +1,5 @@
 import { Col, Collapse, Container, Row } from "react-bootstrap";
-import Calendar from "./Calendar";
+import Calendar from "./Calendar.Current";
 import "bootstrap/dist/css/bootstrap.css";
 
 const Overview: React.FC = () => {

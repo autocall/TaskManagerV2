@@ -4,4 +4,5 @@ public partial interface Settings {
     public const string TestUserEmail = "test@tm.com";
 
     public const int CurrentCalendarWeeks = 6;
+    public const int YearMonths = 12;
 }

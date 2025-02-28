@@ -5,13 +5,18 @@ namespace TaskManager.Logic.Services;
 public class CalendarService : BaseService {
 
     private EventService EventService => this.Host.GetService<EventService>();
+    private Calendar Calendar = CultureInfo.CurrentCulture.Calendar;
 
     public CalendarService(ServicesHost host) : base(host) { }
 
     public async Task<CalendarDto> GetCurrentAsync(DayOfWeek firstDayOfWeek) {
+        var now = DateOnly.FromDateTime(DateTime.Now);
+        return await this.GetAsync(firstDayOfWeek, now);
+    }
+
+    public async Task<CalendarDto> GetAsync(DayOfWeek firstDayOfWeek, DateOnly now) {
         var days = new List<CalendarDayDto>();
         // TODO: use timezone
-        var now = DateOnly.FromDateTime(DateTime.Now);
         var date = now;
         var dto = new CalendarDto(date.Month, date.Year, days);
         var nowWeekOfYear = this.GetWeekOfYear(date, firstDayOfWeek);
@@ -20,7 +25,7 @@ public class CalendarService : BaseService {
             // adds days
             days.AddRange(this.CreateWeek(weekOfYear, date.Year, firstDayOfWeek));
             // next week
-            date = DateOnly.FromDateTime(CultureInfo.CurrentCulture.Calendar.AddWeeks(date.ToDateTime(default), 1));
+            date = DateOnly.FromDateTime(this.Calendar.AddWeeks(date.ToDateTime(default), 1));
         }
 
         // attaches events
@@ -31,10 +36,21 @@ public class CalendarService : BaseService {
         return dto;
     }
 
+    public async Task<List<CalendarDto>> GetYearAsync(DayOfWeek firstDayOfWeek) {
+        var dtos = new List<CalendarDto>();
+        var now = DateOnly.FromDateTime(DateTime.Now);
+        for (int i = 0; i < Settings.YearMonths; i++) {
+            var date = new DateOnly(DateTime.Now.Year, now.Month, 1).AddMonths(i);
+            var dto = await this.GetAsync(firstDayOfWeek, date);
+            dtos.Add(dto);
+        }
+        return dtos;
+    }
+
     #region [ Generator ]
 
     private int GetWeekOfYear(DateOnly date, DayOfWeek firstDayOfWeek) {
-        return CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date.ToDateTime(default), CalendarWeekRule.FirstDay, firstDayOfWeek);
+        return this.Calendar.GetWeekOfYear(date.ToDateTime(default), CalendarWeekRule.FirstDay, firstDayOfWeek);
     }
 
     private DateOnly GetFirstDateOfWeek(int weekOfYear, int year, DayOfWeek firstDayOfWeek) {

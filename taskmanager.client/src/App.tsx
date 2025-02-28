@@ -13,6 +13,7 @@ import { NavDropdown, Spinner } from "react-bootstrap";
 import { ThemeEnum } from "./enums/theme.enum";
 import useAsyncEffect from "use-async-effect";
 import Overview from "./components/Overview";
+import Calendar from "./components/Calendar";
 
 const App: React.FC = () => {
     const service = new authService(null);
@@ -94,6 +95,9 @@ const App: React.FC = () => {
                             <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/projects">
                                 Projects
                             </NavLink>
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/calendar">
+                                Calendar
+                            </NavLink>
                         </Nav>
                         <Nav>
                             {themeDropdown}
@@ -113,6 +117,7 @@ const App: React.FC = () => {
                     <Route path="/login" element={<LogIn />} />
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/projects" element={<Projects />} />
+                    <Route path="/calendar" element={<Calendar />} />
                 </Routes>
             </Container>
         </div>

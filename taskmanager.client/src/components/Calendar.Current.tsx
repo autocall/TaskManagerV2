@@ -1,4 +1,4 @@
-import { Alert, Container, Placeholder, Spinner } from "react-bootstrap";
+import { Alert, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import useAsyncEffect from "use-async-effect";
@@ -6,7 +6,7 @@ import { AppState } from "../states/store";
 import calendarService from "../services/calendar.service";
 import { testHelper } from "../helpers/test.helper";
 import { useLocation } from "react-router-dom";
-import { gettingCalendarAction, gotYearCalendarAction } from "../states/calendar.state";
+import { gettingCalendarAction, gotCurrentCalendarAction } from "../states/calendar.state";
 import "./Calendar.scss";
 import "../../settings";
 import CalendarView from "./Calendar.View";
@@ -25,25 +25,15 @@ const Calendar: React.FC = () => {
         let service: calendarService = new calendarService(testHelper.getTestContainer(search));
         dispatch(gettingCalendarAction());
         //const start = performance.now();
-        let response = await service.getYear();
+        let response = await service.getCurrent();
         //const end = performance.now();
         //console.log(`Execution time: ${end - start} ms`);
-        dispatch(gotYearCalendarAction(response));
+        dispatch(gotCurrentCalendarAction(response));
     };
 
     return (
         <Container fluid>
-            <div className="row">
-                {state.calendars &&
-                    state.calendars.length > 0 &&
-                    state.calendars.map((calendar) => (
-                        <div
-                            key={`${calendar.Year}-${calendar.Month}`}
-                            className="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2 p-2">
-                            <CalendarView calendar={calendar} loading={state.loading} load={load}></CalendarView>
-                        </div>
-                    ))}
-            </div>
+            {!state.error && <CalendarView calendar={state.calendar} loading={state.loading} load={load}></CalendarView>}
             {state.error && <Alert variant="danger">{state.error}</Alert>}
         </Container>
     );

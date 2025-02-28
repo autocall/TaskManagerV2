@@ -7,7 +7,8 @@ public class SettingsController : Controller {
     [HttpGet, Route("/settings.js")]
     public IActionResult Index() {
         var settings = new {
-            Settings.CurrentCalendarWeeks
+            Settings.CurrentCalendarWeeks,
+            Settings.YearMonths,
         };
 
         var json = JsonExtension.Serialize(settings);

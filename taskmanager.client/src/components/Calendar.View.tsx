@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, ListGroup, Overlay, OverlayTrigger, Placeholder, Popover, Tooltip } from "react-bootstrap";
 import EventModal from "./Event.Modal";
 import { EventTypeEnum } from "../enums/event.type.enum";
@@ -10,6 +10,7 @@ import { Link, useLocation } from "react-router-dom";
 import { gettingCalendarAction } from "../states/calendar.state";
 import { useDispatch } from "react-redux";
 import { testHelper } from "../helpers/test.helper";
+import { eventBus, EventNames } from "./../events";
 
 interface CalendarViewProps {
     calendar: CalendarModel | null;
@@ -21,32 +22,41 @@ const CalendarView: React.FC<CalendarViewProps> = ({ loading, calendar, load }) 
     const { search } = useLocation();
     let dispatch = useDispatch();
     const [eventModalData, setEventModalData] = useState<EventModel | null>(null);
-    const [showManageDay, setShowManageDay] = useState<CalendarDayModel | null>(null);
+    const [manageDay, setManageDay] = useState<CalendarDayModel | null>(null);
     const [targetManageDay, setTargetDay] = useState<HTMLElement | null>(null);
     const { confirm, ConfirmDialog } = useConfirm();
 
+    useEffect(() => {
+
+        eventBus.addEventListener(EventNames.resetManageDay, handleResetManageDay);
+        return () => eventBus.removeEventListener(EventNames.resetManageDay, handleResetManageDay);
+    }, []);
+
+    const handleResetManageDay = (event: Event) =>  setManageDay(null);
+
     const handleManageDay = (event: any, day: CalendarDayModel) => {
-        if (showManageDay == day) {
+        eventBus.dispatchEvent(new Event(EventNames.resetManageDay));
+        if (manageDay == day) {
             // setTargetDay(null); jumps to center
-            setShowManageDay(null);
+            setManageDay(null);
         } else {
             setTargetDay(event.target);
-            setShowManageDay(day);
+            setManageDay(day);
         }
     };
 
     const handleAddEvent = (date: Date) => {
-        setShowManageDay(null);
+        setManageDay(null);
         setEventModalData(new EventModel(EventData.defaultWithDate(date)));
     };
 
     const handleEditEvent = (model: CalendarEventModel) => {
-        setShowManageDay(null);
+        setManageDay(null);
         setEventModalData(new EventModel(model));
     };
 
     const handleCompleteEvent = async (model: CalendarEventModel) => {
-        setShowManageDay(null);
+        setManageDay(null);
         if (await confirm("Complete Event", `Are you sure you want to complete the event '${model.Name}'?`)) {
             let service: eventService = new eventService(testHelper.getTestContainer(search));
             dispatch(gettingCalendarAction());
@@ -100,7 +110,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ loading, calendar, load }) 
                             <OverlayTrigger
                                 key={day.Date.toISOString()}
                                 overlay={
-                                    day.Events.length && showManageDay == null ? (
+                                    day.Events.length && manageDay == null ? (
                                         <Tooltip id={`tooltip-${day.Date.toISOString()}`}>
                                             {day.Events.map((e) => (
                                                 <div key={e.Id}>
@@ -141,17 +151,17 @@ const CalendarView: React.FC<CalendarViewProps> = ({ loading, calendar, load }) 
                             </OverlayTrigger>
                         ))}
                         {/* Manage Day */}
-                        <Overlay target={targetManageDay} show={showManageDay != null} placement="bottom">
+                        <Overlay target={targetManageDay} show={manageDay != null} placement="bottom">
                             <Popover id="popover-basic">
                                 <Popover.Header>
-                                    <div>{showManageDay?.Date.toLocaleDateString()}</div>
+                                    <div>{manageDay?.Date.toLocaleDateString()}</div>
                                 </Popover.Header>
                                 <Popover.Body className="p-0">
                                     <ListGroup variant="flush">
-                                        <ListGroup.Item action onClick={() => showManageDay && handleAddEvent(showManageDay.Date)}>
+                                        <ListGroup.Item action onClick={() => manageDay && handleAddEvent(manageDay.Date)}>
                                             Add Event
                                         </ListGroup.Item>
-                                        {showManageDay?.Events.map((e, i) => (
+                                        {manageDay?.Events.map((e, i) => (
                                             <ListGroup.Item key={e.Id} action onClick={() => handleEditEvent(e)}>
                                                 <b>{e.Name}</b>
                                                 {e.Type == EventTypeEnum.Task ? (

@@ -102,7 +102,8 @@ const App: React.FC = () => {
                         <Nav>
                             {themeDropdown}
                             <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/profile">
-                                {currentUser.Email} ({currentUser.Roles})
+                                <span className="d-none d-sm-block">{currentUser.Email} ({currentUser.Roles})</span>
+                                <span className="d-block d-sm-none">Profile</span>
                             </NavLink>
                             <Link id="logout" className="nav-link" to="/login" onClick={logOut}>
                                 Logout

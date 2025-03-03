@@ -3,6 +3,7 @@ import IJwt from "../types/jwt.type";
 import authRepository from "./../repositories/auth.rep";
 import Response from "./models/response";
 import { testContainer } from "../helpers/test.helper";
+import IdentityModel from "./models/identity.model";
 
 export default class authService {
     private rep: authRepository;
@@ -35,14 +36,14 @@ export default class authService {
             });
     }
 
-    public identity(): Promise<Response<any>> {
+    public identity(): Promise<Response<IdentityModel>> {
         return this.rep
             .identity()
             .then((response) => {
-                return Response.success<any>(response.data.Token);
+                return Response.success<IdentityModel>(response.data);
             })
             .catch((exception) => {
-                return Response.fail<any>(exception);
+                return Response.fail<IdentityModel>(exception);
             });
     }
 

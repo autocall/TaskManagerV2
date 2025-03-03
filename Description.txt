@@ -4,17 +4,16 @@
 
 ** Frontend **
 	IDE: Visual Studio Code
+		Code formatting: Prettier
+		Code analysis: ESLint
 	Language: TypeScript
-	Architecture: 3-Tier (component, service, repository)
 	Framework: React 18.x
+	Architecture: 3-Tier (component, service, repository)
 	Build tool & dev server: Vite
 	Libraries & frameworks:
 		Styling: Bootstrap 5.x, computer/mobile layout
 		Form validation: Formik + Yup
 		State management: Redux Toolkit
-	Extensions:
-		Prettier (code formatting)
-		ESLint (code analysis)
 
 ** Backend **
 	IDE: Visual Studio 2022
@@ -24,9 +23,9 @@
 	Logging: log4net, YALV
 	DataBase: SQL Server 2019
 		Code First (EF Core)
-		PK optimization: ordered integer sequences (see example below)
-		String Encoding: VARCHAR + UTF8 (see example below)
-		Queries (avoiding EF change tracker): 
+		PK optimization: ordered integer sequences (see details below)
+		String Encoding: VARCHAR + UTF8 (see details below)
+		Queries (see details below): 
 			SELECT: Linq to SQL
 			UPDATE: RelationalQueryableExtensions.ExecuteUpdate (see example below)
 			DELETE: RelationalQueryableExtensions.ExecuteDelete
@@ -49,5 +48,5 @@
 + Shared settings between backend and frontend via /settings.js
 + Example UPDATE execution: 'Rep.ExecuteUpdateAsync<IEventUpdateDateMap>(model, userId)' where IEventUpdateDateMap has updating properties
 + I avoid 'SaveChange' because the generated queries are difficult to debug.
-+ I prefer random sequences of integer keys. Example: 101,102,103,104,34,35,36,37 (TaskManager.Logic.Helper.DbRandomHelper). This reduces page fragmentation.
++ I prefer random sequences of integer keys. Example: 101,102,103,104,34,35,36,37 (TaskManager.Logic.Helper.DbRandomHelper). This reduces the page fragmentation.
 + To store Cyrillic characters in the database as varchar, I use the collation Latin1_General_100_CI_AI_SC_UTF8 for the column. In the models, I specify "TypeName = nvarchar()", but in the migration, I set the type as "type: varchar". As a result, EF Core sends parameters as N'фыв', and the database stores them as varchar. Example: TaskManager.Data.Migrations.Alter_Collate_UTF8

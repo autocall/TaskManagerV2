@@ -51,4 +51,15 @@ export default class authRepository {
         let action = "identity";
         return axios.get(API_URL + action, { headers: this.generateHeaders(action) });
     }
+
+    public setTimeZone(timeZone: string) {
+        let action = "timezone";
+        return axios.post(
+            API_URL + action,
+            {
+                timeZone,
+            },
+            { headers: this.generateHeaders(action) },
+        );
+    }
 }

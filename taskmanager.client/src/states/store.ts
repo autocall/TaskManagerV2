@@ -6,6 +6,7 @@ import { projectReducer, ProjectState } from "./project.state";
 import { projectsReducer, ProjectsState } from "./projects.state";
 import { calendarReducer, CalendarState } from "./calendar.state";
 import { eventReducer, EventState } from "./event.state";
+import { profileTimeZoneReducer, ProfileTimeZoneState } from "./profile.timezone.state";
 
 export interface AppState {
     readonly loginState: LoginState;
@@ -14,6 +15,7 @@ export interface AppState {
     readonly projectState: ProjectState;
     readonly calendarState: CalendarState;
     readonly eventState: EventState;
+    readonly profileTimeZoneState: ProfileTimeZoneState;
 }
 
 const rootReducer = combineReducers<AppState>({
@@ -23,6 +25,7 @@ const rootReducer = combineReducers<AppState>({
     projectState: projectReducer,
     calendarState: calendarReducer,
     eventState: eventReducer,
+    profileTimeZoneState: profileTimeZoneReducer,
 });
 
 export const store = configureStore({

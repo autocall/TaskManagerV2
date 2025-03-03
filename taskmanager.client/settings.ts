@@ -1,3 +1,5 @@
+import IdentityModel from "./src/services/models/identity.model";
+
 export {};
 
 declare global {
@@ -6,5 +8,6 @@ declare global {
             CurrentCalendarWeeks: number;
             YearMonths: number;
         };
+        identity: IdentityModel;
     }
 }

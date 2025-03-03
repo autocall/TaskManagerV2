@@ -16,14 +16,15 @@ using TaskManager.Common.Exceptions;
 namespace TaskManager.Server.Controllers;
 [ApiController]
 [Route("Api/Account/[action]")]
-public class ApiTmcountController : BaseController {
+public class ApiAccountController : BaseController {
 
+    private ProfileService ProfileService => Host.GetService<ProfileService>();
     private readonly SignInManager<TmUser> SignInManager;
     private readonly IConfiguration Config;
 
     #region [ .ctor ]
 
-    public ApiTmcountController(ServicesHost host, IConfiguration config, SignInManager<TmUser> signInManager)
+    public ApiAccountController(ServicesHost host, IConfiguration config, SignInManager<TmUser> signInManager)
         : base(host) {
         this.SignInManager = signInManager;
         this.Config = config;
@@ -47,6 +48,7 @@ public class ApiTmcountController : BaseController {
                     Id = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
+                    TimeZone = ProfileService.GetTimeZoneById(user.TimeZoneId),
                     Roles = roles
                 });
         }
@@ -139,6 +141,7 @@ public class ApiTmcountController : BaseController {
             Id = user.Id,
             UserName = user.UserName,
             Email = user.Email,
+            TimeZone = ProfileService.GetTimeZoneById(user.TimeZoneId),
             Roles = (await Host.UserManager.GetRolesAsync(user)).ToList()
         };
         return base.JsonSuccess(new {

@@ -3,10 +3,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { Routes, Route, Link, NavigateFunction, useNavigate, NavLink } from "react-router-dom";
 import "./App.css";
-import LogIn from "./components/LogIn";
-import SignUp from "./components/SignUp";
-import Projects from "./components/Projects";
-import React, { useState, useEffect } from "react";
+import React, { Suspense, lazy, useState, useEffect } from "react";
 import authService from "./services/auth.service";
 import IJwt from "./types/jwt.type";
 import { NavDropdown, Spinner } from "react-bootstrap";
@@ -14,12 +11,17 @@ import { ThemeEnum } from "./enums/theme.enum";
 import useAsyncEffect from "use-async-effect";
 import Overview from "./components/Overview";
 import Calendar from "./components/Calendar";
+const Profile = lazy(() => import("./components/Profile"));
+const LogIn = lazy(() => import("./components/LogIn"));
+const SignUp = lazy(() => import("./components/SignUp"));
+const Projects = lazy(() => import("./components/Projects"));
 
 const App: React.FC = () => {
     const service = new authService(null);
     const navigate: NavigateFunction = useNavigate();
 
     const [currentUser, setCurrentUser] = useState<IJwt | undefined>(undefined);
+    const [identity, setIdentity] = useState<any>(undefined);
     const [theme, setTheme] = useState<string>(localStorage.getItem("theme") || ThemeEnum.Light);
 
     useAsyncEffect(async () => {
@@ -28,6 +30,8 @@ const App: React.FC = () => {
             setCurrentUser(jwt);
             let response = await service.identity();
             if (response.success) {
+                window.identity = response.data;
+                setIdentity(response.data);
                 // successed
             } else {
                 if (response.status === 401) {
@@ -78,10 +82,10 @@ const App: React.FC = () => {
                         <Nav className="flex-grow-1"></Nav>
                         <Nav>
                             {themeDropdown}
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/login">
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/login">
                                 Login
                             </NavLink>
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/signup">
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/signup">
                                 Sign Up
                             </NavLink>
                         </Nav>
@@ -89,20 +93,22 @@ const App: React.FC = () => {
                 ) : (
                     <Container>
                         <Nav className="flex-grow-1">
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/">
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/">
                                 Overview
                             </NavLink>
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/projects">
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/projects">
                                 Projects
                             </NavLink>
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/calendar">
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/calendar">
                                 Calendar
                             </NavLink>
                         </Nav>
                         <Nav>
                             {themeDropdown}
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/profile">
-                                <span className="d-none d-sm-block">{currentUser.Email} ({currentUser.Roles})</span>
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/profile">
+                                <span className="d-none d-sm-block">
+                                    {currentUser.Email} ({currentUser.Roles})
+                                </span>
                                 <span className="d-block d-sm-none">Profile</span>
                             </NavLink>
                             <Link id="logout" className="nav-link" to="/login" onClick={logOut}>
@@ -115,10 +121,35 @@ const App: React.FC = () => {
             <Container className="mt-3" fluid>
                 <Routes>
                     <Route path="/" element={<Overview />} />
-                    <Route path="/login" element={<LogIn />} />
-                    <Route path="/signup" element={<SignUp />} />
-                    <Route path="/projects" element={<Projects />} />
                     <Route path="/calendar" element={<Calendar />} />
+                    <Route
+                        path="/login"
+                        element={
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <LogIn />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/signup"
+                        element={
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <SignUp />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/projects"
+                        element={
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <Projects />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/profile"
+                        element={<Suspense fallback={<div>Loading...</div>}>{identity ? <Profile /> : <div>Loading...</div>}</Suspense>}
+                    />
                 </Routes>
             </Container>
         </div>

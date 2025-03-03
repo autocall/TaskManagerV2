@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SignUpState, submittedSignUpAction, submittingSignUpAction } from "../states/signup.state";
 import { AppState } from "../states/store";
 import { testHelper } from "../helpers/test.helper";
+import { Col, Container, Row } from "react-bootstrap";
 
 const SingUp: React.FC = () => {
     const { search } = useLocation();
@@ -51,40 +52,50 @@ const SingUp: React.FC = () => {
     };
 
     return (
-        <div style={{ textAlign: "center" }}>
-            <Card style={{ width: "24rem", display: "inline-block" }}>
-                <Card.Header>Register</Card.Header>
-                <Card.Body style={{ textAlign: "left" }}>
-                    <Formik initialValues={state} validationSchema={validationSchema} onSubmit={handleSubmit}>
-                        {({ handleSubmit, handleChange, values, touched, errors }) => (
-                            <Form onSubmit={handleSubmit}>
-                                <FormGroup error={touched.UserName && (errors.UserName ?? state.errors.UserName)}>
-                                    <Field name="UserName" type="username" placeholder="UserName" className="form-control" />
-                                </FormGroup>
+        <Container>
+            <Row className="justify-content-center">
+                <Col className="text-center" style={{ maxWidth: "24rem" }}>
+                    <Card>
+                        <Card.Header>Register</Card.Header>
+                        <Card.Body style={{ textAlign: "left" }}>
+                            <Formik initialValues={state} validationSchema={validationSchema} onSubmit={handleSubmit}>
+                                {({ handleSubmit, handleChange, values, touched, errors }) => (
+                                    <Form onSubmit={handleSubmit}>
+                                        <FormGroup error={touched.UserName && (errors.UserName ?? state.errors.UserName)}>
+                                            <Field name="UserName" type="username" placeholder="UserName" className="form-control" />
+                                        </FormGroup>
 
-                                <FormGroup error={touched.Email && (errors.Email ?? state.errors.Email)}>
-                                    <Field name="Email" type="email" placeholder="Email" className="form-control" />
-                                </FormGroup>
+                                        <FormGroup error={touched.Email && (errors.Email ?? state.errors.Email)}>
+                                            <Field name="Email" type="email" placeholder="Email" className="form-control" />
+                                        </FormGroup>
 
-                                <FormGroup error={touched.Password && (errors.Password ?? state.errors.Password)}>
-                                    <Field name="Password" type="password" placeholder="Password" className="form-control" />
-                                </FormGroup>
+                                        <FormGroup error={touched.Password && (errors.Password ?? state.errors.Password)}>
+                                            <Field name="Password" type="password" placeholder="Password" className="form-control" />
+                                        </FormGroup>
 
-                                <FormGroup error={touched.ConfirmPassword && (errors.ConfirmPassword ?? state.errors.ConfirmPassword)}>
-                                    <Field name="ConfirmPassword" type="password" placeholder="Confirm Password" className="form-control" />
-                                </FormGroup>
-                                <FormGroup error={state.error} className="d-grid">
-                                    <Button type="submit" variant="primary" disabled={state.submitting}>
-                                        {state.submitting && <span className="spinner-border spinner-border-sm"></span>}
-                                        {!state.submitting && <span>Register</span>}
-                                    </Button>
-                                </FormGroup>
-                            </Form>
-                        )}
-                    </Formik>
-                </Card.Body>
-            </Card>
-        </div>
+                                        <FormGroup
+                                            error={touched.ConfirmPassword && (errors.ConfirmPassword ?? state.errors.ConfirmPassword)}>
+                                            <Field
+                                                name="ConfirmPassword"
+                                                type="password"
+                                                placeholder="Confirm Password"
+                                                className="form-control"
+                                            />
+                                        </FormGroup>
+                                        <FormGroup error={state.error} className="d-grid">
+                                            <Button type="submit" variant="primary" disabled={state.submitting}>
+                                                {state.submitting && <span className="spinner-border spinner-border-sm"></span>}
+                                                {!state.submitting && <span>Register</span>}
+                                            </Button>
+                                        </FormGroup>
+                                    </Form>
+                                )}
+                            </Formik>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 

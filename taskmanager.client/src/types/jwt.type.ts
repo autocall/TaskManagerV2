@@ -3,6 +3,7 @@ export default interface IJwt {
     UserName: string,
     Email: string,
     Roles: string,
+    TimeZoneId: string,
     nbf: number,
     exp: number,
     iat: number

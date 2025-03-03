@@ -5,5 +5,5 @@
 5. Pending to close
 
 !. Check axios.defaults
-!. Attention. For example: testing a query index
 !. To filter tasks/comments by the date
+!. Implement Tags

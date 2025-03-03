@@ -24,7 +24,6 @@ public class EventService : BaseService {
 
     private IEnumerable<EventDto> GenerateRange(List<EventDto> events, DateOnly now, DateOnly startDate, DateOnly endDate) {
         foreach (var e in events) {
-            var tm = e.Clone();
             if (e.RepeatType != EventRepeatEnum.Default && e.RepeatValue <= 0) {
                 // returns with an error
                 var error = "Repeat value should be greater than 0";

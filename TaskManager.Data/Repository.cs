@@ -4,6 +4,7 @@ using TaskManager.Data.Extensions;
 using System.Linq.Expressions;
 using EFCore.BulkExtensions;
 using TaskManager.Data.Helpers;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace TaskManager.Data;
 public interface IRepository { }
@@ -63,7 +64,7 @@ public class Repository<T> : IRepository where T : BaseEntity {
                      ParameterExpression arg = Expression.Parameter(type, "x");
                      var expr = Expression.Property(arg, property);
                      var exprProperty = Expression.Lambda(expr, arg);
-                     var m = b.GetType().GetMethod("SetProperty").MakeGenericMethod(property.PropertyType);
+                     var m = b.GetType().GetMethod(nameof(SetPropertyBuilder<T>.SetProperty)).MakeGenericMethod(property.PropertyType);
                      var value = property.GetValue(newModel);
                      b = (SetPropertyBuilder<T>)m.Invoke(b, [exprProperty, value]);
                  }

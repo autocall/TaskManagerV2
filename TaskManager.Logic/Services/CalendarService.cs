@@ -11,10 +11,17 @@ public class CalendarService : BaseService {
 
     public async Task<CalendarDto> GetCurrentAsync(DayOfWeek firstDayOfWeek) {
         var now = DateOnly.FromDateTime(DateTime.Now);
-        return await this.GetAsync(firstDayOfWeek, now);
+        var dto = this.Get(firstDayOfWeek, now);
+
+        // attaches events
+        var events = await this.EventService.GetRangeAsync(now, dto.Days.Min(x => x.Date), dto.Days.Max(x => x.Date));
+        foreach (var day in dto.Days) {
+            day.Events = events.Where(x => x.Date == day.Date).ToList();
+        }
+        return dto;
     }
 
-    public async Task<CalendarDto> GetAsync(DayOfWeek firstDayOfWeek, DateOnly now) {
+    public CalendarDto Get(DayOfWeek firstDayOfWeek, DateOnly now) {
         var days = new List<CalendarDayDto>();
         // TODO: use timezone
         var date = now;
@@ -27,12 +34,6 @@ public class CalendarService : BaseService {
             // next week
             date = DateOnly.FromDateTime(this.Calendar.AddWeeks(date.ToDateTime(default), 1));
         }
-
-        // attaches events
-        var events = await this.EventService.GetRangeAsync(now, days.Min(x => x.Date), days.Max(x => x.Date));
-        foreach (var day in days) {
-            day.Events = events.Where(x => x.Date == day.Date).ToList();
-        }
         return dto;
     }
 
@@ -41,9 +42,20 @@ public class CalendarService : BaseService {
         var now = DateOnly.FromDateTime(DateTime.Now);
         for (int i = 0; i < Settings.YearMonths; i++) {
             var date = new DateOnly(DateTime.Now.Year, now.Month, 1).AddMonths(i);
-            var dto = await this.GetAsync(firstDayOfWeek, date);
+            var dto = this.Get(firstDayOfWeek, date);
+
             dtos.Add(dto);
         }
+
+        // attaches events
+        var events = await this.EventService.GetRangeAsync(now,
+            dtos.SelectMany(e => e.Days).Min(x => x.Date), dtos.SelectMany(e => e.Days).Max(x => x.Date));
+        foreach (var dto in dtos) {
+            foreach (var day in dto.Days) {
+                day.Events = events.Where(x => x.Date == day.Date).ToList();
+            }
+        }
+
         return dtos;
     }
 

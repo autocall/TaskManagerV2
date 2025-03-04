@@ -14,6 +14,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components.Forms;
 using TaskManager.Logic.Dtos;
 using Microsoft.VisualBasic;
+using TaskManager.Server.Extensions;
 
 namespace TaskManager.Server.Controllers;
 [Authorize]
@@ -22,6 +23,7 @@ namespace TaskManager.Server.Controllers;
 public class ApiCalendarController : BaseController {
 
     private CalendarService Service => Host.GetService<CalendarService>();
+    private ProfileService ProfileService => Host.GetService<ProfileService>();
 
     #region [ .ctor ]
 
@@ -34,7 +36,8 @@ public class ApiCalendarController : BaseController {
 #if DEBUG
         await Task.Delay(TimeSpan.FromSeconds(0.1));
 #endif
-        var dtos = await this.Service.GetYearAsync(firstDayOfWeek);
+        var now = await this.ProfileService.GetNowAsync(this.User.GetUserId());
+        var dtos = await this.Service.GetYearAsync(firstDayOfWeek, DateOnly.FromDateTime(now));
         return JsonSuccess(dtos);
     }
 
@@ -43,7 +46,8 @@ public class ApiCalendarController : BaseController {
 #if DEBUG
         await Task.Delay(TimeSpan.FromSeconds(0.1));
 #endif
-        var dto = await this.Service.GetCurrentAsync(firstDayOfWeek);
+        var now = await this.ProfileService.GetNowAsync(this.User.GetUserId());
+        var dto = await this.Service.GetCurrentAsync(firstDayOfWeek, DateOnly.FromDateTime(now));
         return JsonSuccess(dto);
     }
 }

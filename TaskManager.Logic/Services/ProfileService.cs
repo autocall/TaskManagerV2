@@ -29,6 +29,8 @@ public class ProfileService : BaseService {
         return user.TimeZoneId;
     }
 
+    /// <summary>
+    ///     Gets the user TimeZone or UTC if not set </summary>
     public async Task<TimeZoneDto> GetTimeZoneAsync(int userId) {
         var timeZoneId = await GetTimeZoneIdAsync(userId);
         if (timeZoneId == null) {
@@ -37,6 +39,8 @@ public class ProfileService : BaseService {
         return this.GetTimeZoneById(timeZoneId);
     }
 
+    /// <summary>
+    ///     Gets the user TimeZone or UTC if not set </summary>
     public TimeZoneDto GetTimeZoneById(string timeZoneId) {
         if (timeZoneId == null) {
             timeZoneId = TimeZoneInfo.Utc.Id;
@@ -46,5 +50,12 @@ public class ProfileService : BaseService {
             timeZone = TimeZoneInfo.Utc;
         }
         return new TimeZoneDto(timeZone);
+    }
+
+    /// <summary>
+    ///     Gets current time of the user </summary>
+    public async Task<DateTime> GetNowAsync(int userId) {
+        var timeZone = await this.GetTimeZoneAsync(userId);
+        return TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById(timeZone.Id));
     }
 }

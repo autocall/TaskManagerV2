@@ -9,10 +9,8 @@ public class CalendarService : BaseService {
 
     public CalendarService(ServicesHost host) : base(host) { }
 
-    public async Task<CalendarDto> GetCurrentAsync(DayOfWeek firstDayOfWeek) {
-        var now = DateOnly.FromDateTime(DateTime.Now);
+    public async Task<CalendarDto> GetCurrentAsync(DayOfWeek firstDayOfWeek, DateOnly now) {
         var dto = this.Get(firstDayOfWeek, now);
-
         // attaches events
         var events = await this.EventService.GetRangeAsync(now, dto.Days.Min(x => x.Date), dto.Days.Max(x => x.Date));
         foreach (var day in dto.Days) {
@@ -30,20 +28,18 @@ public class CalendarService : BaseService {
         for (int i = 0; i < Settings.CurrentCalendarWeeks; i++) {
             var weekOfYear = this.GetWeekOfYear(date, firstDayOfWeek);
             // adds days
-            days.AddRange(this.CreateWeek(weekOfYear, date.Year, firstDayOfWeek));
+            days.AddRange(this.CreateWeek(weekOfYear, date.Year, firstDayOfWeek, now));
             // next week
             date = DateOnly.FromDateTime(this.Calendar.AddWeeks(date.ToDateTime(default), 1));
         }
         return dto;
     }
 
-    public async Task<List<CalendarDto>> GetYearAsync(DayOfWeek firstDayOfWeek) {
+    public async Task<List<CalendarDto>> GetYearAsync(DayOfWeek firstDayOfWeek, DateOnly now) {
         var dtos = new List<CalendarDto>();
-        var now = DateOnly.FromDateTime(DateTime.Now);
         for (int i = 0; i < Settings.YearMonths; i++) {
-            var date = new DateOnly(DateTime.Now.Year, now.Month, 1).AddMonths(i);
+            var date = new DateOnly(now.Year, now.Month, 1).AddMonths(i);
             var dto = this.Get(firstDayOfWeek, date);
-
             dtos.Add(dto);
         }
 
@@ -74,28 +70,28 @@ public class CalendarService : BaseService {
         return firstWeekStart.AddDays((weekOfYear - 1) * 7); // Return the first date of the given week number
     }
 
-    private CalendarDayDto CreateFirstDateOfWeek(int weekOfYear, int year, DayOfWeek firstDayOfWeek) {
+    private CalendarDayDto CreateFirstDateOfWeek(int weekOfYear, int year, DayOfWeek firstDayOfWeek, DateOnly now) {
         var date = this.GetFirstDateOfWeek(weekOfYear, year, firstDayOfWeek);
-        return this.CreateDate(date);
+        return this.CreateDate(date, now);
     }
 
-    private CalendarDayDto CreateNextDate(CalendarDayDto day) {
+    private CalendarDayDto CreateNextDate(CalendarDayDto day, DateOnly now) {
         var next = day.Date.AddDays(1);
-        return CreateDate(next);
+        return CreateDate(next, now);
     }
 
-    private CalendarDayDto CreateDate(DateOnly date) {
+    private CalendarDayDto CreateDate(DateOnly date, DateOnly now) {
         return new CalendarDayDto(date) {
             // TODO: use timezone
-            IsCurrentDay = date == DateOnly.FromDateTime(DateTime.Now)
+            IsCurrentDay = date == now
         };
     }
 
-    private IEnumerable<CalendarDayDto> CreateWeek(int weekOfYear, int year, DayOfWeek firstDayOfWeek) {
-        var day = this.CreateFirstDateOfWeek(weekOfYear, year, firstDayOfWeek);
+    private IEnumerable<CalendarDayDto> CreateWeek(int weekOfYear, int year, DayOfWeek firstDayOfWeek, DateOnly now) {
+        var day = this.CreateFirstDateOfWeek(weekOfYear, year, firstDayOfWeek, now);
         yield return day;
         for (int i = 0; i < 6; i++) {
-            day = this.CreateNextDate(day);
+            day = this.CreateNextDate(day, now);
             yield return day;
         }
     }

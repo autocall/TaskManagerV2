@@ -170,22 +170,24 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                                         </FormGroup>
                                     </Row>
                                 </Modal.Body>
-                                <Modal.Footer className="d-flex">
+                                <Modal.Footer>
                                     <FormGroup error={state.error}>
                                         {modalData?.Id && (
-                                            <Button variant="danger" onClick={() => handleDelete()} disabled={state.submitting}>
-                                                {state.submitting ? (
-                                                    <span className="spinner-border spinner-border-sm"></span>
-                                                ) : (
-                                                    <span>Delete</span>
-                                                )}
-                                            </Button>
+                                            <div>
+                                                <Button variant="danger" onClick={() => handleDelete()} disabled={state.submitting}>
+                                                    {state.submitting ? (
+                                                        <span className="spinner-border spinner-border-sm"></span>
+                                                    ) : (
+                                                        <span>Delete</span>
+                                                    )}
+                                                </Button>
+                                            </div>
                                         )}
                                         <div className="ms-auto">
                                             <Button variant="secondary" onClick={() => handleClose(false)} disabled={state.submitting}>
                                                 Cancel
                                             </Button>
-                                            <Button variant="primary" type="submit" disabled={state.submitting} className="ms-2">
+                                            <Button variant="primary" type="submit" disabled={state.submitting}>
                                                 {state.submitting ? (
                                                     <span className="spinner-border spinner-border-sm"></span>
                                                 ) : (

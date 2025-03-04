@@ -68,34 +68,33 @@ button:focus-visible {
 } */
 
 div.invalid > input.form-control {
-  border: 1px solid #d61d2c;
+    border: 1px solid #d61d2c;
 }
 div.invalid > label {
-  color: #d61d2c;
+    color: #d61d2c;
 }
 div.invalid div.error {
-  color: #d61d2c;
+    color: #d61d2c;
 }
 .form-group {
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+.modal-footer > .form-group {
+    display: flex;
+    flex: 1;
+}
+.modal-footer > .form-group > div:last-child > .btn {
+    margin-left: 1rem;
 }
 .form-group:last-child {
-  margin-bottom: 0;
-}
-.modal-footer > .form-group * {
-  margin: calc(var(--bs-modal-footer-gap) * 0.5);
+    margin-bottom: 0;
 }
 .btn {
-  min-width: 80px;
+    min-width: 80px;
 }
 /* Forcibly adding the right border */
 .table.table-bordered {
-  border-right-width: 1px;
-  border-right-style: solid;
-  /*border-right-color: var(--bs-border-color);*/
+    border-right-width: 1px;
+    border-right-style: solid;
+    /*border-right-color: var(--bs-border-color);*/
 }
-
-
-
-
-

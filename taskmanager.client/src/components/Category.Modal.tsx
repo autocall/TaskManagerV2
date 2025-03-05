@@ -1,44 +1,44 @@
 import { Button, Modal, Spinner } from "react-bootstrap";
-import ProjectModel from "../services/models/project.model";
+import CategoryModel from "../services/models/category.model";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import Form from "react-bootstrap/Form";
 import FormGroup from "./shared/form-group";
 import { AppState } from "../states/store";
 import {
-    createProjectAction,
-    gettingProjectAction,
-    gotProjectAction,
-    submittingProjectAction,
-    submittedProjectAction,
-    closeProjectAction,
-    ProjectState,
-} from "../states/project.state";
+    createCategoryAction,
+    gettingCategoryAction,
+    gotCategoryAction,
+    submittingCategoryAction,
+    submittedCategoryAction,
+    closeCategoryAction,
+    CategoryState,
+} from "../states/category.state";
 import useAsyncEffect from "use-async-effect";
-import projectService from "../services/project.service";
+import categoryService from "../services/category.service";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { testHelper } from "../helpers/test.helper";
 
-interface ProjectModalProps {
-    modalData: ProjectModel | null;
+interface CategoryModalProps {
+    modalData: CategoryModel | null;
     onClose: (reload: boolean) => void;
 }
 
-const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
+const CategoryModal: React.FC<CategoryModalProps> = ({ modalData, onClose }) => {
     const { search } = useLocation();
     let dispatch = useDispatch();
-    const state = useSelector((s: AppState) => s.projectState);
+    const state = useSelector((s: AppState) => s.categoryState);
 
     useAsyncEffect(async () => {
         if (modalData != null) {
             if (modalData.Id) {
-                let service: projectService = new projectService(testHelper.getTestContainer(search));
-                dispatch(gettingProjectAction());
+                let service: categoryService = new categoryService(testHelper.getTestContainer(search));
+                dispatch(gettingCategoryAction());
                 let response = await service.get(modalData.Id);
-                dispatch(gotProjectAction(response));
+                dispatch(gotCategoryAction(response));
             } else {
-                dispatch(createProjectAction());
+                dispatch(createCategoryAction());
             }
         }
     }, [modalData, dispatch]);
@@ -53,19 +53,19 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
             .required("This field is required!"),
     });
 
-    const handleSubmit = async (model: ProjectState) => {
-        let service: projectService = new projectService(testHelper.getTestContainer(search));
+    const handleSubmit = async (model: CategoryState) => {
+        let service: categoryService = new categoryService(testHelper.getTestContainer(search));
         if (modalData?.Id) {
-            dispatch(submittingProjectAction());
-            let response = await service.update(modalData.Id, model.Name);
-            dispatch(submittedProjectAction(response));
+            dispatch(submittingCategoryAction());
+            let response = await service.update(modalData.Id, model.Name, model.Color);
+            dispatch(submittedCategoryAction(response));
             if (response.success) {
                 handleClose(true);
             }
         } else {
-            dispatch(submittingProjectAction());
-            let response = await service.create(model.Name);
-            dispatch(submittedProjectAction(response));
+            dispatch(submittingCategoryAction());
+            let response = await service.create(model.Name, model.Color);
+            dispatch(submittedCategoryAction(response));
             if (response.success) {
                 handleClose(true);
             }
@@ -73,14 +73,14 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
     };
 
     const handleClose = (reload: boolean) => {
-        dispatch(closeProjectAction());
+        dispatch(closeCategoryAction());
         onClose(reload);
     };
 
     return (
         <Modal show={modalData != null} onHide={() => handleClose(false)}>
             <Modal.Header closeButton>
-                <Modal.Title>{modalData?.Id ? "Edit" : "Add"} Project</Modal.Title>
+                <Modal.Title>{modalData?.Id ? "Edit" : "Add"} Category</Modal.Title>
             </Modal.Header>
             {state.loading ? (
                 <div className="text-center m-5">
@@ -92,8 +92,13 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
                         <Form onSubmit={handleSubmit}>
                             <fieldset disabled={state.loaded == false}>
                                 <Modal.Body>
+                                    <Form.Label>Name</Form.Label>
                                     <FormGroup error={touched.Name && (errors.Name ?? state.errors.Name)}>
                                         <Field name="Name" placeholder="Name" className="form-control" />
+                                    </FormGroup>
+                                    <Form.Label>Color</Form.Label>
+                                    <FormGroup error={touched.Color && (errors.Color ?? state.errors.Color)}>
+                                        <Field type="color" name="Color" placeholder="Color" className="form-control form-control-color" />
                                     </FormGroup>
                                 </Modal.Body>
 
@@ -119,4 +124,4 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
     );
 };
 
-export default ProjectModal;
+export default CategoryModal;

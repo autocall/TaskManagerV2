@@ -37,7 +37,9 @@ const Projects: React.FC = () => {
             dispatch(deletingProjectAction());
             let response = await service.delete(model.Id);
             dispatch(deletedProjectAction(response));
-            await load();
+            if (response.success) {
+                await load();
+            }
         }
     };
     const handleClose = async (reload: boolean) => {

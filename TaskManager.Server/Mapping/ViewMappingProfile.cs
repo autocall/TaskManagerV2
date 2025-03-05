@@ -13,6 +13,10 @@ public class ViewMappingProfile : Profile {
         CreateMap<CreateProjectViewModel, CreateProjectDto>();
         CreateMap<UpdateProjectViewModel, UpdateProjectDto>();
 
+        CreateMap<CreateCategoryViewModel, CreateCategoryDto>();
+        CreateMap<UpdateCategoryViewModel, UpdateCategoryDto>();
+        CreateMap<UpdateCategoryOrderViewModel, UpdateCategoryOrderDto>();
+
         CreateMap<CreateEventViewModel, CreateEventDto>();
         CreateMap<UpdateEventViewModel, UpdateEventDto>();
     }

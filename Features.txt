@@ -7,3 +7,5 @@
 !. Check axios.defaults
 !. To filter tasks/comments by the date
 !. Implement Tags
+!. Add a short completed tasks (for example a bag 0.5h)
+!. Filter by users

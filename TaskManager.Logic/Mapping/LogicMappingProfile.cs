@@ -10,10 +10,15 @@ public class LogicMappingProfile : Profile {
         CreateMap<TmUserDto, TmUser>().ReverseMap();
         CreateMap<TmRoleDto, TmRole>().ReverseMap();
         CreateMap<ProjectDto, Project>().ReverseMap();
+        CreateMap<CategoryDto, Category>().ReverseMap();
         CreateMap<EventDto, Event>().CreateMappings().ReverseMap().CreateMappings();
 
         CreateMap<CreateProjectDto, Project>();
         CreateMap<UpdateProjectDto, Project>();
+
+        CreateMap<CreateCategoryDto, Category>();
+        CreateMap<UpdateCategoryDto, Category>();
+        CreateMap<UpdateCategoryOrderDto, Category>();
 
         CreateMap<CreateEventDto, Event>().CreateMappings().ReverseMap().CreateMappings();
         CreateMap<UpdateEventDto, Event>().CreateMappings().ReverseMap().CreateMappings();

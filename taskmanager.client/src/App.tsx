@@ -15,6 +15,7 @@ const Profile = lazy(() => import("./components/Profile"));
 const LogIn = lazy(() => import("./components/LogIn"));
 const SignUp = lazy(() => import("./components/SignUp"));
 const Projects = lazy(() => import("./components/Projects"));
+const Categories = lazy(() => import("./components/Categories"));
 
 const App: React.FC = () => {
     const service = new authService(null);
@@ -96,11 +97,14 @@ const App: React.FC = () => {
                             <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/">
                                 Overview
                             </NavLink>
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/calendar">
+                                Calendar
+                            </NavLink>
                             <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/projects">
                                 Projects
                             </NavLink>
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/calendar">
-                                Calendar
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/categories">
+                                Categories
                             </NavLink>
                         </Nav>
                         <Nav>
@@ -143,6 +147,14 @@ const App: React.FC = () => {
                         element={
                             <Suspense fallback={<div>Loading...</div>}>
                                 <Projects />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/categories"
+                        element={
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <Categories />
                             </Suspense>
                         }
                     />

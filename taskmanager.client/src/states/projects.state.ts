@@ -38,7 +38,6 @@ export const DELETEDPROJECT = "DeletedProject";
 export const deletedProjectAction = (response: Response<any>) =>
     ({
         type: DELETEDPROJECT,
-        projects: response.data ?? initialState.projects,
         error: response.error ?? initialState.error,
     }) as const;
 

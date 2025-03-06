@@ -9,6 +9,7 @@ import { categoriesReducer, CategoriesState } from "./categories.state";
 import { calendarReducer, CalendarState } from "./calendar.state";
 import { eventReducer, EventState } from "./event.state";
 import { profileTimeZoneReducer, ProfileTimeZoneState } from "./profile.timezone.state";
+import { overviewReducer, OverviewState } from "./overview.state";
 
 export interface AppState {
     readonly loginState: LoginState;
@@ -17,6 +18,7 @@ export interface AppState {
     readonly projectState: ProjectState;
     readonly categoriesState: CategoriesState;
     readonly categoryState: CategoryState;
+    readonly overviewState: OverviewState;
 
     readonly calendarState: CalendarState;
     readonly eventState: EventState;
@@ -28,9 +30,10 @@ const rootReducer = combineReducers<AppState>({
     signUpState: signUpReducer,
     projectsState: projectsReducer,
     projectState: projectReducer,
+    calendarState: calendarReducer,
     categoriesState: categoriesReducer,
     categoryState: categoryReducer,
-    calendarState: calendarReducer,
+    overviewState: overviewReducer,
     eventState: eventReducer,
     profileTimeZoneState: profileTimeZoneReducer,
 });

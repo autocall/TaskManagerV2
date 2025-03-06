@@ -1,15 +1,15 @@
-import React from "react";
+import CategoryModel from "../../services/models/category.model";
 
 interface Props {
-    children: React.ReactNode;
+    model: CategoryModel;
 }
 
-const Divider = ({ children }: Props) => {
+const Divider = ({ model }: Props) => {
     return (
         <div className="d-flex align-items-center text-center my-1">
-            <div className="flex-grow-1 border-bottom"></div>
-            {children}
-            <div className="flex-grow-1 border-bottom"></div>
+            <div className="flex-grow-1 border-bottom" css={{ borderColor: model.Color + " !important" }}></div>
+            <span className="mx-3" style={{ color: model.Color }}>{model.Name}</span>
+            <div className="flex-grow-1 border-bottom" css={{ borderColor: model.Color + " !important"  }}></div>
         </div>
     );
 };

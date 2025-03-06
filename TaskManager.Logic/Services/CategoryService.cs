@@ -48,7 +48,6 @@ public class CategoryService : BaseService {
             _ => throw new Exception($"Invalid order: {dto.Order}")
         };
         if (swapModel != null) {
-            Console.WriteLine($"Swap: {oldModel.Id} - {swapModel.Id}");
             var swapOrder = swapModel.Order;
             swapModel.Order = oldModel.Order;
             oldModel.Order = swapOrder;

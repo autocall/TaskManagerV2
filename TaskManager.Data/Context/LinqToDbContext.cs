@@ -2,6 +2,7 @@
 using LinqToDB;
 using LinqToDB.Mapping;
 using TaskManager.Data.Mappings;
+using Microsoft.Extensions.Configuration;
 
 namespace TaskManager.Data.Context;
 
@@ -16,8 +17,17 @@ public class LinqToDbContext : DataConnection {
         CompanyMap.LinqToDbConfigure(builder);
         builder.Build();
 
-        var connection = Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.GetDbConnection(dbContext.Database);
-        return new DataOptions().UseMappingSchema(mappingSchema).UseConnectionString(connection.ConnectionString).UseSqlServer();
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+#if DEBUG
+            .AddJsonFile("appsettings.Development.json")
+#else
+            .AddJsonFile("appsettings.json")
+#endif
+            .Build();
+        configuration.GetConnectionString("DefaultConnection");
+        return new DataOptions().UseMappingSchema(mappingSchema)
+            .UseConnectionString(configuration.GetConnectionString("DefaultConnection")).UseSqlServer();
     }
 }
 

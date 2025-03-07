@@ -48,5 +48,27 @@ public class TmDbContextSeed {
             await userManager.CreateAsync(user, Settings.DefaultPassword);
             await userManager.AddToRoleAsync(user, RoleEnum.Admin.ToString());
         }
+
+        // Seed test user
+        if (await userManager.FindByNameAsync(Settings.TestUserName) == null) {
+            var companyId = DbRandomHelper.NewInt32();
+            await context.Set<Company>().AddAsync(new Company {
+                Id = companyId,
+                CreatedDateTime = DateTime.UtcNow,
+                ModifiedDateTime = DateTime.UtcNow,
+            });
+            var user = new TmUser {
+                Id = DbRandomHelper.NewInt32(),
+                CompanyId = companyId,
+                CreatedId = TmUser.SystemUserId,
+                ModifiedId = TmUser.SystemUserId,
+                UserName = Settings.TestUserName,
+                Email = Settings.TestUserEmail,
+                CreatedDateTime = DateTime.UtcNow,
+                ModifiedDateTime = DateTime.UtcNow,
+            }; 
+            await userManager.CreateAsync(user, Settings.DefaultPassword);
+            await userManager.AddToRoleAsync(user, RoleEnum.User.ToString());
+        }
     }
 }

@@ -13,7 +13,7 @@ public class LinqToDbContext : DataConnection {
     private static DataOptions CreateOptions(TmDbContext dbContext) {
         var mappingSchema = new MappingSchema();
         var builder = new FluentMappingBuilder(mappingSchema);
-        LinqToDbCompanyMap.Configure(builder);
+        CompanyMap.LinqToDbConfigure(builder);
         builder.Build();
 
         var connection = Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.GetDbConnection(dbContext.Database);

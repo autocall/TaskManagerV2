@@ -9,10 +9,11 @@ public class CompanyMap : BaseMap<Company> {
         builder.Ignore(e => e.CreatedBy);
         builder.ToTable(typeof(Company).Name);
     }
-}
-public class LinqToDbCompanyMap {
-    public static void Configure(FluentMappingBuilder builder) {
+
+    public static void LinqToDbConfigure(FluentMappingBuilder builder) {
         builder.Entity<Company>()
+            .Ignore(e => e.CreatedById)
+            .Ignore(e => e.ModifiedById)
             .Ignore(e => e.CreatedBy)
             .Ignore(e => e.ModifiedBy);
     }

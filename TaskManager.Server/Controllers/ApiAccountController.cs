@@ -12,6 +12,7 @@ using TaskManager.Logic;
 using TaskManager.Server.Models;
 using TaskManager.Data.Helpers;
 using TaskManager.Common.Exceptions;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace TaskManager.Server.Controllers;
 [ApiController]
@@ -46,6 +47,7 @@ public class ApiAccountController : BaseController {
             return base.JsonSuccess(
                 new IdentityDto {
                     Id = user.Id,
+                    CompanyId = user.CompanyId,
                     UserName = user.UserName,
                     Email = user.Email,
                     TimeZone = ProfileService.GetTimeZoneById(user.TimeZoneId),
@@ -81,9 +83,13 @@ public class ApiAccountController : BaseController {
             }
         }
 
+        // Creates company
+        var company = await Host.GetService<CompanyService>().CreateAsync();
+
         // Creates user
         TmUser user = new TmUser {
             Id = DbRandomHelper.NewInt32(),
+            CompanyId = company.Id,
             UserName = model.UserName,
             Email = model.Email,
             CreatedDateTime = DateTime.UtcNow,
@@ -139,6 +145,7 @@ public class ApiAccountController : BaseController {
         var token = await Host.GetService<AuthService>().CreateAsync(user);
         var identity = new IdentityDto {
             Id = user.Id,
+            CompanyId = user.CompanyId,
             UserName = user.UserName,
             Email = user.Email,
             TimeZone = ProfileService.GetTimeZoneById(user.TimeZoneId),

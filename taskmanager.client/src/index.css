@@ -79,11 +79,7 @@ div.invalid div.error {
 .form-group {
     margin-bottom: 1rem;
 }
-.modal-footer > .form-group {
-    display: flex;
-    flex: 1;
-}
-.modal-footer > .form-group > div:last-child > .btn {
+.modal-footer > .form-group div:last-child > .btn {
     margin-left: 1rem;
 }
 .form-group:last-child {

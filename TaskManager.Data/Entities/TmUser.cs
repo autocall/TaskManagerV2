@@ -6,6 +6,7 @@ namespace TaskManager.Data.Entities;
 public class TmUser : IdentityUser<int> {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
     public override int Id { get; set; }
+    public int CompanyId { get; set; }
 
     [Column(TypeName = "varchar(64)")]
     public string TimeZoneId { get; set; }
@@ -22,12 +23,16 @@ public class TmUser : IdentityUser<int> {
 
     public bool IsDeleted { get; set; }
 
+    [ForeignKey("CompanyId")]
+    public virtual Company Company { get; set; }
+
     public static int SystemUserId = 1000;
     public static int AdminUserId = 11223344;
 
     [NotMapped]
     public static TmUser SystemUser => new TmUser {
         Id = SystemUserId,
+        CompanyId = Company.SystemCompanyId,
         CreatedId = SystemUserId,
         ModifiedId = SystemUserId,
         Email = "system@tm.com",
@@ -38,6 +43,7 @@ public class TmUser : IdentityUser<int> {
     [NotMapped]
     public static TmUser AdminUser => new TmUser {
         Id = AdminUserId,
+        CompanyId = Company.SystemCompanyId,
         CreatedId = SystemUserId,
         ModifiedId = SystemUserId,
         Email = "admin@tm.com",

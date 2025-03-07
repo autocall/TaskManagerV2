@@ -1,4 +1,10 @@
-﻿using TaskManager.Data.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using TaskManager.Data.Entities;
 
 namespace TaskManager.Data.Mappings;
-public class ProjectMap : BaseMap<Project> { }
+public class ProjectMap : BaseMap<Project> {
+    public override void Configure(EntityTypeBuilder<Project> builder) {
+        base.Configure(builder);
+    }
+}

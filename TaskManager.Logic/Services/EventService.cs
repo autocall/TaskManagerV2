@@ -2,27 +2,29 @@
 using TaskManager.Common;
 using TaskManager.Data;
 using TaskManager.Data.Entities;
+using TaskManager.Data.Repositories;
 using TaskManager.Logic.Dtos;
 using TaskManager.Logic.Enums;
 
 namespace TaskManager.Logic.Services;
 public class EventService : BaseService {
-    private Repository<Event> Rep => UnitOfWork.GetRepository<Event>();
+    private ICompanyRepository<Event> CompanyRep => UnitOfWork.GetCompanyRepository<Event>();
+    private IRepository<Event> Rep(int companyId) => this.CompanyRep.Get(companyId);
 
     public EventService(ServicesHost host) : base(host) { }
 
-    public async Task<List<EventDto>> GetAllAsync() {
-        var models = await Rep.GetAll(false).ToListAsync();
+    public async Task<List<EventDto>> GetAllAsync(int companyId) {
+        var models = await Rep(companyId).GetAll(false).ToListAsync();
         return Mapper.Map<List<EventDto>>(models);
     }
 
-    public async Task<List<EventDto>> GetRangeAsync(DateOnly now, DateOnly startDate, DateOnly endDate) {
-        var models = await Rep.GetAll(false).ToListAsync();
+    public async Task<List<EventDto>> GetRangeAsync(DateOnly now, DateOnly startDate, DateOnly endDate, int companyId) {
+        var models = await Rep(companyId).GetAll(false).ToListAsync();
         var dtos = Mapper.Map<List<EventDto>>(models);
-        return this.GenerateRange(dtos, now, startDate, endDate).ToList();
+        return this.GenerateRange(dtos, now, startDate, endDate, companyId).ToList();
     }
 
-    private IEnumerable<EventDto> GenerateRange(List<EventDto> events, DateOnly now, DateOnly startDate, DateOnly endDate) {
+    private IEnumerable<EventDto> GenerateRange(List<EventDto> events, DateOnly now, DateOnly startDate, DateOnly endDate, int companyId) {
         foreach (var e in events) {
             if (e.RepeatType != EventRepeatEnum.Default && e.RepeatValue <= 0) {
                 // returns with an error
@@ -67,40 +69,40 @@ public class EventService : BaseService {
         };
     }
 
-    public async Task<EventDto> GetAsync(int id) {
-        var model = await Rep.GetByIdAsync(id);
+    public async Task<EventDto> GetAsync(int id, int companyId) {
+        var model = await Rep(companyId).GetByIdAsync(id);
         return Mapper.Map<EventDto>(model);
     }
 
-    public async Task<EventDto> CreateAsync(CreateEventDto dto, int userId) {
+    public async Task<EventDto> CreateAsync(CreateEventDto dto, int userId, int companyId) {
         var model = new Event();
         Mapper.Map(dto, model);
-        await Rep.ExecuteCreateAsync(model, userId);
-        return await this.GetAsync(model.Id);
+        await Rep(companyId).InsertAsync(model, userId);
+        return await this.GetAsync(model.Id, companyId);
     }
 
-    public async Task<EventDto> UpdateAsync(UpdateEventDto dto, int userId) {
+    public async Task<EventDto> UpdateAsync(UpdateEventDto dto, int userId, int companyId) {
         var inModel = Mapper.Map<Event>(dto);
-        await Rep.ExecuteUpdateAsync<IEventUpdateMap>(inModel, userId);
-        return await this.GetAsync(dto.Id);
+        await Rep(companyId).UpdateAsync<IEventUpdateMap>(inModel, userId);
+        return await this.GetAsync(dto.Id, companyId);
     }
 
-    public async Task<EventDto> CompleteAsync(int id, int userId) {
-        var model = await Rep.GetByIdAsync(id);
+    public async Task<EventDto> CompleteAsync(int id, int userId, int companyId) {
+        var model = await Rep(companyId).GetByIdAsync(id);
         if (model == null) {
             return null;
         }
         if (model.RepeatType == (int)EventRepeatEnum.Default) {
-            await this.DeletePermanentAsync(id, userId);
+            await this.DeletePermanentAsync(id, userId, companyId);
             return null;
         } else {
             model.Date = GetNextDate(model.Date, (EventRepeatEnum)model.RepeatType, model.RepeatValue);
-            await Rep.ExecuteUpdateAsync<IEventUpdateDateMap>(model, userId);
-            return await this.GetAsync(id);
+            await Rep(companyId).UpdateAsync<IEventUpdateDateMap>(model, userId);
+            return await this.GetAsync(id, companyId);
         }
     }
 
-    public async Task<int> DeletePermanentAsync(int id, int userId) {
-        return await Rep.ExecuteDeleteAsync(id);
+    public async Task<int> DeletePermanentAsync(int id, int userId, int companyId) {
+        return await Rep(companyId).DeleteAsync(id);
     }
 }

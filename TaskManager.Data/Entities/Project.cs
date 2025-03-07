@@ -2,7 +2,7 @@
 using TaskManager.Data.Context;
 
 namespace TaskManager.Data.Entities;
-public class Project : BaseEntity, IProjectUpdateMap {
+public class Project : BaseCompanyEntity, IProjectUpdateMap {
     /// <summary>
     ///     Name </summary>
     /// <see cref="TmDbContext">remarks</see>

@@ -4,11 +4,9 @@ using TaskManager.Data.Extensions;
 using System.Linq.Expressions;
 using EFCore.BulkExtensions;
 using TaskManager.Data.Helpers;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace TaskManager.Data;
-public interface IRepository { }
-public class Repository<T> : IRepository where T : BaseEntity {
+namespace TaskManager.Data.Repositories;
+public class EFCoreRepository<T> : IRepository<T> where T : BaseEntity {
     /// <summary>
     ///     Holds db context instance </summary>
     protected readonly DbContext Context;
@@ -20,7 +18,7 @@ public class Repository<T> : IRepository where T : BaseEntity {
     /// <summary>
     ///     Creates entity repository </summary>
     /// <param name="dbContext">Db Context</param>
-    public Repository(DbContext dbContext) {
+    public EFCoreRepository(DbContext dbContext) {
         Context = dbContext;
         DbSet = Context.Set<T>();
     }
@@ -44,7 +42,7 @@ public class Repository<T> : IRepository where T : BaseEntity {
         return await DbSet.FindAsync(id);
     }
 
-    public async Task ExecuteCreateAsync(T model, int userId) {
+    public async Task InsertAsync(T model, int userId) {
         if (model.Id == default) {
             model.Id = DbRandomHelper.NewInt32();
         }
@@ -55,35 +53,37 @@ public class Repository<T> : IRepository where T : BaseEntity {
         await Context.BulkInsertAsync(new[] { model });
     }
 
-    public async Task<int> ExecuteUpdateAsync<TMap>(T newModel, int userId) where TMap : IBaseUpdateMap {
-        return await QueryableExecutePatchUpdateExtensions.ExecutePatchUpdateAsync(
-             this.DbSet.Where(e => e.Id == newModel.Id),
+    public Task InsertAsync(IEnumerable<T> models, int userId) {
+        throw new NotImplementedException();
+    }
+
+    public async Task<int> UpdateAsync<TMap>(T newModel, int userId) where TMap : IBaseUpdateMap {
+        return await DbSet.Where(e => e.Id == newModel.Id).ExecutePatchUpdateAsync(
              b => {
                  foreach (var property in typeof(TMap).GetProperties()) {
                      Type type = typeof(T);
                      ParameterExpression arg = Expression.Parameter(type, "x");
                      var expr = Expression.Property(arg, property);
                      var exprProperty = Expression.Lambda(expr, arg);
-                     var m = b.GetType().GetMethod(nameof(SetPropertyBuilder<T>.SetProperty)).MakeGenericMethod(property.PropertyType);
+                     var m = b.GetType().GetMethod(nameof(EFCoreSetPropertyBuilder<T>.SetProperty)).MakeGenericMethod(property.PropertyType);
                      var value = property.GetValue(newModel);
-                     b = (SetPropertyBuilder<T>)m.Invoke(b, [exprProperty, value]);
+                     b = (EFCoreSetPropertyBuilder<T>)m.Invoke(b, [exprProperty, value]);
                  }
-                 b = b.SetProperty<int>(e => e.ModifiedById, userId);
-                 b = b.SetProperty<DateTime>(e => e.ModifiedDateTime, DateTime.UtcNow);
+                 b = b.SetProperty(e => e.ModifiedById, userId);
+                 b = b.SetProperty(e => e.ModifiedDateTime, DateTime.UtcNow);
              });
     }
 
-    public async Task<int> ExecuteUpdateIsDeletedAsync(int id, bool value, int userId) {
-        return await QueryableExecutePatchUpdateExtensions.ExecutePatchUpdateAsync(
-            this.DbSet.Where(e => e.Id == id),
+    public async Task<int> UpdateIsDeletedAsync(int id, bool value, int userId) {
+        return await DbSet.Where(e => e.Id == id).ExecutePatchUpdateAsync(
             b => {
-                b = b.SetProperty<bool>(e => e.IsDeleted, value);
-                b = b.SetProperty<int>(e => e.ModifiedById, userId);
-                b = b.SetProperty<DateTime>(e => e.ModifiedDateTime, DateTime.UtcNow);
+                b = b.SetProperty(e => e.IsDeleted, value);
+                b = b.SetProperty(e => e.ModifiedById, userId);
+                b = b.SetProperty(e => e.ModifiedDateTime, DateTime.UtcNow);
             });
     }
 
-    public async Task<int> ExecuteDeleteAsync(int id) {
-        return await this.DbSet.Where(e => e.Id == id).ExecuteDeleteAsync();
+    public async Task<int> DeleteAsync(int id) {
+        return await DbSet.Where(e => e.Id == id).ExecuteDeleteAsync();
     }
 }

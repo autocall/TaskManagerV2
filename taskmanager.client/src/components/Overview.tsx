@@ -47,12 +47,12 @@ const Overview: React.FC = () => {
                     ) : (
                         state.categories?.map((category) => (
                             <Row key={category.Id}>
-                                <Divider model={category}/>
-                                    <Row>
-                                        <Col md={true}>2 of 4</Col>
-                                        <Col md={true}>3 of 4</Col>
-                                        <Col md={true}>4 of 4</Col>
-                                    </Row>
+                                <Divider model={category} />
+                                <Row>
+                                    <Col md={true}>2 of 4</Col>
+                                    <Col md={true}>3 of 4</Col>
+                                    <Col md={true}>4 of 4</Col>
+                                </Row>
                             </Row>
                         ))
                     )}

@@ -6,3 +6,4 @@ bin
 /TaskManager.Server/wwwroot/build
 /TaskManager.Server/appsettings.Production.json
 /TaskManager.Common/Settings.Production.cs
+/taskmanager.client/cypress/downloads

@@ -30,13 +30,13 @@ public class ApiEventController : BaseController {
 
     [HttpGet]
     public async Task<ActionResult> GetAll() {
-        var dtos = await this.Service.GetAllAsync();
+        var dtos = await this.Service.GetAllAsync(base.GetCompanyId());
         return JsonSuccess(dtos);
     }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult> Get(int id) {
-        var dto = await this.Service.GetAsync(id);
+        var dto = await this.Service.GetAsync(id, base.GetCompanyId());
         return JsonSuccess(dto);
     }
 
@@ -46,7 +46,7 @@ public class ApiEventController : BaseController {
             return base.JsonFail(base.GetErrors());
         }
         var inputDto = Mapper.Map<CreateEventDto>(model);
-        var outputDto = await this.Service.CreateAsync(inputDto, base.GetUserId());
+        var outputDto = await this.Service.CreateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(outputDto);
     }
 
@@ -56,7 +56,7 @@ public class ApiEventController : BaseController {
             return base.JsonFail(base.GetErrors());
         }
         var inputDto = Mapper.Map<UpdateEventDto>(model);
-        var outputDto = await this.Service.UpdateAsync(inputDto, base.GetUserId());
+        var outputDto = await this.Service.UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(outputDto);
     }
 
@@ -65,13 +65,13 @@ public class ApiEventController : BaseController {
         if (!ModelState.IsValid) {
             return base.JsonFail(base.GetErrors());
         }
-        var outputDto = await this.Service.CompleteAsync(model.Id, base.GetUserId());
+        var outputDto = await this.Service.CompleteAsync(model.Id, base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(outputDto);
     }
 
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id) {
-        var result = await this.Service.DeletePermanentAsync(id, base.GetUserId());
+        var result = await this.Service.DeletePermanentAsync(id, base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(result);
     }
 }

@@ -1,11 +1,12 @@
-1. Layout as the stack of rows
-2. To create a task with answer
-3. To create a comment without the task
-4. Daily tasks
-5. Pending to close
-
-!. Check axios.defaults
-!. To filter tasks/comments by the date
-!. Implement Tags
 !. Add a short completed tasks (for example a bag 0.5h)
+!. To create a task with answer
+!. To create a comment without the task
+!. Daily tasks
+!. Pending to close
+!. Note/Stick. For Example: "Try to user the chat copilot"
+
+!. To filter tasks/comments by the date
 !. Filter by users
+!. Implement Tags
+!. The prepared data for the example user
+!. Check axios.defaults

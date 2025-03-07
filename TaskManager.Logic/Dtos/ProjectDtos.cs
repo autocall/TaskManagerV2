@@ -1,6 +1,6 @@
 ﻿namespace TaskManager.Logic.Dtos;
 
-public class ProjectDto : BaseDto {
+public class ProjectDto : BaseCompanyDto {
     public string Name { get; set; }
 }
 

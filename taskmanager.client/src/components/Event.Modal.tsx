@@ -173,7 +173,7 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                                 <Modal.Footer>
                                     <FormGroup error={state.error}>
                                         {modalData?.Id && (
-                                            <div>
+                                            <div className="me-auto">
                                                 <Button variant="danger" onClick={() => handleDelete()} disabled={state.submitting}>
                                                     {state.submitting ? (
                                                         <span className="spinner-border spinner-border-sm"></span>
@@ -183,7 +183,7 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                                                 </Button>
                                             </div>
                                         )}
-                                        <div className="ms-auto">
+                                        <div>
                                             <Button variant="secondary" onClick={() => handleClose(false)} disabled={state.submitting}>
                                                 Cancel
                                             </Button>

@@ -34,6 +34,7 @@ public class AuthService : BaseService {
         ci.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
 
         ci.AddClaim(new Claim("UserId", user.Id.ToString()));
+        ci.AddClaim(new Claim("CompanyId", user.CompanyId.ToString()));
         ci.AddClaim(new Claim("UserName", user.UserName));
         ci.AddClaim(new Claim("Email", user.Email));
         var roles = await Host.UserManager.GetRolesAsync(user);

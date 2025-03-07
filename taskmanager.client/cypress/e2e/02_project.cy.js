@@ -84,7 +84,7 @@ describe("Proejcts", () => {
             cy.get(".modal-dialog").should("be.visible");
             cy.get("input[name='Name']").type("Test Project");
             cy.contains("button.btn-primary", "Save").click();
-            cy.get("input[name='Name']").next("div.error").should("have.text", testContaner.errors.Name);
+            cy.get("input[name='Name']").closest('.form-group').get("div.error").should("have.text", testContaner.errors.Name);
         });
     });
 });

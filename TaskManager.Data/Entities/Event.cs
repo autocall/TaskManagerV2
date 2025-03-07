@@ -2,7 +2,7 @@
 using TaskManager.Data.Context;
 
 namespace TaskManager.Data.Entities;
-public class Event : BaseEntity, IEventUpdateMap, IEventUpdateDateMap, IEnumEventMap {
+public class Event : BaseCompanyEntity, IEventUpdateMap, IEventUpdateDateMap, IEnumEventMap {
     [Column(TypeName = "Date")]
     public DateOnly Date { get; set; }
     /// <summary>

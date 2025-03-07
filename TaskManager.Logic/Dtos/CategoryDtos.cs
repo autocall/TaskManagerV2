@@ -1,6 +1,6 @@
 ﻿namespace TaskManager.Logic.Dtos;
 
-public class CategoryDto : BaseDto {
+public class CategoryDto : BaseCompanyDto {
     public string Name { get; set; }
     public int Color { get; set; }
     public byte Order { get; set; }

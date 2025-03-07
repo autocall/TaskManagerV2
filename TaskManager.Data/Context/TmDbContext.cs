@@ -28,15 +28,15 @@ public class TmDbContext : IdentityDbContext<TmUser, TmRole, int, TmUserClaim, T
         base.OnModelCreating(modelBuilder);
 
         // Identity
-        modelBuilder.Entity<TmUser>().ToTable("IdentityUsers");
+        modelBuilder.ApplyConfiguration(new UserMap());
         modelBuilder.Entity<TmRole>().ToTable("IdentityRoles");
-
         modelBuilder.Entity<TmUserRole>().ToTable("IdentityUserRoles");
         modelBuilder.Entity<TmRoleClaim>().ToTable("IdentityRoleClaim");
         modelBuilder.Entity<TmUserLogin>().ToTable("IdentityUserLogins");
         modelBuilder.Entity<TmUserClaim>().ToTable("IdentityUserClaims");
         modelBuilder.Entity<TmUserToken>().ToTable("IdentityUserToken");
 
+        modelBuilder.ApplyConfiguration(new CompanyMap());
         modelBuilder.ApplyConfiguration(new ProjectMap());
         modelBuilder.ApplyConfiguration(new CategoryMap());
         modelBuilder.ApplyConfiguration(new EventMap());

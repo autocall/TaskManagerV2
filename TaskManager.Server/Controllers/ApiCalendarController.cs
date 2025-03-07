@@ -37,7 +37,7 @@ public class ApiCalendarController : BaseController {
         await Task.Delay(TimeSpan.FromSeconds(0.1));
 #endif
         var now = await this.ProfileService.GetNowAsync(this.User.GetUserId());
-        var dtos = await this.Service.GetYearAsync(firstDayOfWeek, DateOnly.FromDateTime(now));
+        var dtos = await this.Service.GetYearAsync(firstDayOfWeek, DateOnly.FromDateTime(now), base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(dtos);
     }
 
@@ -47,7 +47,7 @@ public class ApiCalendarController : BaseController {
         await Task.Delay(TimeSpan.FromSeconds(0.1));
 #endif
         var now = await this.ProfileService.GetNowAsync(this.User.GetUserId());
-        var dto = await this.Service.GetCurrentAsync(firstDayOfWeek, DateOnly.FromDateTime(now));
+        var dto = await this.Service.GetCurrentAsync(firstDayOfWeek, DateOnly.FromDateTime(now), base.GetCompanyId());
         return JsonSuccess(dto);
     }
 }

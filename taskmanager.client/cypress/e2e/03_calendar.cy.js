@@ -120,7 +120,7 @@ Cypress._.each(testCases, (testData) => {
                 cy.get(".modal-dialog").should("be.visible").get(".modal-header").should("contain.text", "Add Event");
                 cy.get("input[name='Name']").type("Test Event");
                 cy.contains("button.btn-primary", "Save").click();
-                cy.get("input[name='Name']").next("div.error").should("have.text", testContaner.errors.Name);
+                cy.get("input[name='Name']").closest('.form-group').get("div.error").should("have.text", testContaner.errors.Name);
             });
         });
     });

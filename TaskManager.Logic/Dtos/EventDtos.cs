@@ -8,7 +8,7 @@ public interface IEnumEventDtoMap {
     public EventTypeEnum Type { get; set; }
 }
 
-public class EventDto : BaseDto, IEnumEventDtoMap, IDeepCloneable<EventDto> {
+public class EventDto : BaseCompanyDto, IEnumEventDtoMap, IDeepCloneable<EventDto> {
     public DateOnly Date { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
@@ -29,7 +29,7 @@ public class EventDto : BaseDto, IEnumEventDtoMap, IDeepCloneable<EventDto> {
     }
 
     public EventDto Clone(DateOnly date) {
-        var dto = this.Clone();
+        var dto = (EventDto)base.Clone();
         dto.Date = date;
         return dto;
     }

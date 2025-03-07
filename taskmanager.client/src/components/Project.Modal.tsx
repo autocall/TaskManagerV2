@@ -99,7 +99,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
 
                                 <Modal.Footer>
                                     <FormGroup error={state.error}>
-                                        <div className="ms-auto">
+                                        <div>
                                             <Button variant="secondary" onClick={() => handleClose(false)}>
                                                 Cancel
                                             </Button>

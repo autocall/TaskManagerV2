@@ -41,4 +41,12 @@ public static class ClaimsPrincipalExtension {
             return "no role";
         }
     }
+
+    public static int GetCompanyId(this ClaimsPrincipal principal) {
+        Claim claim = principal.FindFirst("CompanyId");
+        if (claim == null) {
+            throw new Exception("CompanyId claim not found");
+        }
+        return Int32.Parse(claim.Value);
+    }
 }

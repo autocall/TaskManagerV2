@@ -9,12 +9,12 @@ public abstract class BaseEntity : IBaseUpdateMap {
     [Column(TypeName = "smalldatetime")]
     public DateTime CreatedDateTime { get; set; }
 
-    public int CreatedById { get; set; }
+    public virtual int CreatedById { get; set; }
 
     [Column(TypeName = "smalldatetime")]
     public DateTime ModifiedDateTime { get; set; }
 
-    public int ModifiedById { get; set; }
+    public virtual int ModifiedById { get; set; }
 
     public bool IsDeleted { get; set; }
 
@@ -23,4 +23,9 @@ public abstract class BaseEntity : IBaseUpdateMap {
 
     [ForeignKey("ModifiedById")]
     public virtual TmUser ModifiedBy { get; set; }
+}
+
+public interface IBaseUpdateMap {
+    DateTime ModifiedDateTime { get; set; }
+    int ModifiedById { get; set; }
 }

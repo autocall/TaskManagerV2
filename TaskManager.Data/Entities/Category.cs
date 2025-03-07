@@ -2,7 +2,7 @@
 using TaskManager.Data.Context;
 
 namespace TaskManager.Data.Entities;
-public class Category : BaseEntity, ICategoryUpdateMap, ICategoryOrderUpdateMap {
+public class Category : BaseCompanyEntity, ICategoryUpdateMap, ICategoryOrderUpdateMap {
     /// <summary>
     ///     Name </summary>
     /// <see cref="TmDbContext">remarks</see>

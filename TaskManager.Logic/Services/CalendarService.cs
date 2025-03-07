@@ -9,20 +9,20 @@ public class CalendarService : BaseService {
 
     public CalendarService(ServicesHost host) : base(host) { }
 
-    public async Task<CalendarDto> GetCurrentAsync(DayOfWeek firstDayOfWeek, DateOnly now) {
-        var dto = this.Get(firstDayOfWeek, now);
+    public async Task<CalendarDto> GetCurrentAsync(DayOfWeek firstDayOfWeek, DateOnly now, int companyId) {
+        var dto = this.Get(firstDayOfWeek, now, now);
         // attaches events
-        var events = await this.EventService.GetRangeAsync(now, dto.Days.Min(x => x.Date), dto.Days.Max(x => x.Date));
+        var events = await this.EventService.GetRangeAsync(now, dto.Days.Min(x => x.Date), dto.Days.Max(x => x.Date), companyId);
         foreach (var day in dto.Days) {
             day.Events = events.Where(x => x.Date == day.Date).ToList();
         }
         return dto;
     }
 
-    public CalendarDto Get(DayOfWeek firstDayOfWeek, DateOnly now) {
+    public CalendarDto Get(DayOfWeek firstDayOfWeek, DateOnly from, DateOnly now) {
         var days = new List<CalendarDayDto>();
         // TODO: use timezone
-        var date = now;
+        var date = from;
         var dto = new CalendarDto(date.Month, date.Year, days);
         var nowWeekOfYear = this.GetWeekOfYear(date, firstDayOfWeek);
         for (int i = 0; i < Settings.CurrentCalendarWeeks; i++) {
@@ -35,17 +35,17 @@ public class CalendarService : BaseService {
         return dto;
     }
 
-    public async Task<List<CalendarDto>> GetYearAsync(DayOfWeek firstDayOfWeek, DateOnly now) {
+    public async Task<List<CalendarDto>> GetYearAsync(DayOfWeek firstDayOfWeek, DateOnly now, int userId, int companyId) {
         var dtos = new List<CalendarDto>();
         for (int i = 0; i < Settings.YearMonths; i++) {
             var date = new DateOnly(now.Year, now.Month, 1).AddMonths(i);
-            var dto = this.Get(firstDayOfWeek, date);
+            var dto = this.Get(firstDayOfWeek, date, now);
             dtos.Add(dto);
         }
 
         // attaches events
         var events = await this.EventService.GetRangeAsync(now,
-            dtos.SelectMany(e => e.Days).Min(x => x.Date), dtos.SelectMany(e => e.Days).Max(x => x.Date));
+            dtos.SelectMany(e => e.Days).Min(x => x.Date), dtos.SelectMany(e => e.Days).Max(x => x.Date), companyId);
         foreach (var dto in dtos) {
             foreach (var day in dto.Days) {
                 day.Events = events.Where(x => x.Date == day.Date).ToList();

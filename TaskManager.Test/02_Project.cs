@@ -118,6 +118,8 @@ public class Project_UnitTest {
                     Encoding.UTF8, "application/json")
             );
             var data = await response.Content.ReadAsStringAsync();
+            dto = JsonExtension.Deserialize<ProjectDto>(data);
+            Assert.Equal("Test Project Updated", dto.Name);
 
             Output.WriteLine($"--- Update Project ---");
             Output.WriteLine($"StatusCode: {response.StatusCode}");

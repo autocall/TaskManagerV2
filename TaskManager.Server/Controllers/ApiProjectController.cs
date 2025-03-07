@@ -30,13 +30,13 @@ public class ApiProjectController : BaseController {
 
     [HttpGet]
     public async Task<ActionResult> GetAll() {
-        var dtos = await this.Service.GetAllAsync();
+        var dtos = await this.Service.GetAllAsync(base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(dtos);
     }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult> Get(int id) {
-        var dto = await this.Service.GetAsync(id);
+        var dto = await this.Service.GetAsync(id, base.GetCompanyId());
         return JsonSuccess(dto);
     }
 
@@ -46,7 +46,7 @@ public class ApiProjectController : BaseController {
             return base.JsonFail(base.GetErrors());
         }
         var inputDto = Mapper.Map<CreateProjectDto>(model);
-        var outputDto = await this.Service.CreateAsync(inputDto, base.GetUserId());
+        var outputDto = await this.Service.CreateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(outputDto);
     }
 
@@ -56,20 +56,20 @@ public class ApiProjectController : BaseController {
             return base.JsonFail(base.GetErrors());
         }
         var inputDto = Mapper.Map<UpdateProjectDto>(model);
-        var outputDto = await this.Service.UpdateAsync(inputDto, base.GetUserId());
+        var outputDto = await this.Service.UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(outputDto);
     }
 
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id) {
 #if DEBUG || TEST
-        var dto = await this.Service.GetAsync(id);
+        var dto = await this.Service.GetAsync(id, base.GetCompanyId());
         if (dto.Name.StartsWith("Test ")) {
-            var temp = await this.Service.DeletePermanentAsync(id, base.GetUserId());
+            var temp = await this.Service.DeletePermanentAsync(id, base.GetUserId(), base.GetCompanyId());
             return JsonSuccess(temp);
         }
 #endif
-        var result = await this.Service.DeleteAsync(id, base.GetUserId());
+        var result = await this.Service.DeleteAsync(id, base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(result);
     }
 }

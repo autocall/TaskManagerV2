@@ -78,4 +78,5 @@ public abstract class BaseController : Controller {
     }
 
     protected int GetUserId() => base.User.GetUserId();
+    protected int GetCompanyId() => base.User.GetCompanyId();
 }

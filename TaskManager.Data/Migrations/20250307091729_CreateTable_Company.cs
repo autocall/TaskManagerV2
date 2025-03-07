@@ -60,7 +60,7 @@ namespace TaskManager.Data.Migrations
                 });
 
             migrationBuilder.Sql("insert into Company (Id, CreatedDateTime, ModifiedDateTime, IsDeleted) " +
-                $"select distinct Id, getdate(),  getdate(), 0 from IdentityUsers");
+                $"select distinct Id, getdate(), getdate(), 0 from IdentityUsers");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Project_CompanyId",

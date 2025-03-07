@@ -30,7 +30,7 @@ describe("Account -> SignUp. Error in Field", () => {
         cy.get("input[name='ConfirmPassword']").type("123456");
         cy.get("button[type='submit']").click();
         cy.url().should("include", `${Cypress.config("baseUrl")}/signup`);
-        cy.get("input[name='UserName']").next("div.error").should("have.text", testContaner.errors.UserName);
+        cy.get("input[name='UserName']").closest('.form-group').get("div.error").should("have.text", testContaner.errors.UserName);
     });
 });
 
@@ -62,7 +62,7 @@ describe("Account -> Login. Error in Field", () => {
         cy.get("input[name='Password']").type("123456");
         cy.get("button[type='submit']").click();
         cy.url().should("include", `${Cypress.config("baseUrl")}/login`);
-        cy.get("input[name='Email']").next("div.error").should("have.text", testContaner.errors.Email);
+        cy.get("input[name='Email']").closest('.form-group').get("div.error").should("have.text", testContaner.errors.Email);
     });
 });
 

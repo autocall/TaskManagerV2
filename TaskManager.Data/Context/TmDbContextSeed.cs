@@ -29,6 +29,14 @@ public class TmDbContextSeed {
             }
         }
 
+        if (await context.Set<Company>().FindAsync(Company.SystemCompanyId) == null) {
+            await context.Set<Company>().AddAsync(new Company {
+                Id = Company.SystemCompanyId,
+                CreatedDateTime = DateTime.UtcNow,
+                ModifiedDateTime = DateTime.UtcNow,
+            });
+        }
+
         if (await userManager.FindByIdAsync(TmUser.SystemUser.Id.ToString()) == null) {
             var user = TmUser.SystemUser;
             await userManager.CreateAsync(user, Settings.DefaultPassword);
@@ -39,14 +47,6 @@ public class TmDbContextSeed {
             var user = TmUser.AdminUser;
             await userManager.CreateAsync(user, Settings.DefaultPassword);
             await userManager.AddToRoleAsync(user, RoleEnum.Admin.ToString());
-        }
-
-        if (await context.Set<Company>().FindAsync(Company.SystemCompanyId) == null) {
-            await context.Set<Company>().AddAsync(new Company {
-                Id = Company.SystemCompanyId,
-                CreatedDateTime = DateTime.UtcNow,
-                ModifiedDateTime = DateTime.UtcNow,
-            });
         }
     }
 }

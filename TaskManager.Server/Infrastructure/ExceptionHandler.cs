@@ -32,7 +32,7 @@ public class ExceptionHandler : IExceptionHandler {
         {
             httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             httpContext.Response.ContentType = "application/json";
-            var result = JsonExtension.Serialize(new { error = exception.Message });
+            var result = JsonExtension.Serialize(new { error = exception.GetBaseException().Message });
             await httpContext.Response.WriteAsync(result);
             return false;
         }

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TaskManager.Data.Context;
+﻿using TaskManager.Data.Context;
 using TaskManager.Data.Entities;
 
 namespace TaskManager.Data.Repositories;

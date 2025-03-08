@@ -1,13 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TaskManager.Data;
 using TaskManager.Data.Entities;
 using TaskManager.Data.Repositories;
 using TaskManager.Logic.Dtos;
 
 namespace TaskManager.Logic.Services;
 public class ProjectService : BaseService {
-    private ICompanyRepository<Project> CompanyRep => UnitOfWork.GetCompanyRepository<Project>();
-    private IRepository<Project> Rep(int companyId) => this.CompanyRep.Get(companyId);
+    private IRepository<Project> Rep(int companyId) => base.Rep<Project>(companyId);
 
     public ProjectService(ServicesHost host) : base(host) { }
 

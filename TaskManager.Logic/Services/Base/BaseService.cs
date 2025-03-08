@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using TaskManager.Data;
+using TaskManager.Data.Entities;
+using TaskManager.Data.Repositories;
 
 namespace TaskManager.Logic.Services;
 public interface IService { }
@@ -13,4 +15,7 @@ public abstract class BaseService : IService {
         this.Mapper = host.Mapper;
         this.Host = host;
     }
+
+    public IRepository<T> Rep<T>(int companyId) where T : BaseCompanyEntity => this.UnitOfWork.GetRepository<T>(companyId);
+
 }

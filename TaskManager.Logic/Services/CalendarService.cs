@@ -3,7 +3,6 @@ using TaskManager.Logic.Dtos;
 
 namespace TaskManager.Logic.Services;
 public class CalendarService : BaseService {
-
     private EventService EventService => this.Host.GetService<EventService>();
     private Calendar Calendar = CultureInfo.CurrentCulture.Calendar;
 

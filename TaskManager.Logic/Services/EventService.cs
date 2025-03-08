@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskManager.Common;
-using TaskManager.Data;
 using TaskManager.Data.Entities;
 using TaskManager.Data.Repositories;
 using TaskManager.Logic.Dtos;
@@ -8,8 +7,7 @@ using TaskManager.Logic.Enums;
 
 namespace TaskManager.Logic.Services;
 public class EventService : BaseService {
-    private ICompanyRepository<Event> CompanyRep => UnitOfWork.GetCompanyRepository<Event>();
-    private IRepository<Event> Rep(int companyId) => this.CompanyRep.Get(companyId);
+    private IRepository<Event> Rep(int companyId) => base.Rep<Event>(companyId);
 
     public EventService(ServicesHost host) : base(host) { }
 

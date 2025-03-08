@@ -1,14 +1,12 @@
 ﻿using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Data;
 using TaskManager.Data.Entities;
 using TaskManager.Data.Repositories;
 using TaskManager.Logic.Dtos;
 
 namespace TaskManager.Logic.Services;
 public class CategoryService : BaseService {
-    private ICompanyRepository<Category> CompanyRep => UnitOfWork.GetCompanyRepository<Category>();
-    private IRepository<Category> Rep(int companyId) => this.CompanyRep.Get(companyId);
+    private IRepository<Category> Rep(int companyId) => base.Rep<Category>(companyId);
 
     public CategoryService(ServicesHost host) : base(host) { }
 
@@ -18,7 +16,7 @@ public class CategoryService : BaseService {
     }
 
     public async Task<CategoryDto> GetAsync(int id, int companyId) {
-        var model = await Rep(companyId).GetByIdAsync(id);
+        var model = await base.Rep<Category>(companyId).GetByIdAsync(id);
         return Mapper.Map<CategoryDto>(model);
     }
 

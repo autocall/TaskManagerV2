@@ -1,17 +1,18 @@
-﻿using TaskManager.Data.Context;
+﻿using LinqToDB;
+using TaskManager.Data.Context;
 using TaskManager.Data.Entities;
 using TaskManager.Data.Repositories;
 
 namespace TaskManager.Data;
 public class UnitOfWork : IDisposable {
-    public TmDbContext Context { get; }
+    public LinqToDbContext Context { get; }
     /// <summary>
     ///     Holds registered repositories </summary>
     private readonly Dictionary<Type, IRepository> repositories = new();
 
     private readonly Dictionary<Type, ICompanyRepository> companyRepositories = new();
 
-    public UnitOfWork(TmDbContext context) {
+    public UnitOfWork(LinqToDbContext context) {
         this.Context = context;
     }
 
@@ -19,7 +20,7 @@ public class UnitOfWork : IDisposable {
     public List<TmRole> Roles {
         get {
             if (roles == null) {
-                roles = this.Context.Set<TmRole>().ToList();
+                roles = this.Context.GetTable<TmRole>().ToList();
             }
             return roles;
         }

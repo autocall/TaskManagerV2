@@ -18,6 +18,9 @@ using System.Text;
 using TaskManager.Logic.Services;
 using Microsoft.Extensions.FileProviders;
 using System.Diagnostics;
+using LinqToDB.Data;
+using LinqToDB.AspNet;
+using LinqToDB;
 
 namespace TaskManager.Server;
 public class Program {
@@ -33,6 +36,10 @@ public class Program {
 
         services.AddDbContext<TmDbContext>(options =>
             options.UseSqlServer(connectionString, options => options.CommandTimeout((int)TimeSpan.FromSeconds(30).TotalSeconds)));
+
+        services.AddLinqToDBContext<LinqToDbContext>((provider, options) =>
+            options.UseSqlServer(connectionString)
+        );
 
         services.AddIdentity<TmUser, TmRole>()
             .AddEntityFrameworkStores<TmDbContext>()
@@ -143,14 +150,14 @@ public class Program {
                 var serviceProvider = scope.ServiceProvider;
                 ServiceLocator.Initialize(serviceProvider);
                 var host = serviceProvider.GetRequiredService<ServicesHost>();
-                using (var unitOfWork = host.UnitOfWork) {
+                using (var dbContext = serviceProvider.GetRequiredService<TmDbContext>()) {
                     _l.Init(serviceProvider.GetRequiredService<ICommonLogger>());
-                    if (unitOfWork.Context.Database.GetPendingMigrations().Any()) {
+                    if (dbContext.Database.GetPendingMigrations().Any()) {
                         _l.i("Migrating database");
-                        unitOfWork.Context.Database.Migrate();
+                        dbContext.Database.Migrate();
                     }
                     _l.i("Seeding database");
-                    TmDbContextSeed.SeedAsync(unitOfWork.Context, host.UserManager, host.RoleManager).Wait();
+                    TmDbContextSeed.SeedAsync(dbContext, host.UserManager, host.RoleManager).Wait();
                 }
             }
             app.Run();

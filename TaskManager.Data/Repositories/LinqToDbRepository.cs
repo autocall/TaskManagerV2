@@ -18,8 +18,8 @@ public class LinqToDbRepository<T> : IRepository<T> where T : BaseEntity {
     protected virtual IQueryable<T> Table() {
         return Connection.GetTable<T>();
     }
-    public LinqToDbRepository(Microsoft.EntityFrameworkCore.DbContext dbContext) {
-        Connection = new LinqToDbContext((TmDbContext)dbContext);
+    public LinqToDbRepository(LinqToDbContext dbContext) {
+        Connection = dbContext;
     }
 
     /// <summary>

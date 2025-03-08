@@ -26,6 +26,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="linq2db.AspNet" Version="5.4.0" />
+    <PackageReference Include="linq2db.EntityFrameworkCore" Version="8.1.0" />
     <PackageReference Include="log4net" Version="3.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.12" />

@@ -86,14 +86,16 @@ const ProfileTimeZoneModal: React.FC<ProfileTimeZoneModalProps> = ({ modalData, 
 
                                 <Modal.Footer>
                                     <FormGroup error={state.error} className="text-end">
-                                        <div className="ms-auto">
-                                            <Button variant="secondary" onClick={() => handleClose(false)}>
-                                                Cancel
-                                            </Button>
-                                            <Button variant="primary" type="submit" disabled={state.submitting}>
-                                                {state.submitting && <span className="spinner-border spinner-border-sm"></span>}
-                                                {!state.submitting && <span>Save</span>}
-                                            </Button>
+                                        <div className="d-flex justify-content-end">
+                                            <div className="ms-auto">
+                                                <Button variant="secondary" onClick={() => handleClose(false)}>
+                                                    Cancel
+                                                </Button>
+                                                <Button variant="primary" type="submit" disabled={state.submitting}>
+                                                    {state.submitting && <span className="spinner-border spinner-border-sm"></span>}
+                                                    {!state.submitting && <span>Save</span>}
+                                                </Button>
+                                            </div>
                                         </div>
                                     </FormGroup>
                                 </Modal.Footer>

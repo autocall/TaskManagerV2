@@ -11,8 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EFCore.BulkExtensions.Core" Version="8.1.2" />
-    <PackageReference Include="EFCore.BulkExtensions.SqlServer" Version="8.1.2" />
     <PackageReference Include="linq2db.EntityFrameworkCore" Version="8.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.12">

@@ -27,12 +27,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({ loading, calendar, load }) 
     const { confirm, ConfirmDialog } = useConfirm();
 
     useEffect(() => {
-
         eventBus.addEventListener(EventNames.resetManageDay, handleResetManageDay);
         return () => eventBus.removeEventListener(EventNames.resetManageDay, handleResetManageDay);
     }, []);
 
-    const handleResetManageDay = (event: Event) =>  setManageDay(null);
+    const handleResetManageDay = (event: Event) => setManageDay(null);
 
     const handleManageDay = (event: any, day: CalendarDayModel) => {
         eventBus.dispatchEvent(new Event(EventNames.resetManageDay));
@@ -85,7 +84,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ loading, calendar, load }) 
                                 <Placeholder xs={6} />
                             </Placeholder>
                         ) : (
-                            `${calendar?.MonthName} ${calendar?.Year}`
+                            `${calendar?.MonthName}(${calendar?.Month}) ${calendar?.Year}`
                         )}
                     </strong>
                 </div>
@@ -126,7 +125,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ loading, calendar, load }) 
                                 <button
                                     key={day.Date.toISOString()}
                                     className={
-                                        "btn cal-btn" +
+                                        "btn cal-btn" + (day.Events.length >= 2 ? " position-relative" : "") +
                                         (calendar?.Month != day.Month ? " secondary" : "") +
                                         (day.IsCurrentDay ? " today" : "") +
                                         (day.Events.find((e) => e.Type == EventTypeEnum.Task)
@@ -147,6 +146,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({ loading, calendar, load }) 
                                     ) : (
                                         day.Day
                                     )}
+                                    {day.Events.length >= 2 ? (
+                                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
+                                            {day.Events.length}
+                                        </span>
+                                    ) : null}
                                 </button>
                             </OverlayTrigger>
                         ))}

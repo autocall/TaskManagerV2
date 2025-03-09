@@ -2,7 +2,6 @@
 using TaskManager.Data.Entities;
 using TaskManager.Data.Extensions;
 using System.Linq.Expressions;
-using EFCore.BulkExtensions;
 using TaskManager.Data.Helpers;
 
 namespace TaskManager.Data.Repositories;
@@ -50,7 +49,8 @@ public class EFCoreRepository<T> : IRepository<T> where T : BaseEntity {
         model.ModifiedById = userId;
         model.CreatedDateTime = DateTime.UtcNow;
         model.ModifiedDateTime = DateTime.UtcNow;
-        await Context.BulkInsertAsync(new[] { model });
+        this.DbSet.Add(model);
+        await this.Context.SaveChangesAsync();
     }
 
     public Task InsertAsync(IEnumerable<T> models, int userId) {

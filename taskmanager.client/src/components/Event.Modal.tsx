@@ -127,12 +127,12 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                         <Form onSubmit={handleSubmit}>
                             <fieldset disabled={state.loaded == false}>
                                 <Modal.Body>
+                                    <Form.Label>Date</Form.Label>
                                     <FormGroup error={touched.Date && (errors.Date ?? state.errors.Date)}>
-                                        <Form.Label>Date</Form.Label>
                                         <Field type="Date" name="Date" placeholder="Date" className="form-control" />
                                     </FormGroup>
+                                    <Form.Label>Type</Form.Label>
                                     <FormGroup error={touched.Type && (errors.Type ?? state.errors.Type)}>
-                                        <Form.Label>Type</Form.Label>
                                         <Field as="select" name="Type" className="form-control" onChange={handleTypeChange}>
                                             <option value={EventTypeEnum.Default}>Default</option>
                                             <option value={EventTypeEnum.Task}>Task</option>
@@ -140,16 +140,16 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                                             <option value={EventTypeEnum.Holiday}>Holiday</option>
                                         </Field>
                                     </FormGroup>
+                                    <Form.Label>Name</Form.Label>
                                     <FormGroup error={touched.Name && (errors.Name ?? state.errors.Name)}>
-                                        <Form.Label>Name</Form.Label>
                                         <Field name="Name" placeholder="Name" className="form-control" />
                                     </FormGroup>
+                                    <Form.Label>Description</Form.Label>
                                     <FormGroup error={touched.Description && (errors.Description ?? state.errors.Description)}>
-                                        <Form.Label>Description</Form.Label>
                                         <Field as="textarea" name="Description" placeholder="Description" className="form-control" />
                                     </FormGroup>
+                                    <Form.Label>Repeat</Form.Label>
                                     <Row>
-                                        <Form.Label>Repeat</Form.Label>
                                         <FormGroup as={Col} error={touched.RepeatType && (errors.RepeatType ?? state.errors.RepeatType)}>
                                             <Field as="select" name="RepeatType" className="form-control">
                                                 <option value={EventRepeatEnum.Default}>Default</option>
@@ -172,28 +172,30 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                                 </Modal.Body>
                                 <Modal.Footer>
                                     <FormGroup error={state.error}>
-                                        {modalData?.Id && (
-                                            <div className="me-auto">
-                                                <Button variant="danger" onClick={() => handleDelete()} disabled={state.submitting}>
+                                        <div className="d-flex justify-content-end">
+                                            {modalData?.Id && (
+                                                <div className="me-auto">
+                                                    <Button variant="danger" onClick={() => handleDelete()} disabled={state.submitting}>
+                                                        {state.submitting ? (
+                                                            <span className="spinner-border spinner-border-sm"></span>
+                                                        ) : (
+                                                            <span>Delete</span>
+                                                        )}
+                                                    </Button>
+                                                </div>
+                                            )}
+                                            <div>
+                                                <Button variant="secondary" onClick={() => handleClose(false)} disabled={state.submitting}>
+                                                    Cancel
+                                                </Button>
+                                                <Button variant="primary" type="submit" disabled={state.submitting}>
                                                     {state.submitting ? (
                                                         <span className="spinner-border spinner-border-sm"></span>
                                                     ) : (
-                                                        <span>Delete</span>
+                                                        <span>Save</span>
                                                     )}
                                                 </Button>
                                             </div>
-                                        )}
-                                        <div>
-                                            <Button variant="secondary" onClick={() => handleClose(false)} disabled={state.submitting}>
-                                                Cancel
-                                            </Button>
-                                            <Button variant="primary" type="submit" disabled={state.submitting}>
-                                                {state.submitting ? (
-                                                    <span className="spinner-border spinner-border-sm"></span>
-                                                ) : (
-                                                    <span>Save</span>
-                                                )}
-                                            </Button>
                                         </div>
                                     </FormGroup>
                                 </Modal.Footer>

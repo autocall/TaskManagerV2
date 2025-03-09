@@ -12,8 +12,6 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
-    <PackageReference Include="EFCore.BulkExtensions.Core" Version="8.1.2" />
-    <PackageReference Include="EFCore.BulkExtensions.SqlServer" Version="8.1.2" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.12" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
   </ItemGroup>

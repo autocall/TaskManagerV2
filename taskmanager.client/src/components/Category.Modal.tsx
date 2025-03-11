@@ -92,12 +92,10 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ modalData, onClose }) => 
                         <Form onSubmit={handleSubmit}>
                             <fieldset disabled={state.loaded == false}>
                                 <Modal.Body>
-                                    <Form.Label>Name</Form.Label>
-                                    <FormGroup error={touched.Name && (errors.Name ?? state.errors.Name)}>
+                                    <FormGroup label="Name" error={touched.Name && (errors.Name ?? state.errors.Name)}>
                                         <Field name="Name" placeholder="Name" className="form-control" />
                                     </FormGroup>
-                                    <Form.Label>Color</Form.Label>
-                                    <FormGroup error={touched.Color && (errors.Color ?? state.errors.Color)}>
+                                    <FormGroup label="Color" error={touched.Color && (errors.Color ?? state.errors.Color)}>
                                         <Field type="color" name="Color" placeholder="Color" className="form-control form-control-color" />
                                     </FormGroup>
                                 </Modal.Body>

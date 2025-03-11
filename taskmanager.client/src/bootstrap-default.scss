@@ -6,11 +6,17 @@
     .card {
         --bs-card-bg: rgb(35, 40, 45);
     }
+    .list-group-item {
+        --bs-list-group-bg: --bs-card-bg;
+    }
 }
 
 [data-bs-theme="light"] {
     --bs-body-bg: rgb(248, 248, 250);
     .card {
         --bs-card-bg: rgb(252, 252, 252);
+    }
+    .list-group-item {
+        --bs-list-group-bg: --bs-card-bg;
     }
 }

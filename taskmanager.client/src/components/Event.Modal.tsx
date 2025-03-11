@@ -127,12 +127,10 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                         <Form onSubmit={handleSubmit}>
                             <fieldset disabled={state.loaded == false}>
                                 <Modal.Body>
-                                    <Form.Label>Date</Form.Label>
-                                    <FormGroup error={touched.Date && (errors.Date ?? state.errors.Date)}>
+                                    <FormGroup label="Date" error={touched.Date && (errors.Date ?? state.errors.Date)}>
                                         <Field type="Date" name="Date" placeholder="Date" className="form-control" />
                                     </FormGroup>
-                                    <Form.Label>Type</Form.Label>
-                                    <FormGroup error={touched.Type && (errors.Type ?? state.errors.Type)}>
+                                    <FormGroup label="Type" error={touched.Type && (errors.Type ?? state.errors.Type)}>
                                         <Field as="select" name="Type" className="form-control" onChange={handleTypeChange}>
                                             <option value={EventTypeEnum.Default}>Default</option>
                                             <option value={EventTypeEnum.Task}>Task</option>
@@ -140,17 +138,14 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
                                             <option value={EventTypeEnum.Holiday}>Holiday</option>
                                         </Field>
                                     </FormGroup>
-                                    <Form.Label>Name</Form.Label>
-                                    <FormGroup error={touched.Name && (errors.Name ?? state.errors.Name)}>
+                                    <FormGroup label="Name" error={touched.Name && (errors.Name ?? state.errors.Name)}>
                                         <Field name="Name" placeholder="Name" className="form-control" />
                                     </FormGroup>
-                                    <Form.Label>Description</Form.Label>
-                                    <FormGroup error={touched.Description && (errors.Description ?? state.errors.Description)}>
+                                    <FormGroup label="Description" error={touched.Description && (errors.Description ?? state.errors.Description)}>
                                         <Field as="textarea" name="Description" placeholder="Description" className="form-control" />
                                     </FormGroup>
-                                    <Form.Label>Repeat</Form.Label>
                                     <Row>
-                                        <FormGroup as={Col} error={touched.RepeatType && (errors.RepeatType ?? state.errors.RepeatType)}>
+                                        <FormGroup as={Col} label="Repeat" error={touched.RepeatType && (errors.RepeatType ?? state.errors.RepeatType)}>
                                             <Field as="select" name="RepeatType" className="form-control">
                                                 <option value={EventRepeatEnum.Default}>Default</option>
                                                 <option value={EventRepeatEnum.Days}>Days</option>

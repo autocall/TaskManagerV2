@@ -23,14 +23,9 @@
 	Logging: log4net, YALV
 	DataBase: SQL Server 2019
 		Code First (EF Core)
+		Queries: LinqToDB (see details below)
 		PK optimization: ordered integer sequences (see details below)
 		String Encoding: VARCHAR + UTF8 (see details below)
-		Used flags for performance tuning with high concurrency and large datasets
-		Queries (see details below): 
-			SELECT: Linq to SQL
-			UPDATE: RelationalQueryableExtensions.ExecuteUpdate (see example below)
-			DELETE: RelationalQueryableExtensions.ExecuteDelete
-			INSERT: EFCore.BulkExtensions.Core
 
 ** CI/CD **
 	GitHub Actions

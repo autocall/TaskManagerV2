@@ -9,7 +9,7 @@ public class ProjectService : BaseService {
 
     public ProjectService(ServicesHost host) : base(host) { }
 
-    public async Task<List<ProjectDto>> GetAllAsync(int userId, int companyId) {
+    public async Task<List<ProjectDto>> GetAllAsync(int companyId) {
         var models = await Rep(companyId).GetAll(false).ToListAsync();
         return Mapper.Map<List<ProjectDto>>(models);
     }

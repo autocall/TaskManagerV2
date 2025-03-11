@@ -30,7 +30,7 @@ public class ApiProjectController : BaseController {
 
     [HttpGet]
     public async Task<ActionResult> GetAll() {
-        var dtos = await this.Service.GetAllAsync(base.GetUserId(), base.GetCompanyId());
+        var dtos = await this.Service.GetAllAsync(base.GetCompanyId());
         return JsonSuccess(dtos);
     }
 

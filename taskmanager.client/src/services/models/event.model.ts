@@ -50,7 +50,7 @@ export class EventData implements IEventData {
 
     constructor(data: any = null) {
         if (!data) {
-            this.Date = stringExtension.dateToString(new Date());
+            this.Date = stringExtension.dateToISO(new Date());
             this.Name = "";
             this.Description = "";
 
@@ -72,7 +72,7 @@ export class EventData implements IEventData {
 
     static defaultWithDate(date: Date): EventData {
         let data = new EventData();
-        data.Date = stringExtension.dateToString(date);
+        data.Date = stringExtension.dateToISO(date);
         return data;
     }
 }

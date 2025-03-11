@@ -3,8 +3,10 @@ import { TaskKindEnum } from "../../enums/task.kind.enum";
 import { TaskStatusEnum } from "../../enums/task.status.enum";
 import BaseModel from "./base.model";
 import CommentModel from "./comment.model";
+import ProjectModel from "./project.model";
     
 export default class TaskModel extends BaseModel {
+    Index: number;
     Title: string;
     Description: string;
     ProjectId: number;
@@ -14,11 +16,13 @@ export default class TaskModel extends BaseModel {
     Status: TaskStatusEnum;
     WorkHours: number;
 
+    Project: ProjectModel | null;
     Comments: CommentModel[];
 
     constructor(data?: any) {
         super(data);
         if (data) {
+            this.Index = data.Index;
             this.Title = data.Title;
             this.Description = data.Description;
             this.ProjectId = data.ProjectId;
@@ -27,8 +31,6 @@ export default class TaskModel extends BaseModel {
             this.Kind = data.Kind;
             this.Status = data.Status;
             this.WorkHours = data.WorkHours;
-
-            this.Comments = data.Comments?.map((c: any) => new CommentModel(c));
         }
     }
 }

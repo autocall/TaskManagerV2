@@ -4,8 +4,6 @@ public class CategoryDto : BaseCompanyDto {
     public string Name { get; set; }
     public int Color { get; set; }
     public byte Order { get; set; }
-
-    public List<TaskDto> Tasks { get; set; }
 }
 
 public class CreateCategoryDto {

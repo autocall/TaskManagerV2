@@ -14,3 +14,5 @@ Pending to close
 !. Implement Tags
 !. The prepared db data for the example user
 !. Check axios.defaults
+!. Download images
+!. Fast search

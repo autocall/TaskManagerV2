@@ -6,9 +6,8 @@
     .card {
         --bs-card-bg: rgb(35, 40, 45);
     }
-    .list-group-item {
-        --bs-list-group-bg: --bs-card-bg;
-    }
+
+
 }
 
 [data-bs-theme="light"] {
@@ -16,7 +15,13 @@
     .card {
         --bs-card-bg: rgb(252, 252, 252);
     }
-    .list-group-item {
-        --bs-list-group-bg: --bs-card-bg;
-    }
+}
+
+.list-group-item {
+    --bs-list-group-bg: --bs-card-bg;
+}
+
+.card-body {
+    --bs-card-spacer-y: 0.75rem;
+    --bs-card-spacer-x: 0.75rem;
 }

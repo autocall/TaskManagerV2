@@ -1,5 +1,6 @@
 ﻿namespace TaskManager.Logic.Dtos;
 public class TaskDto : BaseCompanyDto {
+    public int Index { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
     public int ProjectId { get; set; }
@@ -8,14 +9,13 @@ public class TaskDto : BaseCompanyDto {
     public TaskKindEnum Kind { get; set; }
     public TaskStatusEnum Status { get; set; }
     public decimal WorkHours { get; set; }
-
-    public List<CommentDto> Comments { get; set; }
 }
 
 public class CommentDto : BaseCompanyDto {
     public int TaskId { get; set; }
     public DateTime DateTime { get; set; }
     public decimal WorkHours { get; set; }
+    public TaskStatusEnum Status { get; set; }
     public string Text { get; set; }
 }
 
@@ -26,6 +26,7 @@ public enum TaskColumnEnum {
 }
 
 public enum TaskKindEnum {
+    Unknown = 0,
     Task = 1,
     Bug = 2,
     Feature = 3,

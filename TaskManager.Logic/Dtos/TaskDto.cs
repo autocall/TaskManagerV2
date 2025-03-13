@@ -9,14 +9,20 @@ public class TaskDto : BaseCompanyDto {
     public TaskKindEnum Kind { get; set; }
     public TaskStatusEnum Status { get; set; }
     public decimal WorkHours { get; set; }
+    public int CommentsCount { get; set; }
 }
 
 public class CommentDto : BaseCompanyDto {
     public int TaskId { get; set; }
     public DateTime DateTime { get; set; }
     public decimal WorkHours { get; set; }
-    public TaskStatusEnum Status { get; set; }
     public string Text { get; set; }
+}
+
+public class FileDto {
+    public int Id { get; set; }
+    public string FileName { get; set; }
+    public long Size { get; set; }
 }
 
 public enum TaskColumnEnum {

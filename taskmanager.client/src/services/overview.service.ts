@@ -7,6 +7,7 @@ import overviewRepository from "../repositories/overview.rep";
 import ProjectModel from "./models/project.model";
 import CommentModel from "./models/comment.model";
 import UserModel from "./models/user.model";
+import FileModel from "./models/file.model";
 
 export default class overviewService {
     private rep: overviewRepository;
@@ -24,7 +25,8 @@ export default class overviewService {
                 let tasks = (response.data.tasks as any[]).map((e: any) => new TaskModel(e));
                 let comments = (response.data.comments as any[]).map((e: any) => new CommentModel(e));
                 let users = (response.data.users as any[]).map((e: any) => new UserModel(e));
-                let models = this.merge(categories, projects, tasks, comments, users);
+                let files = (response.data.files as any[]).map((e: any) => new FileModel(e));
+                let models = this.merge(categories, projects, tasks, comments, users, files);
                 return Response.success<CategoryModel[]>(models);
             })
             .catch((exception) => {
@@ -38,16 +40,19 @@ export default class overviewService {
         tasks: TaskModel[],
         comments: CommentModel[],
         users: UserModel[],
+        files: FileModel[]
     ): CategoryModel[] {
         comments.forEach((comment) => {
             comment.CreatedUser = users.find((u) => u.Id == comment.CreatedById) ?? null;
             comment.ModifiedUser = users.find((u) => u.Id == comment.ModifiedById) ?? null;
+            comment.Files = files.filter((f) => f.Id == comment.Id);
         });
         tasks.forEach((task) => {
             task.Project = projects.find((p) => p.Id == task.ProjectId) ?? null;
             task.Comments = comments.filter((c) => c.TaskId == task.Id);
             task.CreatedUser = users.find((u) => u.Id == task.CreatedById) ?? null;
             task.ModifiedUser = users.find((u) => u.Id == task.ModifiedById) ?? null;
+            task.Files = files.filter((f) => f.Id == task.Id);
         });
         categories.forEach((category) => {
             category.Tasks = tasks.filter((t) => t.CategoryId == category.Id);

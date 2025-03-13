@@ -26,6 +26,6 @@ public class ApiOverviewController : BaseController {
     [HttpGet]
     public async Task<ActionResult> Get() {
         var data = await this.Service.GetAsync(base.GetCompanyId());
-        return JsonSuccess(new { data.categories, data.projects, data.tasks, data.comments, data.users });
+        return JsonSuccess(new { data.categories, data.projects, data.tasks, data.comments, data.users, data.files });
     }
 }

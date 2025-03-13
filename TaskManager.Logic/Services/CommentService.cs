@@ -12,31 +12,28 @@ public class CommentService : BaseService {
     public async Task<List<CommentDto>> GetAllAsync(int companyId) {
         var comments = new List<CommentDto>() {
             new CommentDto(){
-                Id = 1,
+                Id = 11,
                 TaskId = 3,
                 DateTime = DateTime.UtcNow,
                 WorkHours = 1,
                 Text = "исправленный алгоритм сработал, email изменился. так же синхронизируются очень много свойств",
                 CreatedById = TmUser.AdminUserId,
-                Status = TaskStatusEnum.InProgress,
             },
             new CommentDto() {
-                Id = 2,
+                Id = 12,
                 TaskId = 3,
                 DateTime = DateTime.UtcNow.AddDays(-6),
-                Status = TaskStatusEnum.Completed,
                 WorkHours = 2,
                 Text = "Comment 2",
                 CreatedById = TmUser.SystemUserId,
             },
             new CommentDto() {
-                Id = 3,
+                Id = 13,
                 TaskId = 5,
                 DateTime = DateTime.UtcNow.AddDays(-50),
-                Status = TaskStatusEnum.OnHold,
                 WorkHours = 0.5m,
                 Text = "сервер перезапускался 16го января в 0:00 несколько раз. в это время запускаются процессы, какой то из них повесил сервер, скорей всего скачивание всех MailBox. этот процесс работает раз в неделю, если повторится значит надо будет его править",
-            }
+            },
         };
         return comments;
     }

@@ -19,8 +19,8 @@ const TaskStatusDescriptions: Record<TaskStatusEnum, string> = {
 const TaskStatusVariants: Record<TaskStatusEnum, string> = {
     [TaskStatusEnum.New]: "primary",
     [TaskStatusEnum.InProgress]: "success",
-    [TaskStatusEnum.OnHold]: "warning",
-    [TaskStatusEnum.Completed]: "danger",
+    [TaskStatusEnum.OnHold]: "danger",
+    [TaskStatusEnum.Completed]: "warning text-dark",
     [TaskStatusEnum.Closed]: "secondary",
     [TaskStatusEnum.Canceled]: "secondary",
 };

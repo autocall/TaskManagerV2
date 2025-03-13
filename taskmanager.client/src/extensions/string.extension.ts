@@ -45,6 +45,29 @@ export default class stringExtension {
         }
     }
 
+    public static dateToLong(value: unknown): string {
+        if (value instanceof Date) {
+            return this.dateToLong_date(value);
+        } else if (moment.isMoment(value)) {
+            return this.dateToLong_moment(value);
+        } else {
+            throw new Error("Invalid date type");
+        }
+    }
+
+    private static dateToLong_date(value: Date): string {
+        return this.dateToLong_moment(moment(value));
+    }
+
+    private static dateToLong_moment(value: moment.Moment): string {
+        let now = moment();
+        let diff = now.diff(value, "weeks");
+        if (diff < 1) {
+            return value.format("ddd, D MMM YYYY");
+        }
+        return value.format("D MMM YYYY");
+    }
+
     public static dateToFromNowShort(value: unknown): string {
         if (value instanceof Date) {
             return this.dateToFromNowShort_date(value);
@@ -69,7 +92,7 @@ export default class stringExtension {
         let now = moment();
         let diff = now.diff(value, "minutes");
         if (diff < 1) {
-            return "now ago";
+            return "today";
         }
         if (diff < 2) {
             return diff + " minute ago";

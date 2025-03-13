@@ -1,8 +1,8 @@
-import { Alert, Badge, Card, Col, Collapse, Container, ListGroup, Row, Spinner } from "react-bootstrap";
+import { Alert, Badge, Button, Card, Col, Collapse, Container, ListGroup, Row, Spinner } from "react-bootstrap";
 import Calendar from "./Calendar.Current";
 import "bootstrap/dist/css/bootstrap.css";
 import Divider from "./shared/divider";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../states/store";
 import useAsyncEffect from "use-async-effect";
@@ -15,6 +15,8 @@ import { getTaskKindDescription, getTaskKindVariant } from "../enums/task.kind.e
 import authService from "../services/auth.service";
 import { useState } from "react";
 import IJwt from "../types/jwt.type";
+import SeeMoreText from "./shared/seemore.text";
+import fileExtension from "../extensions/file.extension";
 
 const Overview: React.FC = () => {
     const { search } = useLocation();
@@ -36,6 +38,8 @@ const Overview: React.FC = () => {
         dispatch(gotCategoriesAction(response));
     };
 
+    const flex: string = "d-flex justify-content-between align-items-start ";
+
     return (
         <Container fluid>
             <Row>
@@ -54,87 +58,107 @@ const Overview: React.FC = () => {
                         state.categories?.map((category) => (
                             <Row key={category.Id}>
                                 <Divider model={category} />
-                                <Row>
+                                <Row className="column-row">
                                     {Array.from({ length: 3 }, (_, column) => (
-                                        <Col key={`${category.Id}-${column}`} md={true}>
+                                        <Col key={category.Id + column} md={true}>
                                             {category.Tasks.filter((task) => task.Column == column + 1)?.map((task) => (
-                                                <Row key={task.Id}>
-                                                    <Col>
-                                                        <Card className="mb-2" border={getTaskKindVariant(task.Kind)}>
-                                                            <Card.Header
-                                                                className={
-                                                                    "d-flex justify-content-between align-items-start " +
-                                                                    getTaskKindVariant(task.Kind)
-                                                                }>
-                                                                <div>
-                                                                    <span className="badge-text">
-                                                                        {task.Title && getTaskKindDescription(task.Kind)} #{task.Index}
-                                                                    </span>
-                                                                </div>
-                                                                <div>
-                                                                    <span>{task.Project && task.Project.Name}</span>
-                                                                </div>
-                                                                <div>
-                                                                    <Badge pill bg={getTaskStatusVariant(task.Status)}>
-                                                                        {task.Title && getTaskStatusDescription(task.Status)}
-                                                                    </Badge>
-                                                                    {task.WorkHours > 0 && (
-                                                                        <Badge pill bg="primary" className="ms-1">
-                                                                            {task.WorkHours}h
-                                                                        </Badge>
-                                                                    )}
-                                                                </div>
-                                                            </Card.Header>
-                                                            <Card.Body>
-                                                                {task.Title && (
-                                                                    <div className="d-flex justify-content-between align-items-start">
-                                                                        {<span className="task-title">{task.Title}</span>}
-                                                                        <span className="badge-text text-muted">
-                                                                            {stringExtension.dateToFromNowShort(task.CreatedDateTime)}
-                                                                        </span>
-                                                                    </div>
-                                                                )}
-                                                                {task.Description && <Card.Subtitle>{task.Description}</Card.Subtitle>}
-                                                            </Card.Body>
-                                                            {/* Comments */}
-                                                            {task.Comments?.length > 0 && (
-                                                                <ListGroup className="list-group-flush mx-3">
-                                                                    {task.Comments.map((comment) => (
-                                                                        <ListGroup.Item key={comment.Id} className="px-0">
-                                                                            <div className="d-flex justify-content-between align-items-start">
-                                                                                <span className="text-muted">
-                                                                                    {comment.CreatedUser &&
-                                                                                        comment.CreatedById != currentUser?.UserId && (
-                                                                                            <span>
-                                                                                                {comment.CreatedUser.UserName}&nbsp;
-                                                                                            </span>
-                                                                                        )}
-                                                                                    {stringExtension.dateToShort(comment.DateTime)},&nbsp;
-                                                                                    <span className="badge-text">
-                                                                                        {stringExtension.dateToFromNowShort(
-                                                                                            comment.DateTime,
-                                                                                        )}
-                                                                                    </span>
-                                                                                </span>
-                                                                                <div>
-                                                                                    <Badge pill bg={getTaskStatusVariant(comment.Status)}>
-                                                                                        {getTaskStatusDescription(comment.Status)}
-                                                                                    </Badge>
-                                                                                    <Badge pill bg="primary" className="ms-1">
-                                                                                        {comment.WorkHours}h
-                                                                                    </Badge>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div>
-                                                                                <span> {comment.Text}</span>
-                                                                            </div>
-                                                                        </ListGroup.Item>
-                                                                    ))}
-                                                                </ListGroup>
+                                                <Card key={"task" + task.Id} className="column-card" border={getTaskKindVariant(task.Kind)}>
+                                                    {/* Header */}
+                                                    <Card.Header className={flex + getTaskKindVariant(task.Kind)}>
+                                                        <div>
+                                                            <span className="extra-text">
+                                                                {getTaskKindDescription(task.Kind)} #{task.Index}
+                                                            </span>
+                                                        </div>
+                                                        <div>
+                                                            <span>{task.Project && task.Project.Name}</span>
+                                                        </div>
+                                                        <div>
+                                                            <Badge pill bg={getTaskStatusVariant(task.Status)}>
+                                                                {task.Title && getTaskStatusDescription(task.Status)}
+                                                            </Badge>
+                                                            {task.WorkHours > 0 && (
+                                                                <Badge pill bg="primary" className="ms-1">
+                                                                    {task.WorkHours}h
+                                                                </Badge>
                                                             )}
-                                                        </Card>
-                                                    </Col>
-                                                </Row>
+                                                        </div>
+                                                    </Card.Header>
+                                                    {/* Body */}
+                                                    <Card.Body>
+                                                        {task.Title && <div className={flex}>{<span className="task-title">{task.Title}</span>}</div>}
+                                                        {task.Description && (
+                                                            <Card.Subtitle>
+                                                                <SeeMoreText text={task.Description} />
+                                                            </Card.Subtitle>
+                                                        )}
+                                                        <div className={flex}>
+                                                            <div>
+                                                                {task.Files?.map((file) => (
+                                                                    <Link key={"file" + file.Id + file.FileName}
+                                                                        className={`file bi ${fileExtension.getFileIcon(file.FileName)}`}
+                                                                        title={file.FileName}
+                                                                    />
+                                                                ))}
+                                                                <span className="extra-text" style={{ verticalAlign: "bottom" }}>
+                                                                    {stringExtension.dateToLong(task.CreatedDateTime)}
+                                                                </span>
+                                                            </div>
+                                                            {task.CommentsCount ? (
+                                                                <div className="extra-text">
+                                                                    <i className="bi bi-chat-dots me-1"></i>
+                                                                    <span>{task.CommentsCount}</span>
+                                                                </div>
+                                                            ) : (
+                                                                ""
+                                                            )}
+                                                            <div className="extra-link">
+                                                                <Link>Comment</Link> | <Link>Edit</Link> | <Link>Delete</Link>
+                                                            </div>
+                                                        </div>
+                                                    </Card.Body>
+                                                    {/* Comments */}
+                                                    {task.Comments?.length > 0 && (
+                                                        <ListGroup className="list-group-flush mx-2">
+                                                            {task.Comments.map((comment) => (
+                                                                <ListGroup.Item key={"comment" + comment.Id} className="px-0">
+                                                                    <div className={flex}>
+                                                                        <span className="text-muted">
+                                                                            {comment.CreatedUser && comment.CreatedById != currentUser?.UserId && (
+                                                                                <span>{comment.CreatedUser.UserName} ● </span>
+                                                                            )}
+                                                                            {stringExtension.dateToFromNowShort(comment.DateTime)}
+                                                                        </span>
+                                                                        <div>
+                                                                            <Badge pill bg="primary" className="ms-1">
+                                                                                {comment.WorkHours}h
+                                                                            </Badge>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div>
+                                                                        <SeeMoreText text={comment.Text} />
+                                                                    </div>
+                                                                    <div className={flex}>
+                                                                        <div>
+                                                                            {comment.Files?.map((file) => (
+                                                                                <Link key={"file" + file.Id + file.FileName}
+                                                                                    className={`file bi ${fileExtension.getFileIcon(file.FileName)}`}
+                                                                                    title={file.FileName}
+                                                                                />
+                                                                            ))}
+                                                                            <span className="extra-text">
+                                                                                {stringExtension.dateToLong(comment.DateTime)}
+                                                                            </span>
+                                                                        </div>
+                                                                        <div className="extra-link">
+                                                                            <Link>Edit</Link> | <Link>Delete</Link>
+                                                                        </div>
+                                                                    </div>
+                                                                </ListGroup.Item>
+                                                            ))}
+                                                        </ListGroup>
+                                                    )}
+                                                </Card>
                                             ))}
                                         </Col>
                                     ))}

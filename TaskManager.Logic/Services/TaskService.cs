@@ -26,10 +26,11 @@ public class TaskService : BaseService {
                 CategoryId = categories[0].Id,
                 ProjectId = projects[0].Id,
                 WorkHours = 1.5m,
-                Column = TaskColumnEnum.First,
+                Column = TaskColumnEnum.Third,
                 Kind = TaskKindEnum.Task,
                 CreatedDateTime = DateTime.UtcNow.AddDays(-2),
                 CreatedById = TmUser.SystemUserId,
+                CommentsCount = 2,
             },
             new TaskDto(){
                 Id = 2,
@@ -43,6 +44,7 @@ public class TaskService : BaseService {
                 Kind = TaskKindEnum.Bug,
                 CreatedDateTime = DateTime.UtcNow,
                 CreatedById = TmUser.AdminUserId,
+                CommentsCount = 3,
             },
             new TaskDto(){
                 Id = 3,
@@ -73,7 +75,7 @@ public class TaskService : BaseService {
                 //Status = TaskStatusEnum.New,
                 CategoryId = categories[1].Id,
                 //Kind = TaskKindEnum.Task,
-                Column = TaskColumnEnum.Third,
+                Column = TaskColumnEnum.Second,
             },
             new TaskDto() {
                 Id = 6,

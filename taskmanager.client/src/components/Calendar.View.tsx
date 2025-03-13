@@ -84,7 +84,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({ loading, calendar, load }) 
                                 <Placeholder xs={6} />
                             </Placeholder>
                         ) : (
-                            `${calendar?.MonthName}(${calendar?.Month}) ${calendar?.Year}`
+                            // `${calendar?.MonthName}(${calendar?.Month}) ${calendar?.Year}`
+                            `${calendar?.MonthName} ${calendar?.Year}`
                         )}
                     </strong>
                 </div>

@@ -50,7 +50,7 @@ const Projects: React.FC = () => {
     };
 
     return (
-        <Container>
+        <Container className="scroll-content">
             {ConfirmDialog}
             <ProjectModal modalData={modalData} onClose={handleClose} />
             <div className="d-flex">

@@ -68,7 +68,7 @@ const Categories: React.FC = () => {
     };
 
     return (
-        <Container>
+        <Container className="scroll-content">
             {ConfirmDialog}
             <CategoryModal modalData={modalData} onClose={handleClose} />
             <div className="d-flex">

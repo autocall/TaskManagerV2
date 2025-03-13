@@ -37,7 +37,7 @@ const LogIn: React.FC = () => {
     };
 
     return (
-        <Container>
+        <Container className="scroll-content">
             <Row className="justify-content-center">
                 <Col className="text-center" style={{ maxWidth: "24rem" }}>
                     <Card>

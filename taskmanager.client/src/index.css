@@ -136,6 +136,10 @@ div.invalid div.error {
     margin-bottom: 0.5em;
 }
 
+.card > .card-body {
+  word-break: break-all;
+}
+
 .column-row.row {
     margin-left: 0;
     margin-right: 0;
@@ -150,8 +154,8 @@ div.invalid div.error {
 }
 
 .file {
-  margin-right: 0.1em;
-  font-size: 1.5em;
+    margin-right: 0.1em;
+    font-size: 1.5em;
 }
 
 .extra-text {
@@ -166,4 +170,38 @@ div.invalid div.error {
     vertical-align: bottom;
     align-self: flex-end;
     white-space: nowrap;
+}
+
+body,
+html {
+    height: 100%;
+    margin: 0;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+.container-fluid.content {
+    padding: 0;
+}
+.content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+.main-section {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+.toolbar {
+    height: 50px;
+}
+.scroll-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 15px;
+    padding-left: 15px;
 }

@@ -76,7 +76,7 @@ const App: React.FC = () => {
     );
 
     return (
-        <div>
+        <div className="wrapper">
             <Navbar className="bg-dark d-flex" variant="dark">
                 {!currentUser ? (
                     <Container>
@@ -122,7 +122,7 @@ const App: React.FC = () => {
                     </Container>
                 )}
             </Navbar>
-            <Container className="mt-3" fluid>
+            <Container className="mt-3 content" fluid>
                 <Routes>
                     <Route path="/" element={<Overview />} />
                     <Route path="/calendar" element={<Calendar />} />

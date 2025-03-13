@@ -32,7 +32,7 @@ const Calendar: React.FC = () => {
     };
 
     return (
-        <Container fluid>
+        <Container fluid className="scroll-content">
             <div className="row secondary-transparent-bg">
                 {state.calendars &&
                     state.calendars.length > 0 &&

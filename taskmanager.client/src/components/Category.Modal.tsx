@@ -87,7 +87,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ modalData, onClose }) => 
                     <Spinner animation="border" />
                 </div>
             ) : (
-                <Formik initialValues={state} validationSchema={validationSchema} onSubmit={handleSubmit}>
+                <Formik initialValues={state} validationSchema={validationSchema} onSubmit={handleSubmit} backdrop="static">
                     {({ handleSubmit, handleChange, values, touched, errors }) => (
                         <Form onSubmit={handleSubmit}>
                             <fieldset disabled={state.loaded == false}>

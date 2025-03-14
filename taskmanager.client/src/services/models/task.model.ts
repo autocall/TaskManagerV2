@@ -6,14 +6,14 @@ import CommentModel from "./comment.model";
 import FileModel from "./file.model";
 import ProjectModel from "./project.model";
     
-export default class TaskModel extends BaseModel {
-    Index: number;
+export default class TaskModel extends BaseModel implements ITaskData {
+    Index: number | null;
     Title: string;
     Description: string;
     ProjectId: number;
     CategoryId: number;
     Column: TaskColumnEnum;
-    Kind: TaskKindEnum;
+    Kind: TaskKindEnum | null;
     Status: TaskStatusEnum;
     WorkHours: number;
     CommentsCount: number;
@@ -27,6 +27,7 @@ export default class TaskModel extends BaseModel {
         super(data);
         if (data) {
             this.Index = data.Index;
+            this.Column = data.Column;
             this.Title = data.Title;
             this.Description = data.Description;
             this.ProjectId = data.ProjectId;
@@ -36,6 +37,50 @@ export default class TaskModel extends BaseModel {
             this.Status = data.Status;
             this.WorkHours = data.WorkHours;
             this.CommentsCount = data.CommentsCount;
+        }
+    }
+}
+
+export interface ITaskData {
+    Index: number | null;
+    Title: string;
+    Description: string;
+    ProjectId: number | null;
+    CategoryId: number | null;
+    Column: TaskColumnEnum;
+    Kind: TaskKindEnum | null;
+    Status: TaskStatusEnum | null;
+}
+
+export class TaskData implements ITaskData {
+    Index: number | null;
+    Title: string;
+    Description: string;
+    ProjectId: number | null;
+    CategoryId: number | null;
+    Column: TaskColumnEnum;
+    Kind: TaskKindEnum | null;
+    Status: TaskStatusEnum | null;
+
+    constructor(data: any = null) {
+        if (!data) {
+            this.Index = null;
+            this.Title = "";
+            this.Description = "";
+            this.Column = TaskColumnEnum.First;
+            this.Kind = null;
+            this.Status = null;
+            this.ProjectId = null;
+            this.CategoryId = null;
+        } else {
+            this.Index = data.Index;
+            this.Title = data.Title;
+            this.Description = data.Description;
+            this.Column = data.Column;
+            this.Kind = data.Kind;
+            this.Status = data.Status;
+            this.ProjectId = data.ProjectId;
+            this.CategoryId = data.CategoryId;
         }
     }
 }

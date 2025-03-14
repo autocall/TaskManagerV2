@@ -1,5 +1,4 @@
 import { testContainer } from "../helpers/test.helper";
-import taskRepository from "../repositories/task.rep";
 import TaskModel from "./models/task.model";
 import Response from "./models/response";
 import CategoryModel from "./models/category.model";
@@ -11,6 +10,11 @@ import FileModel from "./models/file.model";
 
 export default class overviewService {
     private rep: overviewRepository;
+
+    /** using in modal */
+    public static projects: ProjectModel[] | null = null;
+    /** using in modal */
+    public static categories: CategoryModel[] | null = null;
 
     constructor(test: testContainer | null) {
         this.rep = new overviewRepository(test);
@@ -26,6 +30,12 @@ export default class overviewService {
                 let comments = (response.data.comments as any[]).map((e: any) => new CommentModel(e));
                 let users = (response.data.users as any[]).map((e: any) => new UserModel(e));
                 let files = (response.data.files as any[]).map((e: any) => new FileModel(e));
+                if (overviewService.projects == null) {
+                    overviewService.projects = (response.data.projects as any[]).map((e) => new ProjectModel(e));
+                }
+                if (overviewService.categories == null) {
+                    overviewService.categories = (response.data.categories as any[]).map((e) => new CategoryModel(e));
+                }
                 let models = this.merge(categories, projects, tasks, comments, users, files);
                 return Response.success<CategoryModel[]>(models);
             })

@@ -1,6 +1,6 @@
 import { testContainer } from "../helpers/test.helper";
 import taskRepository from "../repositories/task.rep";
-import TaskModel from "./models/task.model";
+import TaskModel, { TaskData } from "./models/task.model";
 import Response from "./models/response";
 import CategoryModel from "./models/category.model";
 
@@ -35,9 +35,9 @@ export default class taskService {
             });
     }
 
-    public create(name: string) {
+    public create(data: TaskData) {
         return this.rep
-            .create(name)
+            .create(data)
             .then((response) => {
                 return Response.success<any>(response.data);
             })
@@ -46,9 +46,9 @@ export default class taskService {
             });
     }
 
-    public update(id: number, name: string) {
+    public update(id: number, data: TaskData) {
         return this.rep
-            .update(id, name)
+            .update(id, data)
             .then((response) => {
                 return Response.success<any>(response.data);
             })

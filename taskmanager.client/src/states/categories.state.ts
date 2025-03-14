@@ -28,16 +28,16 @@ export const gotCategoriesAction = (response: Response<CategoryModel[]>) =>
         error: response.error ?? initialState.error,
     }) as const;
 
-export const DELETINGPROJECT = "DeletingCategory";
+export const DELETINGCATEGORY = "DeletingCategory";
 export const deletingCategoryAction = () =>
     ({
-        type: DELETINGPROJECT,
+        type: DELETINGCATEGORY,
     }) as const;
 
-export const DELETEDPROJECT = "DeletedCategory";
+export const DELETEDCATEGORY = "DeletedCategory";
 export const deletedCategoryAction = (response: Response<any>) =>
     ({
-        type: DELETEDPROJECT,
+        type: DELETEDCATEGORY,
         error: response.error ?? initialState.error,
     }) as const;
 
@@ -61,13 +61,13 @@ export const categoriesReducer: any = (state: CategoriesState = initialState, ac
                 ...action,
                 loading: false,
             };
-        case DELETINGPROJECT:
+        case DELETINGCATEGORY:
             return {
                 ...state,
                 ...action,
                 loading: true,
             };
-        case DELETEDPROJECT:
+        case DELETEDCATEGORY:
             return {
                 ...state,
                 ...action,

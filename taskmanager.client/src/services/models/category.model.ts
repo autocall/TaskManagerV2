@@ -5,6 +5,8 @@ import TaskModel from "./task.model";
 export default class CategoryModel extends BaseModel {
     Name: string;
     Color: string;
+    ColorForeground: string;
+    ColorBackground: string;
     Order: number;
 
     Tasks: TaskModel[];
@@ -18,7 +20,10 @@ export default class CategoryModel extends BaseModel {
 
             this.Tasks = data.Tasks?.map((t: any) => new TaskModel(t));
 
-            this.Color = localStorage.getItem("theme") === "light" ? colorExtension.toLightTheme(this.Color) : colorExtension.toDarkTheme(this.Color);
+            this.ColorForeground =
+                localStorage.getItem("theme") === "light" ? colorExtension.toLightTheme(this.Color) : colorExtension.toDarkTheme(this.Color);
+            this.ColorBackground =
+                localStorage.getItem("theme") !== "light" ? colorExtension.toLightTheme(this.Color) : colorExtension.toDarkTheme(this.Color);
         }
     }
 }

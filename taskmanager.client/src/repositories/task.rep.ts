@@ -1,6 +1,7 @@
 import axios from "axios";
 import authHeader from "../services/auth-header";
 import { testContainer } from "../helpers/test.helper";
+import { TaskData } from "../services/models/task.model";
 
 const API_URL = "/api/task/";
 
@@ -32,24 +33,24 @@ export default class taskRepository {
         return axios.get(`${API_URL}${action}/${id}`, { headers: this.generateHeaders(action) });
     }
 
-    public create(name: string) {
+    public create(data: TaskData) {
         let action = "create";
         return axios.post(
             `${API_URL}${action}/`,
             {
-                name,
+                ...data,
             },
             { headers: this.generateHeaders(action) },
         );
     }
 
-    public update(id: number, name: string) {
+    public update(id: number, data: TaskData) {
         let action = "update";
         return axios.put(
             `${API_URL}${action}/`,
             {
                 id,
-                name,
+                ...data,
             },
             { headers: this.generateHeaders(action) },
         );

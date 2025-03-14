@@ -13,12 +13,21 @@ import authService from "../services/auth.service";
 import { useState } from "react";
 import IJwt from "../types/jwt.type";
 import OverviewTask from "./Overview.Task";
+import TaskModal from "./Task.Modal";
+import { useConfirm } from "./shared/confirm";
+import TaskModel, { TaskData } from "../services/models/task.model";
+import taskService from "../services/task.service";
+import { deletedTaskAction, deletingTaskAction } from "../states/task.state";
+import { TaskColumnEnum } from "../enums/task.column.enum";
+import { TaskStatusEnum } from "../enums/task.status.enum";
 
 const Overview: React.FC = () => {
     const { search } = useLocation();
     let dispatch = useDispatch();
     let state = useSelector((s: AppState) => s.overviewState);
     const [currentUser, setCurrentUser] = useState<IJwt | null>(null);
+    const [modalData, setModalData] = useState<TaskModel | null>(null);
+    const { confirm, ConfirmDialog } = useConfirm();
 
     useAsyncEffect(async () => {
         await load();
@@ -33,9 +42,43 @@ const Overview: React.FC = () => {
         let response = await service.get();
         dispatch(gotCategoriesAction(response));
     };
+    const handleAdd = () => {
+        let model = new TaskModel();
+        if (state.categories && state.categories.length > 0) {
+            model.CategoryId = state.categories[0].Id;
+        }
+        model.Status = TaskStatusEnum.New;
+        model.Column = TaskColumnEnum.First;
+        let lastProjectId = localStorage.getItem("last-project-id");
+        if (lastProjectId) {
+            model.ProjectId = parseInt(lastProjectId);
+        }
+        setModalData(model);
+    };
+    const handleEdit = (model: TaskModel) => setModalData(model);
+    const handleDelete = async (model: TaskModel) => {
+        if (await confirm("Delete Task", `Are you sure you want to delete the task '${model.Index}'?`)) {
+            let service: taskService = new taskService(testHelper.getTestContainer(search));
+            dispatch(deletingTaskAction());
+            let response = await service.delete(model.Id);
+            dispatch(deletedTaskAction(response));
+            if (response.success) {
+                await load();
+            }
+        }
+    };
+
+    const handleClose = async (reload: boolean) => {
+        setModalData(null);
+        if (reload) {
+            await load();
+        }
+    };
 
     return (
         <>
+            {ConfirmDialog}
+            <TaskModal modalData={modalData} onClose={handleClose} />
             <Col lg="auto" className="d-none d-lg-block" style={{ width: "280px" }}>
                 <Calendar />
             </Col>
@@ -46,7 +89,9 @@ const Overview: React.FC = () => {
                     {/* toolbar */}
                     <Card>
                         <Card.Body>
-                            <Link>Task</Link>
+                            <Link to="#" onClick={handleAdd}>
+                                Create Task
+                            </Link>
                         </Card.Body>
                     </Card>
                     {/* categories + tasks */}
@@ -63,10 +108,16 @@ const Overview: React.FC = () => {
                                 <Row key={"category" + category.Id}>
                                     <Divider model={category} />
                                     <Row className="column-row">
-                                        {Array.from({ length: 3 }, (_, column) => (
+                                        {[1, 2, 3].map((column) => (
                                             <Col key={category.Id + column} md={true}>
-                                                {category.Tasks?.filter((task) => task.Column == column + 1)?.map((task) => (
-                                                    <OverviewTask key={"task" + task.Id} task={task} currentUser={currentUser} />
+                                                {category.Tasks?.filter((task) => task.Column == column)?.map((task) => (
+                                                    <OverviewTask
+                                                        key={"task" + task.Id}
+                                                        task={task}
+                                                        currentUser={currentUser}
+                                                        handleEdit={handleEdit}
+                                                        handleDelete={handleDelete}
+                                                    />
                                                 ))}
                                             </Col>
                                         ))}

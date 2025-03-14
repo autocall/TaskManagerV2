@@ -8,9 +8,9 @@ interface Props {
 const Divider = ({ model }: Props) => {
     return (
         <div className="d-flex align-items-center text-center my-1">
-            <div className="flex-grow-1 border-bottom" css={{ borderColor: model.Color + " !important" }}></div>
-            <div className="mx-3"><span style={{ color: model.Color }}>{model.Name}</span></div>
-            <div className="flex-grow-1 border-bottom" css={{ borderColor: model.Color + " !important"  }}></div>
+            <div className="flex-grow-1 border-bottom" css={{ borderColor: model.ColorForeground + " !important" }}></div>
+            <div className="mx-3"><span style={{ color: model.ColorForeground }}>{model.Name}</span></div>
+            <div className="flex-grow-1 border-bottom" css={{ borderColor: model.ColorForeground + " !important"  }}></div>
         </div>
     );
 };

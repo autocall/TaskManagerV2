@@ -13,9 +13,11 @@ import OverviewComment from "./Overview.Comment";
 interface OverviewTaskProps {
     task: TaskModel;
     currentUser: IJwt | null;
+    handleEdit: (model: TaskModel) => void;
+    handleDelete: (model: TaskModel) => void;
 }
 
-const OverviewTask: React.FC<OverviewTaskProps> = ({ task, currentUser }: OverviewTaskProps) => {
+const OverviewTask: React.FC<OverviewTaskProps> = ({ task, currentUser, handleEdit, handleDelete }: OverviewTaskProps) => {
     const flex: string = "d-flex justify-content-between align-items-start";
 
     return (
@@ -65,7 +67,14 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({ task, currentUser }: Overvi
                         </div>
                     ) : null}
                     <div className="extra-link" style={{ whiteSpace: "normal", wordBreak: "normal" }}>
-                        <Link>Comment</Link> | <Link>Edit</Link> | <Link>Delete</Link>
+                        <Link>Comment</Link> |{" "}
+                        <Link to="#" onClick={() => handleEdit(task)}>
+                            Edit
+                        </Link>{" "}
+                        |{" "}
+                        <Link to="#" onClick={() => handleDelete(task)}>
+                            Delete
+                        </Link>
                     </div>
                 </div>
             </Card.Body>

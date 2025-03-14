@@ -19,10 +19,10 @@ const TaskKindVariants: Record<TaskKindEnum, string> = {
     [TaskKindEnum.Support]: "info",
 };
 
-export function getTaskKindDescription(kind: TaskKindEnum): string {
-    return TaskKindDescriptions[kind] || "Unknown";
+export function getTaskKindDescription(kind: TaskKindEnum | null): string {
+    return kind && TaskKindDescriptions[kind] || "Unknown";
 }
 
-export function getTaskKindVariant(kind: TaskKindEnum): string {
-    return TaskKindVariants[kind] || "secondary";
+export function getTaskKindVariant(kind: TaskKindEnum | null): string {
+    return kind && TaskKindVariants[kind] || "secondary";
 }

@@ -10,6 +10,7 @@ import { calendarReducer, CalendarState } from "./calendar.state";
 import { eventReducer, EventState } from "./event.state";
 import { profileTimeZoneReducer, ProfileTimeZoneState } from "./profile.timezone.state";
 import { overviewReducer, OverviewState } from "./overview.state";
+import { taskReducer, TaskState } from "./task.state";
 
 export interface AppState {
     readonly loginState: LoginState;
@@ -19,6 +20,7 @@ export interface AppState {
     readonly categoriesState: CategoriesState;
     readonly categoryState: CategoryState;
     readonly overviewState: OverviewState;
+    readonly taskState: TaskState;
 
     readonly calendarState: CalendarState;
     readonly eventState: EventState;
@@ -34,6 +36,7 @@ const rootReducer = combineReducers<AppState>({
     categoriesState: categoriesReducer,
     categoryState: categoryReducer,
     overviewState: overviewReducer,
+    taskState: taskReducer,
     eventState: eventReducer,
     profileTimeZoneState: profileTimeZoneReducer,
 });

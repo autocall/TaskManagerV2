@@ -1,9 +1,18 @@
-﻿namespace TaskManager.Logic.Dtos;
-public class TaskDto : BaseCompanyDto {
+﻿using TaskManager.Logic.Enums;
+
+namespace TaskManager.Logic.Dtos;
+
+public interface IEnumTaskDtoMap {
+    public TaskColumnEnum Column { get; set; }
+    public TaskKindEnum Kind { get; set; }
+    public TaskStatusEnum Status { get; set; }
+}
+
+public class TaskDto : BaseCompanyDto, IEnumTaskDtoMap {
     public int Index { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
-    public int ProjectId { get; set; }
+    public int? ProjectId { get; set; }
     public int CategoryId { get; set; }
     public TaskColumnEnum Column { get; set; }
     public TaskKindEnum Kind { get; set; }
@@ -12,38 +21,28 @@ public class TaskDto : BaseCompanyDto {
     public int CommentsCount { get; set; }
 }
 
-public class CommentDto : BaseCompanyDto {
-    public int TaskId { get; set; }
-    public DateTime DateTime { get; set; }
+public class CreateTaskDto : IEnumTaskDtoMap {
+    public int Index { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public int? ProjectId { get; set; }
+    public int CategoryId { get; set; }
+    public TaskColumnEnum Column { get; set; }
+    public TaskKindEnum Kind { get; set; }
+    public TaskStatusEnum Status { get; set; }
     public decimal WorkHours { get; set; }
-    public string Text { get; set; }
 }
 
-public class FileDto {
+public class UpdateTaskDto : IEnumTaskDtoMap {
     public int Id { get; set; }
-    public string FileName { get; set; }
-    public long Size { get; set; }
-}
 
-public enum TaskColumnEnum {
-    First = 1,
-    Second = 2,
-    Third = 3,
-}
-
-public enum TaskKindEnum {
-    Unknown = 0,
-    Task = 1,
-    Bug = 2,
-    Feature = 3,
-    Support = 4,
-}
-
-public enum TaskStatusEnum {
-    New = 1,
-    InProgress = 2,
-    OnHold = 3,
-    Completed = 4,
-    Closed = 5,
-    Canceled = 6,
+    public int Index { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public int? ProjectId { get; set; }
+    public int CategoryId { get; set; }
+    public TaskColumnEnum Column { get; set; }
+    public TaskKindEnum Kind { get; set; }
+    public TaskStatusEnum Status { get; set; }
+    public decimal WorkHours { get; set; }
 }

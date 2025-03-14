@@ -10,8 +10,10 @@ public class LinqToDbContext : DataConnection {
         var mappingSchema = new MappingSchema();
         var builder = new FluentMappingBuilder(mappingSchema);
         CompanyMap.LinqToDbConfigure(builder);
+        TaskMap.LinqToDbConfigure(builder);
         builder.Build();
-        options.UseMappingSchema(mappingSchema);
+        this.AddMappingSchema(mappingSchema);
+        //options.UseMappingSchema(mappingSchema); // not needed
     }
 }
 

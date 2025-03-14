@@ -24,14 +24,24 @@
     <Compile Include="..\TaskManager.Logic\Dtos\Base\BaseCompanyDto.cs" Link="Dtos\Base\BaseCompanyDto.cs" />
     <Compile Include="..\TaskManager.Logic\Dtos\Base\BaseDto.cs" Link="Dtos\Base\BaseDto.cs" />
     <Compile Include="..\TaskManager.Logic\Dtos\CalendarDtos.cs" Link="Dtos\CalendarDtos.cs" />
+    <Compile Include="..\TaskManager.Logic\Dtos\CommentDto.cs" Link="Dtos\CommentDto.cs" />
     <Compile Include="..\TaskManager.Logic\Dtos\EventDtos.cs" Link="Dtos\EventDtos.cs" />
+    <Compile Include="..\TaskManager.Logic\Dtos\FileDto.cs" Link="Dtos\FileDto.cs" />
     <Compile Include="..\TaskManager.Logic\Dtos\ProjectDtos.cs" Link="Dtos\ProjectDtos.cs" />
+    <Compile Include="..\TaskManager.Logic\Dtos\TaskDto.cs" Link="Dtos\TaskDto.cs" />
     <Compile Include="..\TaskManager.Logic\Enums\EventRepeatEnum.cs" Link="Enums\EventRepeatEnum.cs" />
     <Compile Include="..\TaskManager.Logic\Enums\EventTypeEnum.cs" Link="Enums\EventTypeEnum.cs" />
-    <Compile Include="..\TaskManager.Server\Models\AccountViewModel.cs" Link="Models\AccountViewModel.cs" />
-    <Compile Include="..\TaskManager.Server\Models\EventViewModel.cs" Link="Models\EventViewModel.cs" />
-    <Compile Include="..\TaskManager.Server\Models\ProjectViewModel.cs" Link="Models\ProjectViewModel.cs" />
+    <Compile Include="..\TaskManager.Logic\Enums\TaskColumnEnum.cs" Link="Enums\TaskColumnEnum.cs" />
+    <Compile Include="..\TaskManager.Logic\Enums\TaskKindEnum.cs" Link="Enums\TaskKindEnum.cs" />
+    <Compile Include="..\TaskManager.Logic\Enums\TaskStatusEnum.cs" Link="Enums\TaskStatusEnum.cs" />
+    <Compile Include="..\TaskManager.Server\Models\AccountViewModels.cs" Link="Models\AccountViewModels.cs" />
+    <Compile Include="..\TaskManager.Server\Models\CategoryViewModels.cs" Link="Models\CategoryViewModels.cs" />
+    <Compile Include="..\TaskManager.Server\Models\CommentViewModels.cs" Link="Models\CommentViewModels.cs" />
+    <Compile Include="..\TaskManager.Server\Models\EventViewModels.cs" Link="Models\EventViewModels.cs" />
+    <Compile Include="..\TaskManager.Server\Models\ProfileViewModel.cs" Link="Models\ProfileViewModel.cs" />
+    <Compile Include="..\TaskManager.Server\Models\ProjectViewModels.cs" Link="Models\ProjectViewModels.cs" />
     <Compile Include="..\TaskManager.Server\Models\ResponseModel.cs" Link="Models\ResponseModel.cs" />
+    <Compile Include="..\TaskManager.Server\Models\TaskViewModels.cs" Link="Models\TaskViewModels.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,6 +61,7 @@
     <Folder Include="Exceptions\" />
     <Folder Include="Enums\" />
     <Folder Include="Interfaces\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

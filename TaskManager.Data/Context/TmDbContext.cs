@@ -40,5 +40,7 @@ public class TmDbContext : IdentityDbContext<TmUser, TmRole, int, TmUserClaim, T
         modelBuilder.ApplyConfiguration(new ProjectMap());
         modelBuilder.ApplyConfiguration(new CategoryMap());
         modelBuilder.ApplyConfiguration(new EventMap());
+        modelBuilder.ApplyConfiguration(new TaskMap());
+        modelBuilder.ApplyConfiguration(new CommentMap());
     }
 }

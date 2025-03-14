@@ -19,5 +19,8 @@ public class ViewMappingProfile : Profile {
 
         CreateMap<CreateEventViewModel, CreateEventDto>();
         CreateMap<UpdateEventViewModel, UpdateEventDto>();
+
+        CreateMap<CreateTaskViewModel, CreateTaskDto>();
+        CreateMap<UpdateTaskViewModel, UpdateTaskDto>();
     }
 }

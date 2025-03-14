@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TaskManager.Data.Entities;
 
 namespace TaskManager.Data.Mappings;
-public class ProjectMap : BaseMap<Project> {
+public class ProjectMap : BaseCompanyMap<Project> {
     public override void Configure(EntityTypeBuilder<Project> builder) {
         base.Configure(builder);
     }

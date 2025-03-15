@@ -58,7 +58,19 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
         }
     }, [modalData, dispatch]);
 
-    const validationSchema = Yup.object().shape({});
+    const validationSchema = Yup.object().shape({
+        Column: Yup.number().required("Column is required"),
+        Status: Yup.number().required("Status is required"),
+        Title: Yup.string(),
+        Description: Yup.string().test(
+            "at-least-one",
+            "Either Title or Description is required",
+            function () {
+                const { Title, Description } = this.parent;
+                return Boolean(Title?.trim() || Description?.trim());
+            }
+        ),
+    });
 
     const handleSubmit = async (model: TaskState) => {
         let service: taskService = new taskService(testHelper.getTestContainer(search));

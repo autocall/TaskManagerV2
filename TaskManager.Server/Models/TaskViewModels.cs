@@ -7,10 +7,12 @@ public class CreateTaskViewModel {
     public string Title { get; set; }
     public string Description { get; set; }
     public int? ProjectId { get; set; }
+    [Required]
     public int CategoryId { get; set; }
-    [AllowedValues(TaskColumnEnum.First, TaskColumnEnum.Second, TaskColumnEnum.Third)]
+    [Required]
     public TaskColumnEnum Column { get; set; }
     public TaskKindEnum Kind { get; set; }
+    [Required]
     public TaskStatusEnum Status { get; set; }
 }
 
@@ -21,9 +23,11 @@ public class UpdateTaskViewModel {
     public string Title { get; set; }
     public string Description { get; set; }
     public int? ProjectId { get; set; }
+    [Required]
     public int CategoryId { get; set; }
-    [AllowedValues(TaskColumnEnum.First, TaskColumnEnum.Second, TaskColumnEnum.Third)]
+    [Required]
     public TaskColumnEnum Column { get; set; }
     public TaskKindEnum Kind { get; set; }
+    [Required]
     public TaskStatusEnum Status { get; set; }
 }

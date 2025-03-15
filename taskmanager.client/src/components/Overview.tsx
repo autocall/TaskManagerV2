@@ -1,4 +1,4 @@
-import { Alert, Card, Col, Container, ListGroup, Row, Spinner } from "react-bootstrap";
+import { Alert, Button, ButtonGroup, Card, Col, Container, Dropdown, Form, InputGroup, ListGroup, Row, Spinner, ToggleButton } from "react-bootstrap";
 import Calendar from "./Calendar.Current";
 import "bootstrap/dist/css/bootstrap.css";
 import Divider from "./shared/divider";
@@ -19,7 +19,10 @@ import TaskModel, { TaskData } from "../services/models/task.model";
 import taskService from "../services/task.service";
 import { deletedTaskAction, deletingTaskAction } from "../states/task.state";
 import { TaskColumnEnum } from "../enums/task.column.enum";
-import { TaskStatusEnum } from "../enums/task.status.enum";
+import { getTaskStatusDescription, getTaskStatusVariant, TaskStatusEnum } from "../enums/task.status.enum";
+import CategoryModel from "../services/models/category.model";
+import { getTaskKindDescription, getTaskKindVariant, TaskKindEnum } from "../enums/task.kind.enum";
+import ProjectModel from "../services/models/project.model";
 
 const Overview: React.FC = () => {
     const { search } = useLocation();
@@ -27,6 +30,11 @@ const Overview: React.FC = () => {
     let state = useSelector((s: AppState) => s.overviewState);
     const [currentUser, setCurrentUser] = useState<IJwt | null>(null);
     const [modalData, setModalData] = useState<TaskModel | null>(null);
+    const [projects, setProjects] = useState<ProjectModel[] | null>(null);
+    const [filterText, setFilterText] = useState<string>("");
+    const [filterKindId, setFilterKind] = useState<TaskKindEnum | null>(null);
+    const [filterStatus, setFilterStatus] = useState<TaskStatusEnum | null>(null);
+    const [filterProjectId, setFilterProjectId] = useState<number | null>(null);
     const { confirm, ConfirmDialog } = useConfirm();
 
     useAsyncEffect(async () => {
@@ -40,6 +48,7 @@ const Overview: React.FC = () => {
         let service: overviewService = new overviewService(testHelper.getTestContainer(search));
         dispatch(gettingCategoriesAction());
         let response = await service.get();
+        setProjects(overviewService.projects);
         dispatch(gotCategoriesAction(response));
     };
     const handleAdd = () => {
@@ -89,9 +98,81 @@ const Overview: React.FC = () => {
                     {/* toolbar */}
                     <Card>
                         <Card.Body>
-                            <Link to="#" onClick={handleAdd}>
-                                Create Task
-                            </Link>
+                            <Row className="align-items-center">
+                                <Col xs="auto">
+                                <ButtonGroup>
+                                    <Button onClick={handleAdd}>Task</Button>
+                                    {/* <Button onClick={handleAdd}>Note</Button> */}
+                                </ButtonGroup>
+                                </Col>
+                                <Col xs="auto">
+                                    <InputGroup>
+                                        <Form.Control placeholder="Search" value={filterText}     onChange={(e) => setFilterText(e.target.value)} />
+                                        <Button variant="outline-secondary">
+                                            <i className="bi bi-search"></i>
+                                        </Button>
+                                    </InputGroup>
+                                </Col>
+                                <Col xs="auto">
+                                    <ButtonGroup>
+                                        {(Object.values(TaskKindEnum) as TaskKindEnum[])
+                                            .filter((k) => Number(k))
+                                            .map((kind) => (
+                                                <ToggleButton
+                                                    key={"task-kind" + kind}
+                                                    id={"task-kind" + kind}
+                                                    type="radio"
+                                                    variant={filterKindId == kind ? getTaskKindVariant(filterKindId) : "outline-secondary"}
+                                                    name="radio"
+                                                    value={kind}
+                                                    checked={filterKindId == kind}
+                                                    onClick={(e) => (filterKindId == kind ? setFilterKind(null) : setFilterKind(kind))}>
+                                                    {getTaskKindDescription(kind)}
+                                                </ToggleButton>
+                                            ))}
+                                    </ButtonGroup>
+                                </Col>
+                                <Col xs="auto">
+                                    <Form.Select value={filterStatus || ""}
+                                        onChange={(e) => {
+                                            setFilterStatus(parseInt(e.target.value) as TaskStatusEnum);
+                                        }}>
+                                        <option value="">Filter Status</option>
+                                        {(Object.values(TaskStatusEnum) as TaskStatusEnum[])
+                                            .filter((k) => Number(k))
+                                            .map((status) => (
+                                                <option key={"filter-status" + status} value={status}>
+                                                    {getTaskStatusDescription(status)}
+                                                </option>
+                                            ))}
+                                    </Form.Select>
+                                </Col>
+                                <Col xs="auto">
+                                    <Form.Select value={filterProjectId || ""}
+                                        onChange={(e) => {
+                                            setFilterProjectId(parseInt(e.target.value));
+                                        }}>
+                                        <option value="">Filter Project</option>
+                                        {projects?.map((project) => (
+                                            <option key={"filter-project" + project.Id} value={project.Id}>
+                                                {project.Name}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                </Col>
+                                <Col xs="auto">
+                                    <Button
+                                        variant={filterKindId || filterStatus || filterProjectId ? "danger" : "outline-secondary"}
+                                        onClick={() => {
+                                            setFilterText("");
+                                            setFilterKind(null);
+                                            setFilterStatus(null);
+                                            setFilterProjectId(null);
+                                        }}>
+                                        Reset
+                                    </Button>
+                                </Col>
+                            </Row>
                         </Card.Body>
                     </Card>
                     {/* categories + tasks */}

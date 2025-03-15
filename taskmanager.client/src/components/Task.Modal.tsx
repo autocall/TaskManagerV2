@@ -188,7 +188,6 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
                                                     type="radio"
                                                     variant={values.CategoryId == category.Id ? "secondary" : "outline-secondary"}
                                                     style={{ background: values.CategoryId == category.Id ? category.ColorBackground : "inherit" }}
-                                                    name="radio"
                                                     value={category.Id}
                                                     checked={values.CategoryId == category.Id}
                                                     onChange={(e) => setFieldValue("CategoryId", category.Id)}>

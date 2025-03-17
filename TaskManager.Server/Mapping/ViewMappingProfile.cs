@@ -22,5 +22,7 @@ public class ViewMappingProfile : Profile {
 
         CreateMap<CreateTaskViewModel, CreateTaskDto>();
         CreateMap<UpdateTaskViewModel, UpdateTaskDto>();
+
+        CreateMap<FilterViewModel, FilterDto>();
     }
 }

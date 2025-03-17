@@ -137,7 +137,7 @@ div.invalid div.error {
 }
 
 .card > .card-body {
-  word-break: break-all;
+    word-break: break-all;
 }
 
 .column-row.row {
@@ -204,4 +204,9 @@ html {
     overflow-y: auto;
     padding-right: 15px;
     padding-left: 15px;
+}
+.btn-icon {
+    min-width: auto !important;
+    width: auto;
+    padding: 0.375rem 0.5rem; /* Можно настроить отступы */
 }

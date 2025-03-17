@@ -7,6 +7,8 @@ import ProjectModel from "./models/project.model";
 import CommentModel from "./models/comment.model";
 import UserModel from "./models/user.model";
 import FileModel from "./models/file.model";
+import { TaskKindEnum } from "../enums/task.kind.enum";
+import { TaskStatusEnum } from "../enums/task.status.enum";
 
 export default class overviewService {
     private rep: overviewRepository;
@@ -20,9 +22,15 @@ export default class overviewService {
         this.rep = new overviewRepository(test);
     }
 
-    public get(): Promise<Response<CategoryModel[]>> {
+    public get(
+        filterText: string,
+        filterKindId: TaskKindEnum | null,
+        filterStatus: TaskStatusEnum | null,
+        filterProjectId: number | null,
+        filterDate: string,
+    ): Promise<Response<CategoryModel[]>> {
         return this.rep
-            .get()
+            .get(filterText, filterKindId, filterStatus, filterProjectId, filterDate)
             .then((response) => {
                 let categories = (response.data.categories as any[]).map((e: any) => new CategoryModel(e));
                 let projects = (response.data.projects as any[]).map((e: any) => new ProjectModel(e));
@@ -50,7 +58,7 @@ export default class overviewService {
         tasks: TaskModel[],
         comments: CommentModel[],
         users: UserModel[],
-        files: FileModel[]
+        files: FileModel[],
     ): CategoryModel[] {
         comments.forEach((comment) => {
             comment.CreatedUser = users.find((u) => u.Id == comment.CreatedById) ?? null;

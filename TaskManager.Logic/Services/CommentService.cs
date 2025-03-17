@@ -9,7 +9,7 @@ public class CommentService : BaseService {
 
     public CommentService(ServicesHost host) : base(host) { }
 
-    public async Task<List<CommentDto>> GetAllAsync(int companyId) {
+    public async Task<List<CommentDto>> GetAllAsync(FilterDto filter, int companyId) {
         var comments = new List<CommentDto>() {
             new CommentDto(){
                 Id = 11,

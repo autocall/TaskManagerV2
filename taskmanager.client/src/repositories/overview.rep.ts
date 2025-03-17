@@ -1,6 +1,8 @@
 import axios from "axios";
 import authHeader from "../services/auth-header";
 import { testContainer } from "../helpers/test.helper";
+import { TaskKindEnum } from "../enums/task.kind.enum";
+import { TaskStatusEnum } from "../enums/task.status.enum";
 
 const API_URL = "/api/overview/";
 
@@ -22,8 +24,30 @@ export default class overviewRepository {
         return authHeader();
     }
 
-    public get() {
+    public get(
+        filterText: string,
+        filterKindId: TaskKindEnum | null,
+        filterStatus: TaskStatusEnum | null,
+        filterProjectId: number | null,
+        filterDate: string,
+    ) {
         let action = "get";
-        return axios.get(`${API_URL}${action}`, { headers: this.generateHeaders(action) });
+        let query = {};
+        if (filterText) {
+            query = { ...query, Text: filterText.trim() };
+        }
+        if (filterKindId) {
+            query = { ...query, Kind: filterKindId };
+        }
+        if (filterStatus) {
+            query = { ...query, Status: filterStatus };
+        }
+        if (filterProjectId) {
+            query = { ...query, ProjectId: filterProjectId };
+        }
+        if (filterDate) {
+            query = { ...query, Date: filterDate };
+        }
+        return axios.get(`${API_URL}${action}?` + new URLSearchParams(query).toString(), { headers: this.generateHeaders(action) });
     }
 }

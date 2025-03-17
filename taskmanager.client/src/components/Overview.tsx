@@ -1,8 +1,8 @@
-import { Alert, Button, ButtonGroup, Card, Col, Container, Dropdown, Form, InputGroup, ListGroup, Row, Spinner, ToggleButton } from "react-bootstrap";
+import { Alert, Button, ButtonGroup, Card, Col, Form, InputGroup, Row, Spinner, ToggleButton } from "react-bootstrap";
 import Calendar from "./Calendar.Current";
 import "bootstrap/dist/css/bootstrap.css";
 import Divider from "./shared/divider";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../states/store";
 import useAsyncEffect from "use-async-effect";
@@ -10,17 +10,16 @@ import { testHelper } from "../helpers/test.helper";
 import { gettingCategoriesAction, gotCategoriesAction } from "../states/overview.state";
 import overviewService from "../services/overview.service";
 import authService from "../services/auth.service";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import IJwt from "../types/jwt.type";
 import OverviewTask from "./Overview.Task";
 import TaskModal from "./Task.Modal";
 import { useConfirm } from "./shared/confirm";
-import TaskModel, { TaskData } from "../services/models/task.model";
+import TaskModel from "../services/models/task.model";
 import taskService from "../services/task.service";
 import { deletedTaskAction, deletingTaskAction } from "../states/task.state";
 import { TaskColumnEnum } from "../enums/task.column.enum";
-import { getTaskStatusDescription, getTaskStatusVariant, TaskStatusEnum } from "../enums/task.status.enum";
-import CategoryModel from "../services/models/category.model";
+import { getTaskStatusDescription, TaskStatusEnum } from "../enums/task.status.enum";
 import { getTaskKindDescription, getTaskKindVariant, TaskKindEnum } from "../enums/task.kind.enum";
 import ProjectModel from "../services/models/project.model";
 
@@ -32,14 +31,16 @@ const Overview: React.FC = () => {
     const [modalData, setModalData] = useState<TaskModel | null>(null);
     const [projects, setProjects] = useState<ProjectModel[] | null>(null);
     const [filterText, setFilterText] = useState<string>("");
-    const [filterKindId, setFilterKind] = useState<TaskKindEnum | null>(null);
+    const [filterTextTrigger, setFilterTextTrigger] = useState<string>("filterText");
+    const [filterKind, setFilterKind] = useState<TaskKindEnum | null>(null);
     const [filterStatus, setFilterStatus] = useState<TaskStatusEnum | null>(null);
     const [filterProjectId, setFilterProjectId] = useState<number | null>(null);
+    const [filterDate, setFilterDate] = useState<string | "">("");
     const { confirm, ConfirmDialog } = useConfirm();
 
     useAsyncEffect(async () => {
         await load();
-    }, [dispatch]);
+    }, [dispatch, filterTextTrigger, filterKind, filterStatus, filterProjectId, filterDate]);
 
     const load = async () => {
         let user = new authService(null).getCurrentUser();
@@ -47,7 +48,7 @@ const Overview: React.FC = () => {
 
         let service: overviewService = new overviewService(testHelper.getTestContainer(search));
         dispatch(gettingCategoriesAction());
-        let response = await service.get();
+        let response = await service.get(filterText, filterKind, filterStatus, filterProjectId, filterDate);
         setProjects(overviewService.projects);
         dispatch(gotCategoriesAction(response));
     };
@@ -97,46 +98,61 @@ const Overview: React.FC = () => {
                 <div className="main-section">
                     {/* toolbar */}
                     <Card>
-                        <Card.Body>
+                        {/* responsive toolbar margins */}
+                        {/* Card.Body class="pt-2 pb-0" */}
+                        {/* Card.Body -> Col class="mb-2" */}
+                        <Card.Body className="pt-2 pb-0">
                             <Row className="align-items-center">
-                                <Col xs="auto">
-                                <ButtonGroup>
-                                    <Button onClick={handleAdd}>Task</Button>
-                                    {/* <Button onClick={handleAdd}>Note</Button> */}
-                                </ButtonGroup>
+                                <Col xs="auto" className="mb-2">
+                                    <ButtonGroup>
+                                        <Button onClick={handleAdd}>Task</Button>
+                                        {/* <Button onClick={handleAdd}>Note</Button> */}
+                                    </ButtonGroup>
                                 </Col>
-                                <Col xs="auto">
+                                <Col xs="auto" className="mb-2">
                                     <InputGroup>
-                                        <Form.Control placeholder="Search" value={filterText}     onChange={(e) => setFilterText(e.target.value)} />
-                                        <Button variant="outline-secondary">
+                                        <Form.Control
+                                            placeholder="Search"
+                                            style={{ width: "160px" }}
+                                            value={filterText}
+                                            onChange={(e) => {
+                                                setFilterText(e.target.value);
+                                            }}
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    setFilterTextTrigger(filterText);
+                                                }
+                                            }}
+                                        />
+                                        <Button variant="outline-secondary" className="btn-icon" onClick={() => setFilterTextTrigger(filterText)}>
                                             <i className="bi bi-search"></i>
                                         </Button>
                                     </InputGroup>
                                 </Col>
-                                <Col xs="auto">
+                                <Col xs="auto" className="mb-2">
                                     <ButtonGroup>
                                         {(Object.values(TaskKindEnum) as TaskKindEnum[])
                                             .filter((k) => Number(k))
                                             .map((kind) => (
                                                 <ToggleButton
-                                                    key={"task-kind" + kind}
-                                                    id={"task-kind" + kind}
+                                                    key={"filter-kind" + kind}
+                                                    id={"filter-kind" + kind}
                                                     type="radio"
-                                                    variant={filterKindId == kind ? getTaskKindVariant(filterKindId) : "outline-secondary"}
+                                                    variant={filterKind == kind ? getTaskKindVariant(filterKind) : "outline-secondary"}
                                                     name="radio"
                                                     value={kind}
-                                                    checked={filterKindId == kind}
-                                                    onClick={(e) => (filterKindId == kind ? setFilterKind(null) : setFilterKind(kind))}>
+                                                    checked={filterKind == kind}
+                                                    onClick={(e) => (filterKind == kind ? setFilterKind(null) : setFilterKind(kind))}>
                                                     {getTaskKindDescription(kind)}
                                                 </ToggleButton>
                                             ))}
                                     </ButtonGroup>
                                 </Col>
-                                <Col xs="auto">
-                                    <Form.Select value={filterStatus || ""}
-                                        onChange={(e) => {
-                                            setFilterStatus(parseInt(e.target.value) as TaskStatusEnum);
-                                        }}>
+                                <Col xs="auto" className="mb-2">
+                                    <Form.Select
+                                        className={!filterStatus ? "text-muted" : ""}
+                                        value={filterStatus || ""}
+                                        onChange={(e) => setFilterStatus(parseInt(e.target.value) as TaskStatusEnum)}>
                                         <option value="">Filter Status</option>
                                         {(Object.values(TaskStatusEnum) as TaskStatusEnum[])
                                             .filter((k) => Number(k))
@@ -147,11 +163,11 @@ const Overview: React.FC = () => {
                                             ))}
                                     </Form.Select>
                                 </Col>
-                                <Col xs="auto">
-                                    <Form.Select value={filterProjectId || ""}
-                                        onChange={(e) => {
-                                            setFilterProjectId(parseInt(e.target.value));
-                                        }}>
+                                <Col xs="auto" className="mb-2">
+                                    <Form.Select
+                                        className={!filterProjectId ? "text-muted" : ""}
+                                        value={filterProjectId || ""}
+                                        onChange={(e) => setFilterProjectId(parseInt(e.target.value))}>
                                         <option value="">Filter Project</option>
                                         {projects?.map((project) => (
                                             <option key={"filter-project" + project.Id} value={project.Id}>
@@ -160,14 +176,26 @@ const Overview: React.FC = () => {
                                         ))}
                                     </Form.Select>
                                 </Col>
-                                <Col xs="auto">
+                                <Col xs="auto" className="mb-2">
+                                    <Form.Control
+                                        className={!filterDate ? "text-muted" : ""}
+                                        type="Date"
+                                        value={filterDate}
+                                        onChange={async (e) => {
+                                            setFilterDate(e.target.value);
+                                        }}
+                                    />
+                                </Col>
+                                <Col xs="auto" className="mb-2">
                                     <Button
-                                        variant={filterKindId || filterStatus || filterProjectId ? "danger" : "outline-secondary"}
+                                        variant={filterText || filterKind || filterStatus || filterProjectId || filterDate ? "danger" : "outline-secondary"}
                                         onClick={() => {
+                                            setFilterDate("");
                                             setFilterText("");
                                             setFilterKind(null);
                                             setFilterStatus(null);
                                             setFilterProjectId(null);
+                                            load();
                                         }}>
                                         Reset
                                     </Button>

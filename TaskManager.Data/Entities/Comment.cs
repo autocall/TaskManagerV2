@@ -23,5 +23,4 @@ public interface ICommentUpdateMap : IBaseUpdateMap {
     public int TaskId { get; set; }
     public string Text { get; set; }
     public decimal WorkHours { get; set; }
-
 }

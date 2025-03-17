@@ -36,7 +36,6 @@ public interface IEnumTaskMap {
 }
 
 public interface ITaskUpdateMap : IBaseUpdateMap {
-    public int Index { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
     public int? ProjectId { get; set; }

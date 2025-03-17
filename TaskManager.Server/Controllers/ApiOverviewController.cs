@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using TaskManager.Logic;
+using TaskManager.Logic.Dtos;
+using TaskManager.Logic.Enums;
 using TaskManager.Logic.Services;
 using TaskManager.Server.Controllers;
+using TaskManager.Server.Models;
 
 namespace OverviewManager.Server.Controllers;
 [Authorize]
@@ -24,8 +27,9 @@ public class ApiOverviewController : BaseController {
     #endregion [ .ctor ]
 
     [HttpGet]
-    public async Task<ActionResult> Get() {
-        var data = await this.Service.GetAsync(base.GetCompanyId());
+    public async Task<ActionResult> Get([FromQuery] FilterViewModel filter) {
+        var filterDto = Mapper.Map<FilterDto>(filter);
+        var data = await this.Service.GetAsync(filterDto, base.GetCompanyId());
         return JsonSuccess(new { data.categories, data.projects, data.tasks, data.comments, data.users, data.files });
     }
 }

@@ -29,8 +29,9 @@ public class ApiTaskController : BaseController {
     #endregion [ .ctor ]
 
     [HttpGet]
-    public async Task<ActionResult> GetAll() {
-        var categoryDtos = await this.Service.GetAllAsync(base.GetCompanyId());
+    public async Task<ActionResult> GetAll([FromQuery] FilterViewModel filter) {
+        var filterDto = Mapper.Map<FilterDto>(filter);
+        var categoryDtos = await this.Service.GetAllAsync(filterDto, base.GetCompanyId());
         return JsonSuccess(categoryDtos);
     }
 

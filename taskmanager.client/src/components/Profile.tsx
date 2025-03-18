@@ -28,7 +28,7 @@ const Profile: React.FC = () => {
         <Container className="scroll-content">
             <ProfileTimeZoneModal modalData={profileTimeZoneModalData} onClose={handleCloseTimeZone} />
             <Row className="justify-content-center">
-                <Col className="text-center" style={{ maxWidth: "36rem" }}>
+                <Col className="text-center" style={{ maxWidth: "38rem" }}>
                     <Card>
                         <Card.Header>Profile</Card.Header>
                         <Card.Body>

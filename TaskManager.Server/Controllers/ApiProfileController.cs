@@ -22,11 +22,13 @@ public class ApiProfileController : BaseController {
 
     private readonly SignInManager<TmUser> SignInManager;
     private ProfileService Service => Host.GetService<ProfileService>();
+    private readonly IConfiguration Config;
 
     #region [ .ctor ]
 
-    public ApiProfileController(ServicesHost host, SignInManager<TmUser> signInManager) : base(host) {
+    public ApiProfileController(ServicesHost host, IConfiguration config, SignInManager<TmUser> signInManager) : base(host) {
         SignInManager = signInManager;
+        Config = config;
     }
 
     #endregion [ .ctor ]
@@ -57,6 +59,7 @@ public class ApiProfileController : BaseController {
             ExpiresUtc = DateTime.UtcNow.AddYears(1)
         });
 
-        return JsonSuccess();
+        var accountController = new ApiAccountController(Host, Config, SignInManager);
+        return await accountController.ReturnIdentityAsync(user);
     }
 }

@@ -27,6 +27,7 @@ export default class profileService {
         return this.rep
             .setTimeZoneId(timeZoneId)
             .then((response) => {
+                localStorage.setItem("token", response.data.Token);
                 return Response.success<any>(response.data);
             })
             .catch((exception) => {

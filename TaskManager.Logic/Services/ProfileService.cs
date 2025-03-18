@@ -1,15 +1,12 @@
 ﻿using TaskManager.Logic.Dtos;
+using TaskManager.Logic.Helpers;
 
 namespace TaskManager.Logic.Services;
 public class ProfileService : BaseService {
     public ProfileService(ServicesHost host) : base(host) { }
 
     public List<TimeZoneDto> GetTimeZones() {
-        var timeZoneDtos = new List<TimeZoneDto>();
-        foreach (var item in TimeZoneInfo.GetSystemTimeZones()) {
-            timeZoneDtos.Add(new TimeZoneDto(item));
-        }
-        return timeZoneDtos;
+        return TimeZoneHelper.GetTimeZones();
     }
 
     public async Task SetTimeZoneAsync(int userId, string timeZoneId) {
@@ -34,7 +31,7 @@ public class ProfileService : BaseService {
     public async Task<TimeZoneDto> GetTimeZoneAsync(int userId) {
         var timeZoneId = await GetTimeZoneIdAsync(userId);
         if (timeZoneId == null) {
-            timeZoneId = TimeZoneInfo.Utc.Id;
+            timeZoneId = TimeZoneHelper.UtcId;
         }
         return this.GetTimeZoneById(timeZoneId);
     }
@@ -43,19 +40,20 @@ public class ProfileService : BaseService {
     ///     Gets the user TimeZone or UTC if not set </summary>
     public TimeZoneDto GetTimeZoneById(string timeZoneId) {
         if (timeZoneId == null) {
-            timeZoneId = TimeZoneInfo.Utc.Id;
+            return TimeZoneHelper.Utc;
         }
-        var timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+        var timeZone = TimeZoneHelper.FindTimeZoneById(timeZoneId);
         if (timeZone == null) {
-            timeZone = TimeZoneInfo.Utc;
+            return TimeZoneHelper.Utc;
+        } else {
+            return timeZone;
         }
-        return new TimeZoneDto(timeZone);
     }
 
     /// <summary>
     ///     Gets current time of the user </summary>
     public async Task<DateTime> GetNowAsync(int userId) {
         var timeZone = await this.GetTimeZoneAsync(userId);
-        return TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById(timeZone.Id));
+        return TimeZoneHelper.ConvertTime(DateTime.Now, timeZone.Id);
     }
 }

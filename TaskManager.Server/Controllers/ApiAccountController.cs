@@ -140,7 +140,7 @@ public class ApiAccountController : BaseController {
         }
     }
 
-    private async Task<ActionResult> ReturnIdentityAsync(TmUser user) {
+    public async Task<ActionResult> ReturnIdentityAsync(TmUser user) {
         // successed
         var token = await Host.GetService<AuthService>().CreateAsync(user);
         var identity = new IdentityDto {

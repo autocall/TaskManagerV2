@@ -57,7 +57,7 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({ task, currentUser, handleEd
                             />
                         ))}
                         <span className="extra-text" style={{ wordBreak: "normal" }}>
-                            {stringExtension.dateToLong(task.CreatedDateTime)}
+                            {stringExtension.dateToLong(task.CreatedDateTime, currentUser?.TimeZoneId)}
                         </span>
                     </div>
                     {task.CommentsCount ? (

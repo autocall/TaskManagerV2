@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from "moment-timezone";
 
 export default class stringExtension {
     public static truncate(value: string, length: number = 6): string {
@@ -45,21 +45,24 @@ export default class stringExtension {
         }
     }
 
-    public static dateToLong(value: unknown): string {
+    public static dateToLong(value: unknown, timeZoneId: string | undefined): string {
         if (value instanceof Date) {
-            return this.dateToLong_date(value);
+            return this.dateToLong_date(value, timeZoneId);
         } else if (moment.isMoment(value)) {
-            return this.dateToLong_moment(value);
+            return this.dateToLong_moment(value, timeZoneId);
         } else {
             throw new Error("Invalid date type");
         }
     }
 
-    private static dateToLong_date(value: Date): string {
-        return this.dateToLong_moment(moment(value));
+    private static dateToLong_date(value: Date, timeZoneId: string | undefined): string {
+        return this.dateToLong_moment(moment(value), timeZoneId);
     }
 
-    private static dateToLong_moment(value: moment.Moment): string {
+    private static dateToLong_moment(value: moment.Moment, timeZoneId: string | undefined): string {
+        if (timeZoneId) {
+            value = value.clone().tz(timeZoneId);
+        }
         let now = moment();
         let diff = now.diff(value, "weeks");
         if (diff < 1) {

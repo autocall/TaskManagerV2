@@ -8,6 +8,8 @@ public class TmUser : IdentityUser<int> {
     public override int Id { get; set; }
     public int CompanyId { get; set; }
 
+    /// <summary>
+    ///     IANA time zone name </summary>
     [Column(TypeName = "varchar(64)")]
     public string TimeZoneId { get; set; }
 

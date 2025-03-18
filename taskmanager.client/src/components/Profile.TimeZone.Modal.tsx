@@ -76,7 +76,7 @@ const ProfileTimeZoneModal: React.FC<ProfileTimeZoneModalProps> = ({ modalData, 
                                         <Field as="select" name="TimeZoneId" className="form-control">
                                             <option value="">Select TimeZone</option>
                                             {state.TimeZones.map((x) => (
-                                                <option key={x.Id} value={x.Id}>
+                                                <option key={x.DisplayName} value={x.Id}>
                                                     {x.DisplayName}
                                                 </option>
                                             ))}

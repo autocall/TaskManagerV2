@@ -7,10 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../states/store";
 import useAsyncEffect from "use-async-effect";
 import { testHelper } from "../helpers/test.helper";
-import { gettingCategoriesAction, gotCategoriesAction } from "../states/overview.state";
+import { gettingOverviewAction, gotOverviewAction } from "../states/overview.state";
 import overviewService from "../services/overview.service";
 import authService from "../services/auth.service";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import IJwt from "../types/jwt.type";
 import OverviewTask from "./Overview.Task";
 import TaskModal from "./Task.Modal";
@@ -47,10 +47,10 @@ const Overview: React.FC = () => {
         setCurrentUser(user);
 
         let service: overviewService = new overviewService(testHelper.getTestContainer(search));
-        dispatch(gettingCategoriesAction());
+        dispatch(gettingOverviewAction());
         let response = await service.get(filterText, filterKind, filterStatus, filterProjectId, filterDate);
         setProjects(overviewService.projects);
-        dispatch(gotCategoriesAction(response));
+        dispatch(gotOverviewAction(response));
     };
     const handleAdd = () => {
         let model = new TaskModel();
@@ -188,7 +188,9 @@ const Overview: React.FC = () => {
                                 </Col>
                                 <Col xs="auto" className="mb-2">
                                     <Button
-                                        variant={filterText || filterKind || filterStatus || filterProjectId || filterDate ? "danger" : "outline-secondary"}
+                                        variant={
+                                            filterText || filterKind || filterStatus || filterProjectId || filterDate ? "danger" : "outline-secondary"
+                                        }
                                         onClick={() => {
                                             setFilterDate("");
                                             setFilterText("");

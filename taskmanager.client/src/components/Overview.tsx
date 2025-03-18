@@ -95,127 +95,129 @@ const Overview: React.FC = () => {
             {/* Col(scroll-content) - moves toolbar to scroll-container */}
             {/* Col(main-section) + div(scroll-content) - fixes toolbar */}
             <Col md={true} /*className="main-section"*/ className="scroll-content">
-                <div className="main-section">
-                    {/* toolbar */}
-                    <Card>
-                        {/* responsive toolbar margins */}
-                        {/* Card.Body class="pt-2 pb-0" */}
-                        {/* Card.Body -> Col class="mb-2" */}
-                        <Card.Body className="pt-2 pb-0">
-                            <Row className="align-items-center">
-                                <Col xs="auto" className="mb-2">
-                                    <ButtonGroup>
-                                        <Button onClick={handleAdd}>Task</Button>
-                                        {/* <Button onClick={handleAdd}>Note</Button> */}
-                                    </ButtonGroup>
-                                </Col>
-                                <Col xs="auto" className="mb-2">
-                                    <InputGroup>
-                                        <Form.Control
-                                            placeholder="Search"
-                                            style={{ width: "160px" }}
-                                            value={filterText}
-                                            onChange={(e) => {
-                                                setFilterText(e.target.value);
-                                            }}
-                                            onKeyDown={(e) => {
-                                                if (e.key === "Enter") {
-                                                    setFilterTextTrigger(filterText);
-                                                }
-                                            }}
-                                        />
-                                        <Button variant="outline-secondary" className="btn-icon" onClick={() => setFilterTextTrigger(filterText)}>
-                                            <i className="bi bi-search"></i>
-                                        </Button>
-                                    </InputGroup>
-                                </Col>
-                                <Col xs="auto" className="mb-2">
-                                    <ButtonGroup>
-                                        {(Object.values(TaskKindEnum) as TaskKindEnum[])
-                                            .filter((k) => Number(k))
-                                            .map((kind) => (
-                                                <ToggleButton
-                                                    key={"filter-kind" + kind}
-                                                    id={"filter-kind" + kind}
-                                                    type="radio"
-                                                    variant={filterKind == kind ? getTaskKindVariant(filterKind) : "outline-secondary"}
-                                                    name="radio"
-                                                    value={kind}
-                                                    checked={filterKind == kind}
-                                                    onClick={(e) => (filterKind == kind ? setFilterKind(null) : setFilterKind(kind))}>
-                                                    {getTaskKindDescription(kind)}
-                                                </ToggleButton>
-                                            ))}
-                                    </ButtonGroup>
-                                </Col>
-                                <Col xs="auto" className="mb-2">
-                                    <Form.Select
-                                        className={!filterStatus ? "text-muted" : ""}
-                                        value={filterStatus || ""}
-                                        onChange={(e) => setFilterStatus(parseInt(e.target.value) as TaskStatusEnum)}>
-                                        <option value="">Filter Status</option>
-                                        {(Object.values(TaskStatusEnum) as TaskStatusEnum[])
-                                            .filter((k) => Number(k))
-                                            .map((status) => (
-                                                <option key={"filter-status" + status} value={status}>
-                                                    {getTaskStatusDescription(status)}
+                {state.error && <Alert variant="danger">{state.error}</Alert>}
+                {state.loading ? (
+                    <Row style={{ textAlign: "center", marginTop: "1em" }}>
+                        <Col colSpan={10}>
+                            <Spinner animation="border" />
+                        </Col>
+                    </Row>
+                ) : (
+                    <div className="main-section">
+                        {/* toolbar */}
+                        <Card>
+                            {/* responsive toolbar margins */}
+                            {/* Card.Body class="pt-2 pb-0" */}
+                            {/* Card.Body -> Col class="mb-2" */}
+                            <Card.Body className="pt-2 pb-0">
+                                <Row className="align-items-center">
+                                    <Col xs="auto" className="mb-2">
+                                        <ButtonGroup>
+                                            <Button onClick={handleAdd}>Task</Button>
+                                            {/* <Button onClick={handleAdd}>Note</Button> */}
+                                        </ButtonGroup>
+                                    </Col>
+                                    <Col xs="auto" className="mb-2">
+                                        <InputGroup>
+                                            <Form.Control
+                                                placeholder="Search"
+                                                style={{ width: "160px" }}
+                                                value={filterText}
+                                                onChange={(e) => {
+                                                    setFilterText(e.target.value);
+                                                }}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === "Enter") {
+                                                        setFilterTextTrigger(filterText);
+                                                    }
+                                                }}
+                                            />
+                                            <Button variant="outline-secondary" className="btn-icon" onClick={() => setFilterTextTrigger(filterText)}>
+                                                <i className="bi bi-search"></i>
+                                            </Button>
+                                        </InputGroup>
+                                    </Col>
+                                    <Col xs="auto" className="mb-2">
+                                        <ButtonGroup>
+                                            {(Object.values(TaskKindEnum) as TaskKindEnum[])
+                                                .filter((k) => Number(k))
+                                                .map((kind) => (
+                                                    <ToggleButton
+                                                        key={"filter-kind" + kind}
+                                                        id={"filter-kind" + kind}
+                                                        type="radio"
+                                                        variant={filterKind == kind ? getTaskKindVariant(filterKind) : "outline-secondary"}
+                                                        name="radio"
+                                                        value={kind}
+                                                        checked={filterKind == kind}
+                                                        onClick={(e) => (filterKind == kind ? setFilterKind(null) : setFilterKind(kind))}>
+                                                        {getTaskKindDescription(kind)}
+                                                    </ToggleButton>
+                                                ))}
+                                        </ButtonGroup>
+                                    </Col>
+                                    <Col xs="auto" className="mb-2">
+                                        <Form.Select
+                                            className={!filterStatus ? "text-muted" : ""}
+                                            value={filterStatus || ""}
+                                            onChange={(e) => setFilterStatus(parseInt(e.target.value) as TaskStatusEnum)}>
+                                            <option value="">Filter Status</option>
+                                            {(Object.values(TaskStatusEnum) as TaskStatusEnum[])
+                                                .filter((k) => Number(k))
+                                                .map((status) => (
+                                                    <option key={"filter-status" + status} value={status}>
+                                                        {getTaskStatusDescription(status)}
+                                                    </option>
+                                                ))}
+                                        </Form.Select>
+                                    </Col>
+                                    <Col xs="auto" className="mb-2">
+                                        <Form.Select
+                                            className={!filterProjectId ? "text-muted" : ""}
+                                            value={filterProjectId || ""}
+                                            onChange={(e) => setFilterProjectId(parseInt(e.target.value))}>
+                                            <option value="">Filter Project</option>
+                                            {projects?.map((project) => (
+                                                <option key={"filter-project" + project.Id} value={project.Id}>
+                                                    {project.Name}
                                                 </option>
                                             ))}
-                                    </Form.Select>
-                                </Col>
-                                <Col xs="auto" className="mb-2">
-                                    <Form.Select
-                                        className={!filterProjectId ? "text-muted" : ""}
-                                        value={filterProjectId || ""}
-                                        onChange={(e) => setFilterProjectId(parseInt(e.target.value))}>
-                                        <option value="">Filter Project</option>
-                                        {projects?.map((project) => (
-                                            <option key={"filter-project" + project.Id} value={project.Id}>
-                                                {project.Name}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
-                                </Col>
-                                <Col xs="auto" className="mb-2">
-                                    <Form.Control
-                                        className={!filterDate ? "text-muted" : ""}
-                                        type="Date"
-                                        value={filterDate}
-                                        onChange={async (e) => {
-                                            setFilterDate(e.target.value);
-                                        }}
-                                    />
-                                </Col>
-                                <Col xs="auto" className="mb-2">
-                                    <Button
-                                        variant={
-                                            filterText || filterKind || filterStatus || filterProjectId || filterDate ? "danger" : "outline-secondary"
-                                        }
-                                        onClick={() => {
-                                            setFilterDate("");
-                                            setFilterText("");
-                                            setFilterKind(null);
-                                            setFilterStatus(null);
-                                            setFilterProjectId(null);
-                                            load();
-                                        }}>
-                                        Reset
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </Card.Body>
-                    </Card>
-                    {/* categories + tasks */}
-                    <div /* className="scroll-content" */>
-                        {state.error && <Alert variant="danger">{state.error}</Alert>}
-                        {state.loading ? (
-                            <Row style={{ textAlign: "center", marginTop: "1em" }}>
-                                <Col colSpan={10}>
-                                    <Spinner animation="border" />
-                                </Col>
-                            </Row>
-                        ) : (
-                            state.categories?.map((category) => (
+                                        </Form.Select>
+                                    </Col>
+                                    <Col xs="auto" className="mb-2">
+                                        <Form.Control
+                                            className={!filterDate ? "text-muted" : ""}
+                                            type="Date"
+                                            value={filterDate}
+                                            onChange={async (e) => {
+                                                setFilterDate(e.target.value);
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col xs="auto" className="mb-2">
+                                        <Button
+                                            variant={
+                                                filterText || filterKind || filterStatus || filterProjectId || filterDate
+                                                    ? "danger"
+                                                    : "outline-secondary"
+                                            }
+                                            onClick={() => {
+                                                setFilterDate("");
+                                                setFilterText("");
+                                                setFilterKind(null);
+                                                setFilterStatus(null);
+                                                setFilterProjectId(null);
+                                                load();
+                                            }}>
+                                            Reset
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Card.Body>
+                        </Card>
+                        {/* categories + tasks */}
+                        <div /* className="scroll-content" */>
+                            {state.categories?.map((category) => (
                                 <Row key={"category" + category.Id}>
                                     <Divider model={category} />
                                     <Row className="column-row">
@@ -234,10 +236,10 @@ const Overview: React.FC = () => {
                                         ))}
                                     </Row>
                                 </Row>
-                            ))
-                        )}
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
             </Col>
         </>
     );

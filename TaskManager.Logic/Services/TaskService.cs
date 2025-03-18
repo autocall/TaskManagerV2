@@ -50,7 +50,7 @@ public class TaskService : BaseService {
     }
 
     private async Task<int> GetNextIndexAsync(int companyId) {
-        var maxIndex = await Rep(companyId).GetAll(false).MaxAsync(x => x.Index);
+        var maxIndex = await Rep(companyId).GetAll(false).Select(x => x.Index).DefaultIfEmpty(1).MaxAsync();
         return maxIndex + 1;
     }
 

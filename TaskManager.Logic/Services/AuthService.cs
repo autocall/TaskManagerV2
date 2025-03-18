@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TaskManager.Data.Entities;
+using TaskManager.Logic.Helpers;
 
 namespace TaskManager.Logic.Services;
 public class AuthService : BaseService {
@@ -35,7 +36,7 @@ public class AuthService : BaseService {
 
         ci.AddClaim(new Claim("UserId", user.Id.ToString()));
         ci.AddClaim(new Claim("CompanyId", user.CompanyId.ToString()));
-        ci.AddClaim(new Claim("TimeZoneId", user.TimeZoneId));
+        ci.AddClaim(new Claim("TimeZoneId", user.TimeZoneId ?? TimeZoneHelper.UtcId));
         ci.AddClaim(new Claim("UserName", user.UserName));
         ci.AddClaim(new Claim("Email", user.Email));
         var roles = await Host.UserManager.GetRolesAsync(user);

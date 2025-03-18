@@ -1,21 +1,23 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using LinqToDB.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Data.Entities;
 using TaskManager.Data.Enums;
 using TaskManager.Data.Helpers;
+using TaskManager.Data.Repositories;
 
 namespace TaskManager.Data.Context;
 public class TmDbContextSeed {
-    public static async Task SeedAsync(TmDbContext context, UserManager<TmUser> userManager, RoleManager<TmRole> roleManager) {
+    public static async Task SeedAsync(LinqToDbContext context, UserManager<TmUser> userManager, RoleManager<TmRole> roleManager) {
         // Reduces contention in tempdb by forcing uniform extent allocations instead of mixed extents,
         // improving performance in high-concurrency environments.
-        await context.Database.ExecuteSqlRawAsync("DBCC TRACEON(1118,-1)");
+        await context.ExecuteAsync("DBCC TRACEON(1118,-1)");
         // Dynamically adjusts auto-updated statistics thresholds based on table size, making statistics updates more frequent for large tables.
-        await context.Database.ExecuteSqlRawAsync("DBCC TRACEON(2371,-1)");
+        await context.ExecuteAsync("DBCC TRACEON(2371,-1)");
         // Disables the automatic clearing of the procedure cache when statistics are updated, preventing sudden performance drops due to recompilations.
-        await context.Database.ExecuteSqlRawAsync("DBCC TRACEON(3979,-1)");
+        await context.ExecuteAsync("DBCC TRACEON(3979,-1)");
         // Enables a set of optimizer hotfixes that improve query performance, especially for newer SQL Server versions.
-        await context.Database.ExecuteSqlRawAsync("DBCC TRACEON(4199,-1)");
+        await context.ExecuteAsync("DBCC TRACEON(4199,-1)");
 
         var roles = Enum.GetValues(typeof(RoleEnum)).Cast<RoleEnum>();
         foreach (var role in roles) {
@@ -29,12 +31,11 @@ public class TmDbContextSeed {
             }
         }
 
-        if (await context.Set<Company>().FindAsync(Company.SystemCompanyId) == null) {
-            await context.Set<Company>().AddAsync(new Company {
+        var companyRep = new LinqToDbRepository<Company>(context);
+        if (await companyRep.GetByIdAsync(Company.SystemCompanyId) == null) {
+            await companyRep.InsertAsync(new Company {
                 Id = Company.SystemCompanyId,
-                CreatedDateTime = DateTime.UtcNow,
-                ModifiedDateTime = DateTime.UtcNow,
-            });
+            }, Company.SystemCompanyId);
         }
 
         if (await userManager.FindByIdAsync(TmUser.SystemUser.Id.ToString()) == null) {
@@ -47,6 +48,10 @@ public class TmDbContextSeed {
             var user = TmUser.AdminUser;
             await userManager.CreateAsync(user, Settings.DefaultPassword);
             await userManager.AddToRoleAsync(user, RoleEnum.Admin.ToString());
+        }
+
+        foreach (var user in await userManager.Users.ToListAsync()) {
+            await GenerateExampleDataAsync(context, user);
         }
 
         // Seed test user
@@ -71,5 +76,31 @@ public class TmDbContextSeed {
         //    await userManager.CreateAsync(user, Settings.DefaultPassword);
         //    await userManager.AddToRoleAsync(user, RoleEnum.User.ToString());
         //}
+    }
+
+    public static async Task GenerateExampleDataAsync(LinqToDbContext context, TmUser user) {
+        var categoryRep = new CompanyLinqToDbRepository<Category>(context, user.CompanyId);
+        var namesColors = new Dictionary<string, int> {
+            { "Critical", 0xff0000 },
+            { "Important", 0xBBBB00 },
+            { "General", 0x0000CC },
+        };
+
+        var categories = await categoryRep.GetAll(false).ToListAsync();
+        if (user.Email == "test@tm.com") {
+            foreach (var category in categories) {
+                await categoryRep.DeleteAsync(category.Id);
+            }
+            categories.Clear();
+        }
+        if (categories.Any() == false) {
+            foreach (var (name, color) in namesColors) {
+                await categoryRep.InsertAsync(new Category {
+                    Id = DbRandomHelper.NewInt32(),
+                    Name = name,
+                    Color = color,
+                }, user.Id);
+            }
+        }
     }
 }

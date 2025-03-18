@@ -51,6 +51,7 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({ task, currentUser, handleEd
                     <div>
                         {task.Files?.map((file) => (
                             <Link
+                                to="#"
                                 key={"file" + file.Id + file.FileName}
                                 className={`file bi ${fileExtension.getFileIcon(file.FileName)}`}
                                 title={file.FileName}
@@ -67,7 +68,7 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({ task, currentUser, handleEd
                         </div>
                     ) : null}
                     <div className="extra-link" style={{ whiteSpace: "normal", wordBreak: "normal" }}>
-                        <Link>Comment</Link> |{" "}
+                        <Link to="#">Comment</Link> |{" "}
                         <Link to="#" onClick={() => handleEdit(task)}>
                             Edit
                         </Link>{" "}

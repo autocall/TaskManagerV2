@@ -1,16 +1,13 @@
-import { fileURLToPath, URL } from 'node:url';
+import { fileURLToPath, URL } from "node:url";
 
-import { defineConfig } from 'vite';
-import plugin from '@vitejs/plugin-react';
-import fs from 'fs';
-import path from 'path';
-import child_process from 'child_process';
-import { env } from 'process';
+import { defineConfig } from "vite";
+import plugin from "@vitejs/plugin-react";
+import fs from "fs";
+import path from "path";
+import child_process from "child_process";
+import { env } from "process";
 
-const baseFolder =
-    env.APPDATA !== undefined && env.APPDATA !== ''
-        ? `${env.APPDATA}/ASP.NET/https`
-        : `${env.HOME}/.aspnet/https`;
+const baseFolder = env.APPDATA !== undefined && env.APPDATA !== "" ? `${env.APPDATA}/ASP.NET/https` : `${env.HOME}/.aspnet/https`;
 
 const certificateName = "taskmanager.client";
 const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
@@ -21,52 +18,55 @@ if (!fs.existsSync(baseFolder)) {
 }
 
 if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
-    if (0 !== child_process.spawnSync('dotnet', [
-        'dev-certs',
-        'https',
-        '--export-path',
-        certFilePath,
-        '--format',
-        'Pem',
-        '--no-password',
-    ], { stdio: 'inherit', }).status) {
+    if (
+        0 !==
+        child_process.spawnSync("dotnet", ["dev-certs", "https", "--export-path", certFilePath, "--format", "Pem", "--no-password"], {
+            stdio: "inherit",
+        }).status
+    ) {
         throw new Error("Could not create certificate.");
     }
 }
 
-const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
-    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:7090';
+const target = env.ASPNETCORE_HTTPS_PORT
+    ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`
+    : env.ASPNETCORE_URLS
+      ? env.ASPNETCORE_URLS.split(";")[0]
+      : "https://localhost:7090";
 
 // https://vitejs.dev/config/
 export default defineConfig({
     build: {
-        outDir: '../TaskManager.Server/wwwroot/build', 
+        rollupOptions: {
+            external: ["/settings.js"], // not working
+        },
+        outDir: "../TaskManager.Server/wwwroot/build",
     },
     plugins: [plugin()],
     resolve: {
         alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url))
-        }
+            "@": fileURLToPath(new URL("./src", import.meta.url)),
+        },
     },
     server: {
         proxy: {
-            '^/settings.js' : {
+            "^/settings.js": {
                 target: target,
-                secure: false
+                secure: false,
             },
-            '^/api': {
+            "^/api": {
                 target,
-                secure: false
+                secure: false,
             },
-            '^/Api': {
+            "^/Api": {
                 target,
-                secure: false
+                secure: false,
             },
         },
         port: 5173,
         https: {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),
-        }
-    }
-})
+        },
+    },
+});

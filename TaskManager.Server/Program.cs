@@ -157,7 +157,9 @@ public class Program {
                         dbContext.Database.Migrate();
                     }
                     _l.i("Seeding database");
-                    TmDbContextSeed.SeedAsync(dbContext, host.UserManager, host.RoleManager).Wait();
+                    using (var linqToDbContext = serviceProvider.GetRequiredService<LinqToDbContext>()) {
+                        TmDbContextSeed.SeedAsync(linqToDbContext, host.UserManager, host.RoleManager).Wait();
+                    }
                 }
             }
             app.Run();

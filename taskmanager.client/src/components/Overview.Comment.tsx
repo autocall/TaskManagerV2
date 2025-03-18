@@ -35,15 +35,16 @@ const OverviewComment: React.FC<OverviewCommentProps> = ({ comment, currentUser 
                 <div>
                     {comment.Files?.map((file) => (
                         <Link
+                            to="#"
                             key={"file" + file.Id + file.FileName}
                             className={`file bi ${fileExtension.getFileIcon(file.FileName)}`}
                             title={file.FileName}
                         />
                     ))}
-                    <span className="extra-text">{stringExtension.dateToLong(comment.DateTime)}</span>
+                    <span className="extra-text">{stringExtension.dateToLong(comment.DateTime, currentUser?.TimeZoneId)}</span>
                 </div>
                 <div className="extra-link">
-                    <Link>Edit</Link> | <Link>Delete</Link>
+                    <Link to="#">Edit</Link> | <Link to="#">Delete</Link>
                 </div>
             </div>
         </ListGroup.Item>

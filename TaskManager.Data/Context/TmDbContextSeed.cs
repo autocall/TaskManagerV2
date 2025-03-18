@@ -83,7 +83,7 @@ public class TmDbContextSeed {
         var namesColors = new Dictionary<string, int> {
             { "Critical", 0xff0000 },
             { "Important", 0xBBBB00 },
-            { "General", 0x0000CC },
+            { "General", 0x0000DD },
         };
 
         var categories = await categoryRep.GetAll(false).ToListAsync();

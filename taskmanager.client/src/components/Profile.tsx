@@ -15,7 +15,7 @@ const Profile: React.FC = () => {
     }, []);
 
     const handleChangeTimeZone = () => {
-        setProfileTimeZoneModalData(new ProfileTimeZoneModel({ TimeZoneId: currentUser?.TimeZone.Id ?? null }));
+        setProfileTimeZoneModalData(new ProfileTimeZoneModel({ TimeZoneId: currentUser!.TimeZone.Id ?? null }));
     };
 
     const handleCloseTimeZone = async (reload: boolean) => {

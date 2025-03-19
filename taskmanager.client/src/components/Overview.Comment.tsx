@@ -10,17 +10,19 @@ import IJwt from "../types/jwt.type";
 interface OverviewCommentProps {
     comment: CommentModel;
     currentUser: IJwt | null;
+    handleEdit: (model: CommentModel) => void;
+    handleDelete: (model: CommentModel) => void;
 }
 
-const OverviewComment: React.FC<OverviewCommentProps> = ({ comment, currentUser }: OverviewCommentProps) => {
+const OverviewComment: React.FC<OverviewCommentProps> = ({ comment, currentUser, handleEdit, handleDelete }: OverviewCommentProps) => {
     const flex: string = "d-flex justify-content-between align-items-start";
 
     return (
         <ListGroup.Item key={"comment" + comment.Id} className="px-0">
             <div className={flex}>
                 <span className="text-muted">
-                    {comment.CreatedUser && comment.CreatedById != currentUser?.UserId && <span>{comment.CreatedUser.UserName} ● </span>}
-                    {stringExtension.dateToFromNowShort(comment.DateTime)}
+                    {comment.CreatedUser && comment.CreatedById != currentUser!.UserId && <span>{comment.CreatedUser.UserName} ● </span>}
+                    {stringExtension.dateToFromNowShort(comment.Date, currentUser!.TimeZoneId)}
                 </span>
                 <div>
                     <Badge pill bg="primary" className="ms-1">
@@ -41,10 +43,16 @@ const OverviewComment: React.FC<OverviewCommentProps> = ({ comment, currentUser 
                             title={file.FileName}
                         />
                     ))}
-                    <span className="extra-text">{stringExtension.dateToLong(comment.DateTime, currentUser?.TimeZoneId)}</span>
+                    <span className="extra-text">{stringExtension.dateToLong(comment.Date, currentUser!.TimeZoneId)}</span>
                 </div>
                 <div className="extra-link">
-                    <Link to="#">Edit</Link> | <Link to="#">Delete</Link>
+                    <Link to="#" onClick={() => handleEdit(comment)}>
+                        Edit
+                    </Link>{" "}
+                    |{" "}
+                    <Link to="#" onClick={() => handleDelete(comment)}>
+                        Delete
+                    </Link>
                 </div>
             </div>
         </ListGroup.Item>

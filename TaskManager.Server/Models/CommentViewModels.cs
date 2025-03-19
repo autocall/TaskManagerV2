@@ -5,7 +5,7 @@ namespace TaskManager.Server.Models;
 
 public class CreateCommentViewModel {
     [Required]
-    public DateTime DateTime { get; set; }
+    public DateOnly Date { get; set; }
     [Required]
     public string Text { get; set; }
     [Required]
@@ -19,7 +19,7 @@ public class UpdateCommentViewModel {
     public int Id { get; set; }
 
     [Required]
-    public DateTime DateTime { get; set; }
+    public DateOnly Date { get; set; }
     [Required]
     public string Text { get; set; }
     [Required]

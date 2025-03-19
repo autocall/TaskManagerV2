@@ -50,7 +50,7 @@ export class EventData implements IEventData {
 
     constructor(data: any = null) {
         if (!data) {
-            this.Date = stringExtension.dateToISO(new Date());
+            //this.Date = ;
             this.Name = "";
             this.Description = "";
 

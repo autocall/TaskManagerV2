@@ -1,18 +1,12 @@
-Changes | Bugs, Comment | Note, Task, Task & Answer & Completed
-Pending to close
-
 !. Add a short completed tasks (for example a bag 0.5h)
 !. To create a task with answer
 !. To create a comment without the task
 !. Daily tasks
-!. Pending to close
 !. Note/Stick. For Example: "Try to user the chat copilot"
 
-!. Overview. Test with error
-!. To filter tasks/comments by the date
-!. Filter by users
-!. Implement Tags
 !. The prepared db data for the example user
 !. Check axios.defaults
 !. Download images
-!. Fast search
+!. Check to delete a task
+!. Reload only an edited task/comment
+!. clickable the completed icon

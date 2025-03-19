@@ -9,15 +9,27 @@ import SeeMoreText from "./shared/seemore.text";
 import fileExtension from "../extensions/file.extension";
 import TaskModel from "../services/models/task.model";
 import OverviewComment from "./Overview.Comment";
+import CommentModel from "../services/models/comment.model";
 
 interface OverviewTaskProps {
     task: TaskModel;
     currentUser: IJwt | null;
-    handleEdit: (model: TaskModel) => void;
-    handleDelete: (model: TaskModel) => void;
+    handleTaskEdit: (model: TaskModel) => void;
+    handleTaskDelete: (model: TaskModel) => void;
+    handleCommentAdd: (model: TaskModel) => void;
+    handleCommentEdit: (commentModel: CommentModel) => void;
+    handleCommentDelete: (model: CommentModel) => void;
 }
 
-const OverviewTask: React.FC<OverviewTaskProps> = ({ task, currentUser, handleEdit, handleDelete }: OverviewTaskProps) => {
+const OverviewTask: React.FC<OverviewTaskProps> = ({
+    task,
+    currentUser,
+    handleTaskEdit,
+    handleTaskDelete,
+    handleCommentAdd,
+    handleCommentEdit,
+    handleCommentDelete,
+}: OverviewTaskProps) => {
     const flex: string = "d-flex justify-content-between align-items-start";
 
     return (
@@ -58,7 +70,7 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({ task, currentUser, handleEd
                             />
                         ))}
                         <span className="extra-text" style={{ wordBreak: "normal" }}>
-                            {stringExtension.dateToLong(task.CreatedDateTime, currentUser?.TimeZoneId)}
+                            {stringExtension.dateToLong(task.CreatedDateTime, currentUser!.TimeZoneId)}
                         </span>
                     </div>
                     {task.CommentsCount ? (
@@ -68,12 +80,15 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({ task, currentUser, handleEd
                         </div>
                     ) : null}
                     <div className="extra-link" style={{ whiteSpace: "normal", wordBreak: "normal" }}>
-                        <Link to="#">Comment</Link> |{" "}
-                        <Link to="#" onClick={() => handleEdit(task)}>
+                        <Link to="#" onClick={() => handleCommentAdd(task)}>
+                            Comment
+                        </Link>{" "}
+                        |{" "}
+                        <Link to="#" onClick={() => handleTaskEdit(task)}>
                             Edit
                         </Link>{" "}
                         |{" "}
-                        <Link to="#" onClick={() => handleDelete(task)}>
+                        <Link to="#" onClick={() => handleTaskDelete(task)}>
                             Delete
                         </Link>
                     </div>
@@ -83,7 +98,13 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({ task, currentUser, handleEd
             {task.Comments?.length > 0 && (
                 <ListGroup className="list-group-flush mx-2">
                     {task.Comments.map((comment) => (
-                        <OverviewComment key={"comment" + comment.Id} comment={comment} currentUser={currentUser} />
+                        <OverviewComment
+                            key={"comment" + comment.Id}
+                            comment={comment}
+                            currentUser={currentUser}
+                            handleEdit={handleCommentEdit}
+                            handleDelete={handleCommentDelete}
+                        />
                     ))}
                 </ListGroup>
             )}

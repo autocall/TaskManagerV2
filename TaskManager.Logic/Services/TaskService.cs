@@ -10,8 +10,8 @@ public class TaskService : BaseService {
 
     public TaskService(ServicesHost host) : base(host) { }
 
-    public async Task<List<TaskDto>> GetAllAsync(FilterDto filter, int companyId) {
-        var query = Rep(companyId).GetAll(false);
+    public async Task<IQueryable<Task1>> GetAllQueryAsync(FilterDto filter, int companyId) {
+        IQueryable<Task1> query = Rep(companyId).GetAll(false);
         if (!string.IsNullOrWhiteSpace(filter.Text)) {
             query = query.Where(x => x.Title.Contains(filter.Text) || x.Description.Contains(filter.Text));
         }
@@ -28,10 +28,15 @@ public class TaskService : BaseService {
         }
         if (filter.Date.HasValue) {
             var timeZone = await this.Host.GetService<ProfileService>().GetTimeZoneAsync(companyId);
-            var dateFrom =  filter.Date.Value.ToDateTime(default).AddHours(timeZone.BaseUtcOffset.TotalHours);
+            var dateFrom = filter.Date.Value.ToDateTime(default).AddHours(timeZone.BaseUtcOffset.TotalHours);
             var dateTo = dateFrom.AddDays(1);
             query = query.Where(x => x.CreatedDateTime >= dateFrom && x.CreatedDateTime < dateTo);
         }
+        return query;
+    }
+
+    public async Task<List<TaskDto>> GetAllAsync(FilterDto filter, int companyId) {
+       var query = await this.GetAllQueryAsync(filter, companyId);
         var models = await query.ToListAsync();
         return Mapper.Map<List<TaskDto>>(models);
     }
@@ -58,6 +63,11 @@ public class TaskService : BaseService {
         var inModel = Mapper.Map<Task1>(dto);
         await Rep(companyId).UpdateAsync<ITaskUpdateMap>(inModel, userId);
         return await this.GetAsync(dto.Id, companyId);
+    }
+
+    public async Task UpdateAsync(CreateCommentDto inputDto, int userId, int companyId) {
+        update total comments;
+        update the status;
     }
 
     public async Task<int> DeleteAsync(int id, int userId, int companyId) {

@@ -23,6 +23,9 @@ public class ViewMappingProfile : Profile {
         CreateMap<CreateTaskViewModel, CreateTaskDto>();
         CreateMap<UpdateTaskViewModel, UpdateTaskDto>();
 
+        CreateMap<CreateCommentViewModel, CreateCommentDto>();
+        CreateMap<UpdateCommentViewModel, UpdateCommentDto>();
+
         CreateMap<FilterViewModel, FilterDto>();
     }
 }

@@ -3,8 +3,8 @@ using TaskManager.Data.Context;
 
 namespace TaskManager.Data.Entities;
 public class Comment : BaseCompanyEntity, ICommentUpdateMap {
-    [Column(TypeName = "smalldatetime")]
-    public DateTime DateTime { get; set; }
+    [Column(TypeName = "date")]
+    public DateOnly Date { get; set; }
     public int TaskId { get; set; }
     /// <summary>
     ///     Name </summary>
@@ -19,7 +19,7 @@ public class Comment : BaseCompanyEntity, ICommentUpdateMap {
 }
 
 public interface ICommentUpdateMap : IBaseUpdateMap {
-    public DateTime DateTime { get; set; }
+    public DateOnly Date { get; set; }
     public int TaskId { get; set; }
     public string Text { get; set; }
     public decimal WorkHours { get; set; }

@@ -22,13 +22,17 @@ import { TaskColumnEnum } from "../enums/task.column.enum";
 import { getTaskStatusDescription, TaskStatusEnum } from "../enums/task.status.enum";
 import { getTaskKindDescription, getTaskKindVariant, TaskKindEnum } from "../enums/task.kind.enum";
 import ProjectModel from "../services/models/project.model";
+import CommentModel from "../services/models/comment.model";
+import CommentModal from "./Comment.Modal";
+import commentService from "../services/comment.service";
 
 const Overview: React.FC = () => {
     const { search } = useLocation();
     let dispatch = useDispatch();
     let state = useSelector((s: AppState) => s.overviewState);
     const [currentUser, setCurrentUser] = useState<IJwt | null>(null);
-    const [modalData, setModalData] = useState<TaskModel | null>(null);
+    const [modalTaskData, setModalTaskData] = useState<TaskModel | null>(null);
+    const [modalCommentData, setModalCommentData] = useState<CommentModel | null>(null);
     const [projects, setProjects] = useState<ProjectModel[] | null>(null);
     const [filterText, setFilterText] = useState<string>("");
     const [filterTextTrigger, setFilterTextTrigger] = useState<string>("filterText");
@@ -52,7 +56,7 @@ const Overview: React.FC = () => {
         setProjects(overviewService.projects);
         dispatch(gotOverviewAction(response));
     };
-    const handleAdd = () => {
+    const handleTaskAdd = () => {
         let model = new TaskModel();
         if (state.categories && state.categories.length > 0) {
             model.CategoryId = state.categories[0].Id;
@@ -63,10 +67,10 @@ const Overview: React.FC = () => {
         if (lastProjectId) {
             model.ProjectId = parseInt(lastProjectId);
         }
-        setModalData(model);
+        setModalTaskData(model);
     };
-    const handleEdit = (model: TaskModel) => setModalData(model);
-    const handleDelete = async (model: TaskModel) => {
+    const handleTaskEdit = (model: TaskModel) => setModalTaskData(model);
+    const handleTaskDelete = async (model: TaskModel) => {
         if (await confirm("Delete Task", `Are you sure you want to delete the task '${model.Index}'?`)) {
             let service: taskService = new taskService(testHelper.getTestContainer(search));
             dispatch(deletingTaskAction());
@@ -78,8 +82,32 @@ const Overview: React.FC = () => {
         }
     };
 
-    const handleClose = async (reload: boolean) => {
-        setModalData(null);
+    const handleCommentAdd = (model: TaskModel) => {
+        let comment = CommentModel.create(currentUser!.TimeZoneId, model);
+        setModalCommentData(comment);
+    };
+    const handleCommentEdit = (commentModel: CommentModel) => setModalCommentData(commentModel);
+    const handleCommentDelete = async (model: CommentModel) => {
+        if (await confirm("Delete Comment", `Are you sure you want to delete the comment?`)) {
+            let service: commentService = new commentService(testHelper.getTestContainer(search));
+            dispatch(deletingTaskAction());
+            let response = await service.delete(model.Id);
+            dispatch(deletedTaskAction(response));
+            if (response.success) {
+                await load();
+            }
+        }
+    };
+
+    const handleTaskClose = async (reload: boolean) => {
+        setModalTaskData(null);
+        if (reload) {
+            await load();
+        }
+    };
+
+    const handleCommentClose = async (reload: boolean) => {
+        setModalCommentData(null);
         if (reload) {
             await load();
         }
@@ -88,7 +116,8 @@ const Overview: React.FC = () => {
     return (
         <>
             {ConfirmDialog}
-            <TaskModal modalData={modalData} onClose={handleClose} />
+            <TaskModal modalData={modalTaskData} onClose={handleTaskClose} />
+            <CommentModal modalData={modalCommentData} onClose={handleCommentClose} />
             <Col lg="auto" className="d-none d-lg-block" style={{ width: "280px" }}>
                 <Calendar />
             </Col>
@@ -113,7 +142,7 @@ const Overview: React.FC = () => {
                                 <Row className="align-items-center">
                                     <Col xs="auto" className="mb-2">
                                         <ButtonGroup>
-                                            <Button onClick={handleAdd}>Task</Button>
+                                            <Button onClick={handleTaskAdd}>Task</Button>
                                             {/* <Button onClick={handleAdd}>Note</Button> */}
                                         </ButtonGroup>
                                     </Col>
@@ -228,8 +257,11 @@ const Overview: React.FC = () => {
                                                         key={"task" + task.Id}
                                                         task={task}
                                                         currentUser={currentUser}
-                                                        handleEdit={handleEdit}
-                                                        handleDelete={handleDelete}
+                                                        handleTaskEdit={handleTaskEdit}
+                                                        handleTaskDelete={handleTaskDelete}
+                                                        handleCommentAdd={handleCommentAdd}
+                                                        handleCommentEdit={handleCommentEdit}
+                                                        handleCommentDelete={handleCommentDelete}
                                                     />
                                                 ))}
                                             </Col>

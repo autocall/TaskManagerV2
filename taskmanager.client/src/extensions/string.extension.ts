@@ -5,8 +5,14 @@ export default class stringExtension {
         return value.length > length ? value.substring(0, length) : value;
     }
 
-    public static dateToISO(value: Date): string {
-        return value.toISOString().split("T")[0];
+    public static dateToISO(value: Date | moment.Moment): string {
+        if (value instanceof Date) {
+            return value.toISOString().split("T")[0];
+        } else if (moment.isMoment(value)) {
+            return value.format("YYYY-MM-DD");
+        } else {
+            throw new Error("Invalid date type");
+        }
     }
 
     public static dateTimeToShort(value: moment.Moment): string {
@@ -22,7 +28,7 @@ export default class stringExtension {
         }
     }
 
-    public static dateToShort(value: unknown): string {
+    public static dateToShort(value: Date | moment.Moment): string {
         if (value instanceof Date) {
             return this.dateToShort_date(value);
         } else if (moment.isMoment(value)) {
@@ -45,25 +51,31 @@ export default class stringExtension {
         }
     }
 
-    public static dateToLong(value: unknown, timeZoneId: string | undefined): string {
+    public static dateToLong(value: Date | moment.Moment | string, timeZoneId: string): string {
         if (value instanceof Date) {
             return this.dateToLong_date(value, timeZoneId);
         } else if (moment.isMoment(value)) {
             return this.dateToLong_moment(value, timeZoneId);
+        } else if (typeof value === "string") {
+            return this.dateToLong_string(value, timeZoneId);
         } else {
             throw new Error("Invalid date type");
         }
     }
 
-    private static dateToLong_date(value: Date, timeZoneId: string | undefined): string {
+    private static dateToLong_date(value: Date, timeZoneId: string): string {
         return this.dateToLong_moment(moment(value), timeZoneId);
     }
 
-    private static dateToLong_moment(value: moment.Moment, timeZoneId: string | undefined): string {
+    private static dateToLong_string(value: string, timeZoneId: string): string {
+        return this.dateToLong_moment(moment(value), timeZoneId);
+    }
+
+    private static dateToLong_moment(value: moment.Moment, timeZoneId: string): string {
         if (timeZoneId) {
             value = value.clone().tz(timeZoneId);
         }
-        let now = moment();
+        let now = moment().tz(timeZoneId);
         let diff = now.diff(value, "weeks");
         if (diff < 1) {
             return value.format("ddd, D MMM YYYY");
@@ -71,11 +83,13 @@ export default class stringExtension {
         return value.format("D MMM YYYY");
     }
 
-    public static dateToFromNowShort(value: unknown): string {
+    public static dateToFromNowShort(value: Date | moment.Moment | string, timeZoneId: string): string {
         if (value instanceof Date) {
             return this.dateToFromNowShort_date(value);
         } else if (moment.isMoment(value)) {
             return this.dateToFromNowShort_moment(value);
+        } else if (typeof value === "string") {
+            return this.dateToFromNowShort_string(value, timeZoneId);
         } else {
             throw new Error("Invalid date type");
         }
@@ -85,30 +99,15 @@ export default class stringExtension {
         return this.dateToFromNowShort_moment(moment(value));
     }
 
+    private static dateToFromNowShort_string(value: string, timeZoneId: string): string {
+        return this.dateToFromNowShort_moment(moment.tz(value, timeZoneId));
+    }
+
     private static dateToFromNowShort_moment(value: moment.Moment): string {
-        // if diff less 1 minute -> 1 min(s)
-        // if diff less 1 hour -> 1 hour(s)
-        // if diff less 1 day -> 1 day(s)
-        // if diff less 1 week -> 1 week(s)
-        // if diff less 1 month -> 1 month(s)
-        // if diff less 1 year -> 1 year(s)
         let now = moment();
-        let diff = now.diff(value, "minutes");
-        if (diff < 1) {
+        let diff = now.diff(value, "seconds");
+        if (diff <= 24 * 60 * 60) {
             return "today";
-        }
-        if (diff < 2) {
-            return diff + " minute ago";
-        }
-        if (diff < 60) {
-            return diff + " minutes ago";
-        }
-        diff = now.diff(value, "hours");
-        if (diff < 2) {
-            return diff + " hour ago";
-        }
-        if (diff < 24) {
-            return diff + " hours ago";
         }
         diff = now.diff(value, "days");
         if (diff < 2) {

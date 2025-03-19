@@ -1,139 +1,134 @@
-import { TaskKindEnum } from "../enums/task.kind.enum";
 import { TaskStatusEnum } from "../enums/task.status.enum";
 import Response from "../services/models/response";
-import TaskModel, { TaskData, ITaskData } from "../services/models/task.model";
+import CommentModel, { CommentData, ICommentData } from "../services/models/comment.model";
 
-export interface TaskState extends ITaskData {
+export interface CommentState extends ICommentData {
     readonly submitting: boolean;
     readonly loading: boolean;
     readonly loaded: boolean;
-    readonly Index: number | null;
-    readonly Title: string;
-    readonly Description: string;
-    readonly ProjectId: number | null;
-    readonly CategoryId: number | null;
-    readonly Column: number;
-    readonly Kind: TaskKindEnum | null;
+    readonly DateTime: Date;
+    readonly Text: string;
     readonly Status: TaskStatusEnum | null;
     readonly error: string | null;
     readonly errors: { [key: string]: string };
 }
 
-const initialState: TaskState = {
+const initialState: CommentState = {
     loading: true, // prevents reinitialization of fields
     loaded: false,
     submitting: false,
-    ...new TaskData(),
+    ...new CommentData(),
     error: null,
     errors: {},
 };
 
-export const GETTINGTASK = "GettingTask";
-export const gettingTaskAction = () =>
+export const GETTINGCOMMENT = "GettingComment";
+export const gettingCommentAction = () =>
     ({
-        type: GETTINGTASK,
+        type: GETTINGCOMMENT,
     }) as const;
 
-export const GOTTASK = "GotTask";
-export const gotTaskAction = (response: Response<TaskModel>) =>
+export const GOTCOMMENT = "GotComment";
+export const gotCommentAction = (response: Response<CommentModel>) =>
     ({
-        type: GOTTASK,
-        ...new TaskData(response.data),
+        type: GOTCOMMENT,
+        ...new CommentData(response.data),
         error: response.error ?? initialState.error,
         errors: response.errors ?? initialState.errors,
     }) as const;
 
-export const CREATETASK = "CreateTask";
-export const createTaskAction = (data: ITaskData) =>
+export const CREATECOMMENT = "CreateComment";
+export const createCommentAction = (data: ICommentData) =>
     ({
-        type: CREATETASK,
+        type: CREATECOMMENT,
         ...data,
         error: initialState.error,
         errors: initialState.errors,
     }) as const;
 
-export const SUBMITTINGTASK = "SubmittingTask";
-export const submittingTaskAction = () =>
+export const SUBMITTINGCOMMENT = "SubmittingComment";
+export const submittingCommentAction = () =>
     ({
-        type: SUBMITTINGTASK,
+        type: SUBMITTINGCOMMENT,
         error: initialState.error,
         errors: initialState.errors,
     }) as const;
 
-export const SUBMITTEDTASK = "SubmittedTask";
-export const submittedTaskAction = (response: Response<TaskModel>) =>
+export const SUBMITTEDCOMMENT = "SubmittedComment";
+export const submittedCommentAction = (response: Response<CommentModel>) =>
     ({
-        type: SUBMITTEDTASK,
+        type: SUBMITTEDCOMMENT,
         error: response.error ?? initialState.error,
         errors: response.errors ?? initialState.errors,
     }) as const;
 
-export const CLOSETASK = "CloseTask";
-export const closeTaskAction = () =>
+export const CLOSECOMMENT = "CloseComment";
+export const closeCommentAction = () =>
     ({
-        type: CLOSETASK,
-        ...new TaskData(),
+        type: CLOSECOMMENT,
+        ...new CommentData(),
         error: initialState.error,
         errors: initialState.errors,
     }) as const;
 
-export const DELETINGTASK = "DeletingTask";
-export const deletingTaskAction = () =>
+export const DELETINGCOMMENT = "DeletingComment";
+export const deletingCommentAction = () =>
     ({
-        type: DELETINGTASK,
+        type: DELETINGCOMMENT,
     }) as const;
 
-export const DELETEDTASK = "DeletedTask";
-export const deletedTaskAction = (response: Response<any>) =>
+export const DELETEDCOMMENT = "DeletedComment";
+export const deletedCommentAction = (response: Response<any>) =>
     ({
-        type: DELETEDTASK,
+        type: DELETEDCOMMENT,
         error: response.error ?? initialState.error,
     }) as const;
 
-type TaskActions =
-    | ReturnType<typeof gettingTaskAction>
-    | ReturnType<typeof gotTaskAction>
-    | ReturnType<typeof createTaskAction>
-    | ReturnType<typeof submittingTaskAction>
-    | ReturnType<typeof submittedTaskAction>
-    | ReturnType<typeof closeTaskAction>;
 
-export const taskReducer: any = (state: TaskState = initialState, action: TaskActions) => {
+type CommentActions =
+    | ReturnType<typeof gettingCommentAction>
+    | ReturnType<typeof gotCommentAction>
+    | ReturnType<typeof createCommentAction>
+    | ReturnType<typeof submittingCommentAction>
+    | ReturnType<typeof submittedCommentAction>
+    | ReturnType<typeof closeCommentAction>;
+
+export const commentReducer: any = (state: CommentState = initialState, action: CommentActions) => {
     switch (action.type) {
-        case GETTINGTASK:
+        case GETTINGCOMMENT:
             return {
                 ...state,
                 ...action,
                 loading: true,
                 loaded: false,
             };
-        case GOTTASK:
+        case GOTCOMMENT:
             return {
                 ...state,
                 ...action,
                 loading: false,
                 loaded: action.error ? false : true,
             };
-        case CREATETASK:
+        case CREATECOMMENT:
             return {
                 ...state,
                 ...action,
                 loading: false,
                 loaded: true,
             };
-        case SUBMITTINGTASK:
+        case SUBMITTINGCOMMENT:
             return {
                 ...state,
                 ...action,
                 submitting: true,
             };
-        case SUBMITTEDTASK:
+        case SUBMITTEDCOMMENT:
             return {
                 ...state,
                 ...action,
                 submitting: false,
             };
-        case CLOSETASK:
+        case CLOSECOMMENT:
             return {
                 ...state,
                 ...action,

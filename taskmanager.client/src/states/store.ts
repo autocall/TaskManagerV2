@@ -23,7 +23,6 @@ export interface AppState {
     readonly overviewState: OverviewState;
     readonly taskState: TaskState;
     readonly commentState: CommentState;
-
     readonly calendarState: CalendarState;
     readonly eventState: EventState;
     readonly profileTimeZoneState: ProfileTimeZoneState;

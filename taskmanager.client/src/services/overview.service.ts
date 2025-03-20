@@ -38,12 +38,10 @@ export default class overviewService {
                 let comments = (response.data.comments as any[]).map((e: any) => new CommentModel(e));
                 let users = (response.data.users as any[]).map((e: any) => new UserModel(e));
                 let files = (response.data.files as any[]).map((e: any) => new FileModel(e));
-                if (overviewService.projects == null) {
-                    overviewService.projects = (response.data.projects as any[]).map((e) => new ProjectModel(e));
-                }
-                if (overviewService.categories == null) {
-                    overviewService.categories = (response.data.categories as any[]).map((e) => new CategoryModel(e));
-                }
+
+                overviewService.projects = (response.data.projects as any[]).map((e) => new ProjectModel(e));
+                overviewService.categories = (response.data.categories as any[]).map((e) => new CategoryModel(e));
+
                 let models = this.merge(categories, projects, tasks, comments, users, files);
                 return Response.success<CategoryModel[]>(models);
             })

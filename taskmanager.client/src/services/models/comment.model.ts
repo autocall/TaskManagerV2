@@ -23,6 +23,9 @@ export default class CommentModel extends BaseModel implements ICommentData {
             this.Date = data.Date;
             this.WorkHours = data.WorkHours;
             this.Text = data.Text;
+
+            this.Status = data.TaskStatus;
+            this.TaskIndex = data.TaskIndex;
         }
     }
     public static create(timeZoneId: string, task: TaskModel): CommentModel {

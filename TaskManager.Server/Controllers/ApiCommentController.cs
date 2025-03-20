@@ -37,7 +37,7 @@ public class ApiCommentController : BaseController {
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult> Get(int id) {
-        var dto = await this.Service.GetAsync(id, base.GetCompanyId());
+        CommentViewDto dto = await this.Service.GetWithTaskAsync(id, base.GetCompanyId());
         return JsonSuccess(dto);
     }
 
@@ -59,6 +59,7 @@ public class ApiCommentController : BaseController {
         }
         var inputDto = Mapper.Map<UpdateCommentDto>(model);
         var outputDto = await this.Service.UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
+        await this.Host.GetService<TaskService>().UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(outputDto);
     }
 

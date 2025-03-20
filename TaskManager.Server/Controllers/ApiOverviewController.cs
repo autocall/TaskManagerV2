@@ -28,6 +28,9 @@ public class ApiOverviewController : BaseController {
 
     [HttpGet]
     public async Task<ActionResult> Get([FromQuery] FilterViewModel filter) {
+#if DEBUG
+        await Task.Delay(TimeSpan.FromSeconds(0.0));
+#endif
         var filterDto = Mapper.Map<FilterDto>(filter);
         var data = await this.Service.GetAsync(filterDto, base.GetCompanyId());
         return JsonSuccess(new { data.categories, data.projects, data.tasks, data.comments, data.users, data.files });

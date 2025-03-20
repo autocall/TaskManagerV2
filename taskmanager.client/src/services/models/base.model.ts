@@ -3,8 +3,8 @@ import UserModel from "./user.model";
 
 export default class BaseModel {
     Id: number;
-    CreatedDateTime: moment.Moment;
-    ModifiedDateTime: moment.Moment;
+    CreatedDateTime: Date;
+    ModifiedDateTime: Date;
 
     CreatedById: number;
     ModifiedById: number;
@@ -15,8 +15,8 @@ export default class BaseModel {
     constructor(data?: any) {
         if (data) {
             this.Id = data.Id;
-            this.CreatedDateTime = moment(data.CreatedDateTime);
-            this.ModifiedDateTime = moment(data.ModifiedDateTime);
+            this.CreatedDateTime = new Date(data.CreatedDateTime);
+            this.ModifiedDateTime = new Date(data.ModifiedDateTime);
             this.CreatedById = data.CreatedById;
             this.ModifiedById = data.ModifiedById;
         }

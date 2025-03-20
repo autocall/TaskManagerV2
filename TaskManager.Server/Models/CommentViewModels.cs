@@ -7,6 +7,8 @@ public class CreateCommentViewModel {
     [Required]
     public DateOnly Date { get; set; }
     [Required]
+    public decimal WorkHours { get; set; }
+    [Required]
     public string Text { get; set; }
     [Required]
     public int TaskId { get; set; }
@@ -20,6 +22,8 @@ public class UpdateCommentViewModel {
 
     [Required]
     public DateOnly Date { get; set; }
+    [Required]
+    public decimal WorkHours { get; set; }
     [Required]
     public string Text { get; set; }
     [Required]

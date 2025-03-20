@@ -7,8 +7,10 @@ export interface CommentState extends ICommentData {
     readonly loading: boolean;
     readonly loaded: boolean;
     readonly Date: string;
+    readonly WorkHours: number;
     readonly Text: string;
     readonly Status: TaskStatusEnum | null;
+    readonly TaskIndex: number | null;
     readonly error: string | null;
     readonly errors: { [key: string]: string };
 }
@@ -18,6 +20,7 @@ const initialState: CommentState = {
     loaded: false,
     submitting: false,
     ...new CommentData(),
+    TaskIndex: null,
     error: null,
     errors: {},
 };
@@ -33,6 +36,7 @@ export const gotCommentAction = (response: Response<CommentModel>) =>
     ({
         type: GOTCOMMENT,
         ...new CommentData(response.data),
+        TaskIndex: response.data?.TaskIndex, // added
         error: response.error ?? initialState.error,
         errors: response.errors ?? initialState.errors,
     }) as const;
@@ -83,7 +87,6 @@ export const deletedCommentAction = (response: Response<any>) =>
         type: DELETEDCOMMENT,
         error: response.error ?? initialState.error,
     }) as const;
-
 
 type CommentActions =
     | ReturnType<typeof gettingCommentAction>

@@ -65,12 +65,16 @@ public class TaskService : BaseService {
         return await this.GetAsync(dto.Id, companyId);
     }
 
-    public async Task UpdateAsync(CreateCommentDto inputDto, int userId, int companyId) {
+    public async Task UpdateAsync(ITaskUpdateStatusDtoMap dto, int userId, int companyId) {
         var commentsCount = await base.UnitOfWork.GetRepository<Comment>(companyId).GetAll(false).CountAsync();
-        await this.Rep(companyId).GetAll(false).Where(x => x.Id == inputDto.TaskId)
-            .Set(x => x.CommentsCount, commentsCount)
-            .Set(x => x.Status, (byte)inputDto.Status)
-            .UpdateAsync();
+        var workHours = await base.UnitOfWork.GetRepository<Comment>(companyId).GetAll(false).SumAsync(x => x.WorkHours);
+        var task = new Task1() {
+            Id = dto.TaskId,
+            WorkHours = workHours,
+            CommentsCount = commentsCount,
+            Status = (byte)dto.Status
+        };
+        await this.Rep(companyId).UpdateAsync<ITaskUpdateStatusMap>(task, userId);
     }
 
     public async Task<int> DeleteAsync(int id, int userId, int companyId) {

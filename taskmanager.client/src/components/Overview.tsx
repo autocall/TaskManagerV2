@@ -39,7 +39,7 @@ const Overview: React.FC = () => {
     const [filterKind, setFilterKind] = useState<TaskKindEnum | null>(null);
     const [filterStatus, setFilterStatus] = useState<TaskStatusEnum | null>(null);
     const [filterProjectId, setFilterProjectId] = useState<number | null>(null);
-    const [filterDate, setFilterDate] = useState<string | "">("");
+    const [filterDate, setFilterDate] = useState<string>("");
     const { confirm, ConfirmDialog } = useConfirm();
 
     useAsyncEffect(async () => {
@@ -86,7 +86,8 @@ const Overview: React.FC = () => {
         let comment = CommentModel.create(currentUser!.TimeZoneId, model);
         setModalCommentData(comment);
     };
-    const handleCommentEdit = (commentModel: CommentModel) => setModalCommentData(commentModel);
+    const handleCommentEdit = (model: CommentModel) => setModalCommentData(model);
+
     const handleCommentDelete = async (model: CommentModel) => {
         if (await confirm("Delete Comment", `Are you sure you want to delete the comment?`)) {
             let service: commentService = new commentService(testHelper.getTestContainer(search));

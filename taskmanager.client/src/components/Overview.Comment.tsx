@@ -24,11 +24,13 @@ const OverviewComment: React.FC<OverviewCommentProps> = ({ comment, currentUser,
                     {comment.CreatedUser && comment.CreatedById != currentUser!.UserId && <span>{comment.CreatedUser.UserName} ● </span>}
                     {stringExtension.dateToFromNowShort(comment.Date, currentUser!.TimeZoneId)}
                 </span>
-                <div>
-                    <Badge pill bg="primary" className="ms-1">
-                        {comment.WorkHours}h
-                    </Badge>
-                </div>
+                {comment.WorkHours > 0 && (
+                    <div>
+                        <Badge pill bg="primary" className="ms-1">
+                            {comment.WorkHours}h
+                        </Badge>
+                    </div>
+                )}
             </div>
             <div>
                 <SeeMoreText text={comment.Text} />
@@ -43,7 +45,7 @@ const OverviewComment: React.FC<OverviewCommentProps> = ({ comment, currentUser,
                             title={file.FileName}
                         />
                     ))}
-                    <span className="extra-text">{stringExtension.dateToLong(comment.Date, currentUser!.TimeZoneId)}</span>
+                    <span className="extra-text">{stringExtension.dateToLong(comment.CreatedDateTime, currentUser!.TimeZoneId)}</span>
                 </div>
                 <div className="extra-link">
                     <Link to="#" onClick={() => handleEdit(comment)}>

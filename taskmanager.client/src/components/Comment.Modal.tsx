@@ -21,10 +21,8 @@ import { useLocation } from "react-router-dom";
 import { testHelper } from "../helpers/test.helper";
 import { useConfirm } from "./shared/confirm";
 import { useRef, useState } from "react";
-import CategoryModel from "../services/models/category.model";
-import ProjectModel from "../services/models/project.model";
-import overviewService from "../services/overview.service";
 import { getTaskStatusDescription, getTaskStatusVariant, TaskStatusEnum } from "../enums/task.status.enum";
+import FieldHours from "./shared/field-hours";
 
 interface CommentModalProps {
     modalData: CommentModel | null;
@@ -34,16 +32,11 @@ interface CommentModalProps {
 const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
     const formikRef = useRef<FormikProps<CommentState>>(null);
     const { search } = useLocation();
-    const [categories, setCategories] = useState<CategoryModel[] | null>(null);
-    const [projects, setProjects] = useState<ProjectModel[] | null>(null);
     const { confirm, ConfirmDialog } = useConfirm();
     let dispatch = useDispatch();
     const state = useSelector((s: AppState) => s.commentState);
 
     useAsyncEffect(async () => {
-        setProjects(overviewService.projects);
-        setCategories(overviewService.categories);
-
         if (modalData != null) {
             if (modalData.Id) {
                 let service: commentService = new commentService(testHelper.getTestContainer(search));
@@ -57,6 +50,8 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
     }, [modalData, dispatch]);
 
     const validationSchema = Yup.object().shape({
+        Date: Yup.string().required("This field is required!"),
+        Status: Yup.number().required("Status is required"),
         Text: Yup.string()
             .test(
                 "len",
@@ -108,7 +103,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
             {ConfirmDialog}
             <Modal.Header closeButton>
                 <Modal.Title>
-                    {modalData?.Id ? "Edit" : "Add"} Comment for Task {modalData?.TaskIndex}
+                    {modalData?.Id ? "Edit" : "Add"} Comment for Task {state.TaskIndex}
                 </Modal.Title>
             </Modal.Header>
             {state.loading ? (
@@ -124,6 +119,9 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
                                     <FormGroup label="Date" error={touched.Date && (errors.Date ?? state.errors.Date)}>
                                         <Field type="Date" name="Date" placeholder="Date" className="form-control" />
                                     </FormGroup>
+                                    <FormGroup label="WorkHours" error={touched.WorkHours && (errors.WorkHours ?? state.errors.WorkHours)}>
+                                        <FieldHours initialValue={state.WorkHours} onChange={(h) => setFieldValue("WorkHours", h)} />
+                                    </FormGroup>
                                     <FormGroup label="Status" error={touched.Status && (errors.Status ?? state.errors.Status)}>
                                         <ButtonGroup>
                                             {(Object.values(TaskStatusEnum) as TaskStatusEnum[])
@@ -137,7 +135,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
                                                         name="radio"
                                                         value={status}
                                                         checked={values.Status == status}
-                                                        onChange={(e) => setFieldValue("Status", status)}>
+                                                        onChange={() => setFieldValue("Status", status)}>
                                                         {getTaskStatusDescription(status)}
                                                     </ToggleButton>
                                                 ))}

@@ -17,7 +17,7 @@ interface OverviewTaskProps {
     handleTaskEdit: (model: TaskModel) => void;
     handleTaskDelete: (model: TaskModel) => void;
     handleCommentAdd: (model: TaskModel) => void;
-    handleCommentEdit: (commentModel: CommentModel) => void;
+    handleCommentEdit: (model: CommentModel) => void;
     handleCommentDelete: (model: CommentModel) => void;
 }
 

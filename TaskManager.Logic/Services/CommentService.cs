@@ -2,6 +2,7 @@
 using TaskManager.Data.Entities;
 using TaskManager.Data.Repositories;
 using TaskManager.Logic.Dtos;
+using TaskManager.Logic.Enums;
 
 namespace TaskManager.Logic.Services;
 public class CommentService : BaseService {
@@ -19,6 +20,16 @@ public class CommentService : BaseService {
     public async Task<CommentDto> GetAsync(int id, int companyId) {
         var model = await Rep(companyId).GetByIdAsync(id);
         return Mapper.Map<CommentDto>(model);
+    }
+
+    public async Task<CommentViewDto> GetWithTaskAsync(int id, int companyId) {
+        var commentModel = await Rep(companyId).GetByIdAsync(id);
+        var indexState  = await base.Rep<Task1>(companyId).GetAll(false)
+            .Where(x => x.Id == commentModel.TaskId).Select(x => new { x.Index, x.Status }).FirstAsync();
+        var commentViewDto = Mapper.Map<CommentViewDto>(Mapper.Map<CommentDto>(commentModel));
+        commentViewDto.TaskIndex = indexState.Index;
+        commentViewDto.TaskStatus = (TaskStatusEnum)indexState.Status;
+        return commentViewDto;
     }
 
     public async Task<CommentDto> CreateAsync(CreateCommentDto dto, int userId, int companyId) {

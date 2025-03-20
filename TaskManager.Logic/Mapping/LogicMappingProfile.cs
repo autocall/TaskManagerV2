@@ -12,9 +12,12 @@ public class LogicMappingProfile : Profile {
         CreateMap<CompanyDto, Company>().ReverseMap();
         CreateMap<ProjectDto, Project>().ReverseMap();
         CreateMap<CategoryDto, Category>().ReverseMap();
-        CreateMap<TaskDto, Task1>().CreateTaskMappings().ReverseMap().CreateTaskMappings();
-        CreateMap<CommentDto, Comment>().ReverseMap();
         CreateMap<EventDto, Event>().CreateEventMappings().ReverseMap().CreateEventMappings();
+
+        CreateMap<TaskDto, Task1>().CreateTaskMappings().ReverseMap().CreateTaskMappings();
+
+        CreateMap<CommentDto, Comment>().ReverseMap();
+        CreateMap<CommentDto, CommentViewDto>();
 
         CreateMap<CreateProjectDto, Project>();
         CreateMap<UpdateProjectDto, Project>();

@@ -124,29 +124,25 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
                                     <FormGroup label="Date" error={touched.Date && (errors.Date ?? state.errors.Date)}>
                                         <Field type="Date" name="Date" placeholder="Date" className="form-control" />
                                     </FormGroup>
-                                    {!modalData?.Id && (
-                                        <FormGroup label="Status" error={touched.Status && (errors.Status ?? state.errors.Status)}>
-                                            <ButtonGroup>
-                                                {(Object.values(TaskStatusEnum) as TaskStatusEnum[])
-                                                    .filter((k) => Number(k))
-                                                    .map((status) => (
-                                                        <ToggleButton
-                                                            key={"comment-status" + status}
-                                                            id={"comment-status" + status}
-                                                            type="radio"
-                                                            variant={
-                                                                values.Status == status ? getTaskStatusVariant(values.Status) : "outline-secondary"
-                                                            }
-                                                            name="radio"
-                                                            value={status}
-                                                            checked={values.Status == status}
-                                                            onChange={(e) => setFieldValue("Status", status)}>
-                                                            {getTaskStatusDescription(status)}
-                                                        </ToggleButton>
-                                                    ))}
-                                            </ButtonGroup>
-                                        </FormGroup>
-                                    )}
+                                    <FormGroup label="Status" error={touched.Status && (errors.Status ?? state.errors.Status)}>
+                                        <ButtonGroup>
+                                            {(Object.values(TaskStatusEnum) as TaskStatusEnum[])
+                                                .filter((k) => Number(k))
+                                                .map((status) => (
+                                                    <ToggleButton
+                                                        key={"comment-status" + status}
+                                                        id={"comment-status" + status}
+                                                        type="radio"
+                                                        variant={values.Status == status ? getTaskStatusVariant(values.Status) : "outline-secondary"}
+                                                        name="radio"
+                                                        value={status}
+                                                        checked={values.Status == status}
+                                                        onChange={(e) => setFieldValue("Status", status)}>
+                                                        {getTaskStatusDescription(status)}
+                                                    </ToggleButton>
+                                                ))}
+                                        </ButtonGroup>
+                                    </FormGroup>
                                     <FormGroup label="Text" error={touched.Text && (errors.Text ?? state.errors.Text)}>
                                         <Field as="textarea" name="Text" placeholder="Text" className="form-control" />
                                     </FormGroup>

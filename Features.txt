@@ -10,3 +10,4 @@
 !. Check to delete a task
 !. Reload only an edited task/comment
 !. clickable the completed icon
+!. need reload projects after it was created

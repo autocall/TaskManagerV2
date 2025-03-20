@@ -66,8 +66,11 @@ public class TaskService : BaseService {
     }
 
     public async Task UpdateAsync(CreateCommentDto inputDto, int userId, int companyId) {
-        update total comments;
-        update the status;
+        var commentsCount = await base.UnitOfWork.GetRepository<Comment>(companyId).GetAll(false).CountAsync();
+        await this.Rep(companyId).GetAll(false).Where(x => x.Id == inputDto.TaskId)
+            .Set(x => x.CommentsCount, commentsCount)
+            .Set(x => x.Status, (byte)inputDto.Status)
+            .UpdateAsync();
     }
 
     public async Task<int> DeleteAsync(int id, int userId, int companyId) {

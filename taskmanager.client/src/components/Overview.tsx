@@ -73,7 +73,7 @@ const Overview: React.FC = () => {
     const handleTaskDelete = async (model: TaskModel) => {
         if (await confirm("Delete Task", `Are you sure you want to delete the task '${model.Index}'?`)) {
             let service: taskService = new taskService(testHelper.getTestContainer(search));
-            dispatch(deletingTaskAction());
+            dispatch(deletingTaskAction()); // TODO: set loading
             let response = await service.delete(model.Id);
             dispatch(deletedTaskAction(response));
             if (response.success) {
@@ -90,7 +90,7 @@ const Overview: React.FC = () => {
     const handleCommentDelete = async (model: CommentModel) => {
         if (await confirm("Delete Comment", `Are you sure you want to delete the comment?`)) {
             let service: commentService = new commentService(testHelper.getTestContainer(search));
-            dispatch(deletingTaskAction());
+            dispatch(deletingTaskAction()); // TODO: set loading
             let response = await service.delete(model.Id);
             dispatch(deletedTaskAction(response));
             if (response.success) {

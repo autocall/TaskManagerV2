@@ -6,7 +6,7 @@ export interface CommentState extends ICommentData {
     readonly submitting: boolean;
     readonly loading: boolean;
     readonly loaded: boolean;
-    readonly DateTime: Date;
+    readonly Date: string;
     readonly Text: string;
     readonly Status: TaskStatusEnum | null;
     readonly error: string | null;

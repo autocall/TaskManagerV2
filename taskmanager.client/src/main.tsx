@@ -6,11 +6,14 @@ import "./bootstrap-default.scss";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./states/store.ts";
+import { ToastProvider } from "./components/shared/toast-manager.tsx";
 
-createRoot(document.getElementById('root')!).render(
-  <Provider store={store}>
-      <BrowserRouter>
-          <App />
-      </BrowserRouter>
-  </Provider>,
-)
+createRoot(document.getElementById("root")!).render(
+    <Provider store={store}>
+        <BrowserRouter>
+            <ToastProvider>
+                <App />
+            </ToastProvider>
+        </BrowserRouter>
+    </Provider>,
+);

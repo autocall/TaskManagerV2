@@ -2,7 +2,7 @@ import { Badge, ListGroup } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import { Link } from "react-router-dom";
 import stringExtension from "../extensions/string.extension";
-import SeeMoreText from "./shared/seemore.text";
+import SeeMoreText from "./shared/seemore-text";
 import fileExtension from "../extensions/file.extension";
 import CommentModel from "../services/models/comment.model";
 import IJwt from "../types/jwt.type";

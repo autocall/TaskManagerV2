@@ -55,8 +55,8 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
         Text: Yup.string()
             .test(
                 "len",
-                "The name must be between 2 and 64 characters.",
-                (val: any) => val && val.toString().length >= 2 && val.toString().length <= 64,
+                "The name must be at least 2 characters long",
+                (val: any) => val && val.toString().length >= 2,
             )
             .required("This field is required!"),
     });

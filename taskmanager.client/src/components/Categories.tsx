@@ -11,6 +11,7 @@ import CategoryModel from "../services/models/category.model";
 import { gettingCategoriesAction, gotCategoriesAction, deletingCategoryAction, deletedCategoryAction } from "../states/categories.state";
 import { useConfirm } from "./shared/confirm";
 import { testHelper } from "../helpers/test.helper";
+import stringExtension from "../extensions/string.extension";
 
 const Categories: React.FC = () => {
     const { search } = useLocation();
@@ -105,7 +106,7 @@ const Categories: React.FC = () => {
                                 <td style={{ color: category.Color }}>{category.Id}</td>
                                 <td style={{ color: category.Color }}>{category.Name}</td>
                                 <td style={{ color: category.Color }}>{category.Color}</td>
-                                <td style={{ color: category.Color }}>{category.CreatedDateTime.format("M/D/YYYY")}</td>
+                                <td style={{ color: category.Color }}>{stringExtension.dateToShort(category.CreatedDateTime)}</td>
                                 <td
                                     css={css`
                                         padding: 0;

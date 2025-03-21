@@ -11,6 +11,7 @@ import ProjectModel from "../services/models/project.model";
 import { gettingProjectsAction, gotProjectsAction, deletingProjectAction, deletedProjectAction } from "../states/projects.state";
 import { useConfirm } from "./shared/confirm";
 import { testHelper } from "../helpers/test.helper";
+import stringExtension from "../extensions/string.extension";
 
 const Projects: React.FC = () => {
     const { search } = useLocation();
@@ -84,7 +85,7 @@ const Projects: React.FC = () => {
                             <tr key={project.Id}>
                                 <td>{project.Id}</td>
                                 <td>{project.Name}</td>
-                                <td>{project.CreatedDateTime.format("M/D/YYYY")}</td>
+                                <td>{stringExtension.dateToShort(project.CreatedDateTime)}</td>
                                 <td
                                     css={css`
                                         padding: 0;

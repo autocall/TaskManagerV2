@@ -3,6 +3,7 @@ import UserModel from "./user.model";
 
 export default class BaseModel {
     Id: number;
+    // do not use moment in Redux
     CreatedDateTime: Date;
     ModifiedDateTime: Date;
 

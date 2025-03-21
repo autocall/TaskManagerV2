@@ -5,10 +5,10 @@ import Response from "./models/response";
 
 export default class projectService {
     private rep: projectRepository;
-    
-        constructor(test: testContainer | null) {
-            this.rep = new projectRepository(test);
-        }
+
+    constructor(test: testContainer | null) {
+        this.rep = new projectRepository(test);
+    }
 
     public getAll(): Promise<Response<ProjectModel[]>> {
         return this.rep

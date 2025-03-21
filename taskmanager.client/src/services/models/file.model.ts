@@ -7,9 +7,7 @@ export default class FileModel {
         if (data) {
             this.Id = data.Id;
             this.FileName = data.FileName;
-            this.Size = data.Size
+            this.Size = data.Size;
         }
     }
-    
-    
 }

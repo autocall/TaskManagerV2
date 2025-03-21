@@ -5,7 +5,7 @@ import stringExtension from "../extensions/string.extension";
 import { getTaskStatusDescription, getTaskStatusVariant } from "../enums/task.status.enum";
 import { getTaskKindDescription, getTaskKindVariant } from "../enums/task.kind.enum";
 import IJwt from "../types/jwt.type";
-import SeeMoreText from "./shared/seemore.text";
+import SeeMoreText from "./shared/seemore-text";
 import fileExtension from "../extensions/file.extension";
 import TaskModel from "../services/models/task.model";
 import OverviewComment from "./Overview.Comment";

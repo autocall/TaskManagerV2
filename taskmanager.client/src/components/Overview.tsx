@@ -247,7 +247,7 @@ const Overview: React.FC = () => {
                         </Card>
                         {/* categories + tasks */}
                         <div /* className="scroll-content" */>
-                            {state.categories?.map((category) => (
+                            {currentUser && state.categories?.map((category) => (
                                 <Row key={"category" + category.Id}>
                                     <Divider model={category} />
                                     <Row className="column-row">

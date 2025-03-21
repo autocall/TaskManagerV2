@@ -13,6 +13,7 @@ public class CommentService : BaseService {
     public async Task<List<CommentDto>> GetAllAsync(IQueryable<int> taskIdsQuery, int companyId) {
         var models = await Rep(companyId).GetAll(false)
             .Where(x => taskIdsQuery.Contains(x.TaskId))
+            .OrderBy(x => x.Date)
             .ToListAsync();
         return Mapper.Map<List<CommentDto>>(models);
     }

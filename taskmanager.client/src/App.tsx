@@ -11,6 +11,7 @@ import { ThemeEnum } from "./enums/theme.enum";
 import useAsyncEffect from "use-async-effect";
 import Overview from "./components/Overview";
 import Calendar from "./components/Calendar";
+import Report from "./components/Report";
 const Profile = lazy(() => import("./components/Profile"));
 const LogIn = lazy(() => import("./components/LogIn"));
 const SignUp = lazy(() => import("./components/SignUp"));
@@ -106,6 +107,9 @@ const App: React.FC = () => {
                             <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/categories">
                                 Categories
                             </NavLink>
+                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/report">
+                                Report
+                            </NavLink>
                         </Nav>
                         <Nav>
                             {themeDropdown}
@@ -158,6 +162,7 @@ const App: React.FC = () => {
                             </Suspense>
                         }
                     />
+                    <Route path="/report" element={<Report />} />
                     <Route
                         path="/profile"
                         element={<Suspense fallback={<div>Loading...</div>}>{identity ? <Profile /> : <div>Loading...</div>}</Suspense>}

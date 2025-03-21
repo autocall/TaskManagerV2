@@ -37,6 +37,10 @@ public class LogicMappingProfile : Profile {
 
         CreateMap<CreateTaskDto, Task1>().CreateTaskMappings().ReverseMap().CreateTaskMappings();
         CreateMap<UpdateTaskDto, Task1>().CreateTaskMappings().ReverseMap().CreateTaskMappings();
+
+        CreateMap<CommentDto, ReportCommentDto>();
+        CreateMap<TaskDto, ReportTaskDto>();
+        CreateMap<ProjectDto, ReportProjectDto>();
     }
 }
 

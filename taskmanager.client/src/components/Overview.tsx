@@ -25,10 +25,12 @@ import ProjectModel from "../services/models/project.model";
 import CommentModel from "../services/models/comment.model";
 import CommentModal from "./Comment.Modal";
 import commentService from "../services/comment.service";
+import { useToast } from "./shared/toast-manager";
 
 const Overview: React.FC = () => {
     const { search } = useLocation();
     let dispatch = useDispatch();
+    const { toast } = useToast();
     let state = useSelector((s: AppState) => s.overviewState);
     const [currentUser, setCurrentUser] = useState<IJwt | null>(null);
     const [modalTaskData, setModalTaskData] = useState<TaskModel | null>(null);
@@ -96,6 +98,8 @@ const Overview: React.FC = () => {
             dispatch(deletedTaskAction(response));
             if (response.success) {
                 await load();
+            } else {
+                toast({ message: response.error, type: "danger" });
             }
         }
     };
@@ -247,29 +251,30 @@ const Overview: React.FC = () => {
                         </Card>
                         {/* categories + tasks */}
                         <div /* className="scroll-content" */>
-                            {currentUser && state.categories?.map((category) => (
-                                <Row key={"category" + category.Id}>
-                                    <Divider model={category} />
-                                    <Row className="column-row">
-                                        {[1, 2, 3].map((column) => (
-                                            <Col key={category.Id + column} md={true}>
-                                                {category.Tasks?.filter((task) => task.Column == column)?.map((task) => (
-                                                    <OverviewTask
-                                                        key={"task" + task.Id}
-                                                        task={task}
-                                                        currentUser={currentUser}
-                                                        handleTaskEdit={handleTaskEdit}
-                                                        handleTaskDelete={handleTaskDelete}
-                                                        handleCommentAdd={handleCommentAdd}
-                                                        handleCommentEdit={handleCommentEdit}
-                                                        handleCommentDelete={handleCommentDelete}
-                                                    />
-                                                ))}
-                                            </Col>
-                                        ))}
+                            {currentUser &&
+                                state.categories?.map((category) => (
+                                    <Row key={"category" + category.Id}>
+                                        <Divider model={category} />
+                                        <Row className="column-row">
+                                            {[1, 2, 3].map((column) => (
+                                                <Col key={category.Id + column} md={true}>
+                                                    {category.Tasks?.filter((task) => task.Column == column)?.map((task) => (
+                                                        <OverviewTask
+                                                            key={"task" + task.Id}
+                                                            task={task}
+                                                            currentUser={currentUser}
+                                                            handleTaskEdit={handleTaskEdit}
+                                                            handleTaskDelete={handleTaskDelete}
+                                                            handleCommentAdd={handleCommentAdd}
+                                                            handleCommentEdit={handleCommentEdit}
+                                                            handleCommentDelete={handleCommentDelete}
+                                                        />
+                                                    ))}
+                                                </Col>
+                                            ))}
+                                        </Row>
                                     </Row>
-                                </Row>
-                            ))}
+                                ))}
                         </div>
                     </div>
                 )}

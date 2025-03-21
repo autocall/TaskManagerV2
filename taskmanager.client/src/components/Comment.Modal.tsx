@@ -142,7 +142,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
                                         </ButtonGroup>
                                     </FormGroup>
                                     <FormGroup label="Text" error={touched.Text && (errors.Text ?? state.errors.Text)}>
-                                        <Field as="textarea" name="Text" placeholder="Text" className="form-control" />
+                                        <Field as="textarea" name="Text" placeholder="Text" className="form-control" rows={4} />
                                     </FormGroup>
                                 </Modal.Body>
                                 <Modal.Footer>

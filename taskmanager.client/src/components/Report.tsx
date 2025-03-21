@@ -29,17 +29,16 @@ const Report: React.FC = () => {
     }, [dispatch]);
 
     useAsyncEffect(async () => {
+        // sets default date to today
         if (!date) setDate(stringExtension.dateToISO(moment().tz(currentUser!.TimeZoneId)));
     }, [currentUser]);
 
     useAsyncEffect(async () => {
+        // loads report when date changes
         if (date) await load(date);
     }, [date]);
 
     const load = async (date: string) => {
-        let user = new authService(null).getCurrentUser();
-        setCurrentUser(user);
-
         let service: reportService = new reportService(testHelper.getTestContainer(search));
         dispatch(gettingReportAction());
         let response = await service.get(date);
@@ -47,10 +46,8 @@ const Report: React.FC = () => {
     };
 
     const copyCardBodyToClipboard = async () => {
-        if (!cardBodyRef.current) return;
-
-        const html = cardBodyRef.current.innerHTML;
-        const text = cardBodyRef.current.innerText;
+        const html = cardBodyRef.current!.innerHTML;
+        const text = cardBodyRef.current!.innerText;
 
         try {
             await navigator.clipboard.write([
@@ -62,7 +59,7 @@ const Report: React.FC = () => {
             toast({ message: "Report copied", type: "success" });
         } catch (err) {
             console.error("toast error:", err);
-            toast({ message: "toast error", type: "error" });
+            toast({ message: "toast error", type: "danger" });
         }
     };
 

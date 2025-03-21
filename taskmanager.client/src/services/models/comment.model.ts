@@ -32,7 +32,7 @@ export default class CommentModel extends BaseModel implements ICommentData {
         let model = new CommentModel(new CommentData());
         model.Date = stringExtension.dateToISO(moment().tz(timeZoneId));
         model.TaskId = task.Id;
-        model.Status = task.Status;
+        model.Status = Math.max(task.Status, TaskStatusEnum.InProgress);
         model.TaskIndex = task.Index;
         return model;
     }

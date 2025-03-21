@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { Toast, ToastContainer } from "react-bootstrap";
 
-type ToastType = "success" | "error" | "info" | "warning";
+type ToastType = "success" | "danger" | "info" | "warning";
 
 interface ToastContextType {
     toast: (options: { message: string; type?: ToastType }) => void;
@@ -24,7 +24,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
         <ToastContext.Provider value={{ toast: trigger }}>
             {children}
             <ToastContainer position="bottom-end" className="p-3">
-                <Toast bg={type} show={show} onClose={() => setShow(false)} delay={3000} autohide>
+                <Toast bg={type} show={show} onClose={() => setShow(false)} delay={10000} autohide>
                     <Toast.Body className="text-white">{message}</Toast.Body>
                 </Toast>
             </ToastContainer>

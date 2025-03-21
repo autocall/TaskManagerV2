@@ -20,7 +20,8 @@ namespace TaskManager.Server.Controllers;
 [Route("Api/Comment/[action]")]
 public class ApiCommentController : BaseController {
 
-    private CommentService Service => Host.GetService<CommentService>();
+    private CommentService CommentService => Host.GetService<CommentService>();
+    private TaskService TaskService => Host.GetService<TaskService>();
 
     #region [ .ctor ]
 
@@ -37,7 +38,7 @@ public class ApiCommentController : BaseController {
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult> Get(int id) {
-        CommentViewDto dto = await this.Service.GetWithTaskAsync(id, base.GetCompanyId());
+        CommentViewDto dto = await this.CommentService.GetWithTaskAsync(id, base.GetCompanyId());
         return JsonSuccess(dto);
     }
 
@@ -47,8 +48,8 @@ public class ApiCommentController : BaseController {
             return base.JsonFail(base.GetErrors());
         }
         var inputDto = Mapper.Map<CreateCommentDto>(model);
-        var outputDto = await this.Service.CreateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
-        await this.Host.GetService<TaskService>().UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
+        var outputDto = await this.CommentService.CreateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
+        await this.TaskService.UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(outputDto);
     }
 
@@ -58,14 +59,16 @@ public class ApiCommentController : BaseController {
             return base.JsonFail(base.GetErrors());
         }
         var inputDto = Mapper.Map<UpdateCommentDto>(model);
-        var outputDto = await this.Service.UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
-        await this.Host.GetService<TaskService>().UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
+        var outputDto = await this.CommentService.UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
+        await this.TaskService.UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(outputDto);
     }
 
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id) {
-        var result = await this.Service.DeletePermanentAsync(id, base.GetUserId(), base.GetCompanyId());
+        var dto = await this.CommentService.GetAsync(id, base.GetCompanyId());
+        var result = await this.CommentService.DeletePermanentAsync(dto.Id, base.GetUserId(), base.GetCompanyId());
+        await this.TaskService.UpdateStatisticAsync(dto.TaskId, base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(result);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using LinqToDB;
+using TaskManager.Common.Extensions;
 using TaskManager.Data.Entities;
 using TaskManager.Data.Repositories;
 using TaskManager.Logic.Dtos;
@@ -7,6 +8,7 @@ using TaskManager.Logic.Enums;
 namespace TaskManager.Logic.Services;
 public class TaskService : BaseService {
     private IRepository<Task1> Rep(int companyId) => base.Rep<Task1>(companyId);
+    private IRepository<Comment> CommentRep(int companyId) => base.Rep<Comment>(companyId);
 
     public TaskService(ServicesHost host) : base(host) { }
 
@@ -66,8 +68,8 @@ public class TaskService : BaseService {
     }
 
     public async Task UpdateAsync(ITaskUpdateStatusDtoMap dto, int userId, int companyId) {
-        var commentsCount = await base.UnitOfWork.GetRepository<Comment>(companyId).GetAll(false).CountAsync();
-        var workHours = await base.UnitOfWork.GetRepository<Comment>(companyId).GetAll(false).SumAsync(x => x.WorkHours);
+        var commentsCount = await this.CommentRep(companyId).GetAll(false).Where(e => e.TaskId == dto.TaskId).CountAsync();
+        var workHours = await this.CommentRep(companyId).GetAll(false).Where(e => e.TaskId == dto.TaskId).SumAsync(x => x.WorkHours);
         var task = new Task1() {
             Id = dto.TaskId,
             WorkHours = workHours,
@@ -75,6 +77,17 @@ public class TaskService : BaseService {
             Status = (byte)dto.Status
         };
         await this.Rep(companyId).UpdateAsync<ITaskUpdateStatusMap>(task, userId);
+    }
+
+    public async Task UpdateStatisticAsync(int taskId, int userId, int companyId) {
+        var commentsCount = await this.CommentRep(companyId).GetAll(false).Where(e => e.TaskId == taskId).CountAsync();
+        var workHours = await this.CommentRep(companyId).GetAll(false).Where(e => e.TaskId == taskId).SumAsync(x => x.WorkHours);
+        var task = new Task1() {
+            Id = taskId,
+            WorkHours = workHours,
+            CommentsCount = commentsCount,
+        };
+        await this.Rep(companyId).UpdateAsync<ITaskUpdateStatisticMap>(task, userId);
     }
 
     public async Task<int> DeleteAsync(int id, int userId, int companyId) {

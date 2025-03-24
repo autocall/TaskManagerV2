@@ -39,7 +39,8 @@ const OverviewComment: React.FC<OverviewCommentProps> = ({ comment, currentUser,
                 <div>
                     {comment.Files?.map((file) => (
                         <Link
-                            to="#"
+                            target="_blank"
+                            to={`api/file/${file.CompanyId}/${file.Id}/${file.FileName}`}
                             key={"file" + file.Id + file.FileName}
                             className={`file bi ${fileExtension.getFileIcon(file.FileName)}`}
                             title={file.FileName}

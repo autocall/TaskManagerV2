@@ -5,16 +5,16 @@ import Response from "./models/response";
 
 export default class commentService {
     private rep: commentRepository;
-    
-        constructor(test: testContainer | null) {
-            this.rep = new commentRepository(test);
-        }
+
+    constructor(test: testContainer | null) {
+        this.rep = new commentRepository(test);
+    }
 
     public get(id: number) {
         return this.rep
             .get(id)
             .then((response) => {
-                let model = new CommentModel(response.data);
+                let model = new CommentModel(response.data.comment, response.data.files);
                 return Response.success<CommentModel>(model);
             })
             .catch((exception) => {

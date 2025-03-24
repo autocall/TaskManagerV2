@@ -1,5 +1,6 @@
 import { TaskKindEnum } from "../enums/task.kind.enum";
 import { TaskStatusEnum } from "../enums/task.status.enum";
+import FileModel from "../services/models/file.model";
 import Response from "../services/models/response";
 import TaskModel, { TaskData, ITaskData } from "../services/models/task.model";
 
@@ -15,6 +16,8 @@ export interface TaskState extends ITaskData {
     readonly Column: number;
     readonly Kind: TaskKindEnum | null;
     readonly Status: TaskStatusEnum | null;
+    readonly Files: FileModel[] | null;
+    
     readonly error: string | null;
     readonly errors: { [key: string]: string };
 }

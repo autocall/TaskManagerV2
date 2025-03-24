@@ -1,4 +1,3 @@
-import { error } from "console";
 import Response from "../services/models/response";
 import ProjectModel from "../services/models/project.model";
 

@@ -20,7 +20,7 @@ import taskService from "../services/task.service";
 import { deletedTaskAction, deletingTaskAction } from "../states/task.state";
 import { TaskColumnEnum } from "../enums/task.column.enum";
 import { getTaskStatusDescription, TaskStatusEnum } from "../enums/task.status.enum";
-import { getTaskKindDescription, getTaskKindVariant, TaskKindEnum } from "../enums/task.kind.enum";
+import { getOverviewTaskKinds, getTaskKindDescription, getTaskKindVariant, TaskKindEnum } from "../enums/task.kind.enum";
 import ProjectModel from "../services/models/project.model";
 import CommentModel from "../services/models/comment.model";
 import CommentModal from "./Comment.Modal";
@@ -173,7 +173,7 @@ const Overview: React.FC = () => {
                                     </Col>
                                     <Col xs="auto" className="mb-2">
                                         <ButtonGroup>
-                                            {(Object.values(TaskKindEnum) as TaskKindEnum[])
+                                            {getOverviewTaskKinds()
                                                 .filter((k) => Number(k))
                                                 .map((kind) => (
                                                     <ToggleButton

@@ -27,7 +27,7 @@ export default class taskService {
         return this.rep
             .get(id)
             .then((response) => {
-                let model = new TaskModel(response.data);
+                let model = new TaskModel(response.data.task, response.data.files);
                 return Response.success<TaskModel>(model);
             })
             .catch((exception) => {

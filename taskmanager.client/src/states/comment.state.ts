@@ -1,6 +1,7 @@
 import { TaskStatusEnum } from "../enums/task.status.enum";
 import Response from "../services/models/response";
 import CommentModel, { CommentData, ICommentData } from "../services/models/comment.model";
+import FileModel from "../services/models/file.model";
 
 export interface CommentState extends ICommentData {
     readonly submitting: boolean;
@@ -11,6 +12,7 @@ export interface CommentState extends ICommentData {
     readonly Text: string;
     readonly Status: TaskStatusEnum | null;
     readonly TaskIndex: number | null;
+    readonly Files: FileModel[] | null;
     readonly error: string | null;
     readonly errors: { [key: string]: string };
 }

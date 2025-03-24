@@ -1,10 +1,11 @@
 ﻿namespace TaskManager.Logic.Enums;
 
-public enum TaskKindEnum
-{
+public enum TaskKindEnum {
     Unknown = 0,
     Task = 1,
-    Bug = 2,
-    Feature = 3,
-    Support = 4,
+    Fix = 2,
+    Bug = 3,
+    Feature = 4,
+    Improvement = 5,
+    Support = 6,
 }

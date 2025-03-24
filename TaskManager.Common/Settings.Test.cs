@@ -5,5 +5,6 @@ public partial interface Settings {
     public const string PrivateKey = "bAafd@A7d9#@F4*V!LHZs#ebKQrkE6pad2f3kj34c3dXy@";
     public const string DefaultPassword = "123456";
     public const string MasterPassword = "tm123456";
+    public const string PilePath = @"\Files\";
 #endif
 }

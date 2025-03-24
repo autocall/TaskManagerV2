@@ -17,12 +17,14 @@ import {
 import useAsyncEffect from "use-async-effect";
 import commentService from "../services/comment.service";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { testHelper } from "../helpers/test.helper";
 import { useConfirm } from "./shared/confirm";
 import { useRef, useState } from "react";
 import { getTaskStatusDescription, getTaskStatusVariant, TaskStatusEnum } from "../enums/task.status.enum";
 import FieldHours from "./shared/field-hours";
+import FileModel from "../services/models/file.model";
+import fileExtension from "../extensions/file.extension";
 
 interface CommentModalProps {
     modalData: CommentModel | null;
@@ -30,6 +32,7 @@ interface CommentModalProps {
 }
 
 const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
+    const fileRef = useRef<HTMLInputElement | null>(null);
     const formikRef = useRef<FormikProps<CommentState>>(null);
     const { search } = useLocation();
     const { confirm, ConfirmDialog } = useConfirm();
@@ -53,13 +56,19 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
         Date: Yup.string().required("This field is required!"),
         Status: Yup.number().required("Status is required"),
         Text: Yup.string()
-            .test(
-                "len",
-                "The name must be at least 2 characters long",
-                (val: any) => val && val.toString().length >= 2,
-            )
+            .test("len", "The name must be at least 2 characters long", (val: any) => val && val.toString().length >= 2)
             .required("This field is required!"),
     });
+
+    const handleFileAttach = (model: CommentState) => {
+        const files = fileRef.current?.files;
+        model.Files?.push(...Array.from(files ?? []).map((f) => FileModel.createFromBlob(f)));
+        formikRef.current?.setFieldValue("Files", model.Files);
+    };
+
+    const handleFileDelete = (file: FileModel) => {
+        file.IsDeleted = !file.IsDeleted;
+    };
 
     const handleSubmit = async (model: CommentState) => {
         let service: commentService = new commentService(testHelper.getTestContainer(search));
@@ -144,6 +153,38 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
                                     <FormGroup label="Text" error={touched.Text && (errors.Text ?? state.errors.Text)}>
                                         <Field as="textarea" name="Text" placeholder="Text" className="form-control" rows={4} />
                                     </FormGroup>
+                                    {/* Files */}
+                                    <Button variant="primary" size="sm" className="me-3" onClick={() => fileRef.current?.click()}>
+                                        <i className="bi bi-paperclip me-2"></i>
+                                        Attach Files
+                                    </Button>
+                                    <input type="file" ref={fileRef} multiple style={{ display: "none" }} onChange={() => handleFileAttach(values)} />
+                                    {values.Files?.map((file) => (
+                                        <span key={"task-file" + file.Id + file.FileName} className="me-2">
+                                            {file.IsDeleted ? (
+                                                <span className="text-muted text-decoration-line-through">
+                                                    <i className={`bi ${fileExtension.getFileIcon(file.FileName)}`}></i>
+                                                    {file.FileName}
+                                                </span>
+                                            ) : (
+                                                <Link
+                                                    to={`api/file/${file.CompanyId}/${file.Id}/${file.FileName}`}
+                                                    target="_blank"
+                                                    title={file.FileName}>
+                                                    <i className={`bi ${fileExtension.getFileIcon(file.FileName)}`}></i>
+                                                    {file.FileName}
+                                                </Link>
+                                            )}
+                                            <Link
+                                                to="#"
+                                                onClick={(event) => {
+                                                    handleFileDelete(file);
+                                                    event.stopPropagation();
+                                                }}>
+                                                <i className="bi bi-x fs-5 text-danger pointer"></i>
+                                            </Link>
+                                        </span>
+                                    ))}
                                 </Modal.Body>
                                 <Modal.Footer>
                                     <FormGroup error={state.error}>

@@ -35,25 +35,47 @@ export default class commentRepository {
 
     public create(data: CommentData) {
         let action = "create";
-        return axios.post(
-            `${API_URL}${action}/`,
-            {
-                ...data,
+        let formData = new FormData();
+        let files = data.Files;
+        data.Files = null;
+        formData.append("modelJson", JSON.stringify(data));
+        if (files) {
+            for (let file of files) {
+                if (file.Blob) {
+                    formData.append("files", file.Blob);
+                }
+            }
+        }
+
+        return axios.post(`${API_URL}${action}/`, formData, {
+            headers: {
+                ...this.generateHeaders(action),
+                "Content-Type": "multipart/form-data",
             },
-            { headers: this.generateHeaders(action) },
-        );
+        });
     }
 
     public update(id: number, data: CommentData) {
         let action = "update";
-        return axios.put(
-            `${API_URL}${action}/`,
-            {
-                id,
-                ...data,
+        let formData = new FormData();
+        let files = data.Files;
+        let deleteFileNames = data.Files?.filter((e) => e.IsDeleted).map((e) => e.FileName);
+        data.Files = null;
+        formData.append("modelJson", JSON.stringify({ id, deleteFileNames, ...data }));
+        if (files) {
+            for (let file of files) {
+                if (file.Blob) {
+                    formData.append("files", file.Blob);
+                }
+            }
+        }
+
+        return axios.put(`${API_URL}${action}/`, formData, {
+            headers: {
+                ...this.generateHeaders(action),
+                "Content-Type": "multipart/form-data",
             },
-            { headers: this.generateHeaders(action) },
-        );
+        });
     }
 
     public delete(id: number) {

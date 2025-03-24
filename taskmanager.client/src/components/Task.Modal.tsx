@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Modal, Spinner, ToggleButton } from "react-bootstrap";
+import { Button, ButtonGroup, CloseButton, Modal, Spinner, ToggleButton } from "react-bootstrap";
 import TaskModel, { TaskData } from "../services/models/task.model";
 import { Formik, Field, FormikProps } from "formik";
 import * as Yup from "yup";
@@ -17,7 +17,7 @@ import {
 import useAsyncEffect from "use-async-effect";
 import taskService from "../services/task.service";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { testHelper } from "../helpers/test.helper";
 import { useConfirm } from "./shared/confirm";
 import { useRef, useState } from "react";
@@ -27,6 +27,9 @@ import CategoryModel from "../services/models/category.model";
 import ProjectModel from "../services/models/project.model";
 import overviewService from "../services/overview.service";
 import { getTaskStatusDescription, getTaskStatusVariant, TaskStatusEnum } from "../enums/task.status.enum";
+import CommentModel from "../services/models/comment.model";
+import FileModel from "../services/models/file.model";
+import fileExtension from "../extensions/file.extension";
 
 interface TaskModalProps {
     modalData: TaskModel | null;
@@ -34,6 +37,7 @@ interface TaskModalProps {
 }
 
 const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
+    const fileRef = useRef<HTMLInputElement | null>(null);
     const formikRef = useRef<FormikProps<TaskState>>(null);
     const { search } = useLocation();
     const [categories, setCategories] = useState<CategoryModel[] | null>(null);
@@ -62,15 +66,21 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
         Column: Yup.number().required("Column is required"),
         Status: Yup.number().required("Status is required"),
         Title: Yup.string(),
-        Description: Yup.string().test(
-            "at-least-one",
-            "Either Title or Description is required",
-            function () {
-                const { Title, Description } = this.parent;
-                return Boolean(Title?.trim() || Description?.trim());
-            }
-        ),
+        Description: Yup.string().test("at-least-one", "Either Title or Description is required", function () {
+            const { Title, Description } = this.parent;
+            return Boolean(Title?.trim() || Description?.trim());
+        }),
     });
+
+    const handleFileAttach = (model: TaskState) => {
+        const files = fileRef.current?.files;
+        model.Files?.push(...Array.from(files ?? []).map((f) => FileModel.createFromBlob(f)));
+        formikRef.current?.setFieldValue("Files", model.Files);
+    };
+
+    const handleFileDelete = (file: FileModel) => {
+        file.IsDeleted = !file.IsDeleted;
+    };
 
     const handleSubmit = async (model: TaskState) => {
         let service: taskService = new taskService(testHelper.getTestContainer(search));
@@ -113,7 +123,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
         <Modal show={modalData != null} onHide={() => handleClose(false)} size="lg" backdrop="static">
             {ConfirmDialog}
             <Modal.Header closeButton>
-                <Modal.Title>{modalData?.Id ? "Edit" : "Add"} Task</Modal.Title>
+                <Modal.Title>{modalData?.Id ? `Edit Task #${modalData.Index}` : "Add Task"}</Modal.Title>
             </Modal.Header>
             {state.loading ? (
                 <div className="text-center m-5">
@@ -216,8 +226,40 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
                                         </ButtonGroup>
                                     </FormGroup>
                                     <FormGroup label="Description" error={touched.Description && (errors.Description ?? state.errors.Description)}>
-                                        <Field as="textarea" name="Description" placeholder="Description" className="form-control" />
+                                        <Field as="textarea" name="Description" placeholder="Description" className="form-control" rows={3} />
                                     </FormGroup>
+                                    {/* Files */}
+                                    <Button variant="primary" size="sm" className="me-3" onClick={() => fileRef.current?.click()}>
+                                        <i className="bi bi-paperclip me-2"></i>
+                                        Attach Files
+                                    </Button>
+                                    <input type="file" ref={fileRef} multiple style={{ display: "none" }} onChange={() => handleFileAttach(values)} />
+                                    {values.Files?.map((file) => (
+                                        <span key={"task-file" + file.Id + file.FileName} className="me-2">
+                                            {file.IsDeleted ? (
+                                                <span className="text-muted text-decoration-line-through">
+                                                    <i className={`bi ${fileExtension.getFileIcon(file.FileName)}`}></i>
+                                                    {file.FileName}
+                                                </span>
+                                            ) : (
+                                                <Link
+                                                    to={`api/file/${file.CompanyId}/${file.Id}/${file.FileName}`}
+                                                    target="_blank"
+                                                    title={file.FileName}>
+                                                    <i className={`bi ${fileExtension.getFileIcon(file.FileName)}`}></i>
+                                                    {file.FileName}
+                                                </Link>
+                                            )}
+                                            <Link
+                                                to="#"
+                                                onClick={(event) => {
+                                                    handleFileDelete(file);
+                                                    event.stopPropagation();
+                                                }}>
+                                                <i className="bi bi-x fs-5 text-danger pointer"></i>
+                                            </Link>
+                                        </span>
+                                    ))}
                                 </Modal.Body>
                                 <Modal.Footer>
                                     <FormGroup error={state.error}>

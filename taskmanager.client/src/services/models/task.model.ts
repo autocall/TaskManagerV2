@@ -23,7 +23,7 @@ export default class TaskModel extends BaseModel implements ITaskData {
 
     Files: FileModel[];
     
-    constructor(data?: any) {
+    constructor(data?: any, files?: any) {
         super(data);
         if (data) {
             this.Index = data.Index;
@@ -38,6 +38,9 @@ export default class TaskModel extends BaseModel implements ITaskData {
             this.WorkHours = data.WorkHours;
             this.CommentsCount = data.CommentsCount;
         }
+        if (files) {
+            this.Files = files.map((e: any) => new FileModel(e));
+        }
     }
 }
 
@@ -50,6 +53,7 @@ export interface ITaskData {
     Column: TaskColumnEnum;
     Kind: TaskKindEnum | null;
     Status: TaskStatusEnum | null;
+    Files: FileModel[] | null;
 }
 
 export class TaskData implements ITaskData {
@@ -61,6 +65,7 @@ export class TaskData implements ITaskData {
     Column: TaskColumnEnum;
     Kind: TaskKindEnum | null;
     Status: TaskStatusEnum | null;
+    Files: FileModel[] | null;
 
     constructor(data: any = null) {
         if (!data) {
@@ -72,6 +77,7 @@ export class TaskData implements ITaskData {
             this.Status = null;
             this.ProjectId = null;
             this.CategoryId = null;
+            this.Files = null;
         } else {
             this.Index = data.Index;
             this.Title = data.Title;
@@ -81,6 +87,7 @@ export class TaskData implements ITaskData {
             this.Status = data.Status;
             this.ProjectId = data.ProjectId;
             this.CategoryId = data.CategoryId;
+            this.Files = data.Files;
         }
     }
 }

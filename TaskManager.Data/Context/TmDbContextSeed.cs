@@ -87,12 +87,13 @@ public class TmDbContextSeed {
         };
 
         var categories = await categoryRep.GetAll(false).ToListAsync();
-        if (user.Email == "test@tm.com") {
-            foreach (var category in categories) {
-                await categoryRep.DeleteAsync(category.Id);
-            }
-            categories.Clear();
-        }
+        // delete code
+        //if (user.Email == "test@tm.com") {
+        //    foreach (var category in categories) {
+        //        await categoryRep.DeleteAsync(category.Id);
+        //    }
+        //    categories.Clear();
+        //}
         if (categories.Any() == false) {
             foreach (var (name, color) in namesColors) {
                 await categoryRep.InsertAsync(new Category {

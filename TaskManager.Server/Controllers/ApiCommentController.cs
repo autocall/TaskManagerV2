@@ -18,7 +18,7 @@ namespace TaskManager.Server.Controllers;
 [Authorize]
 [ApiController]
 [Route("Api/Comment/[action]")]
-public class ApiCommentController : BaseController {
+public class ApiCommentController : BaseFileController {
 
     private CommentService CommentService => Host.GetService<CommentService>();
     private TaskService TaskService => Host.GetService<TaskService>();
@@ -38,29 +38,39 @@ public class ApiCommentController : BaseController {
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult> Get(int id) {
-        CommentViewDto dto = await this.CommentService.GetWithTaskAsync(id, base.GetCompanyId());
-        return JsonSuccess(dto);
+        CommentViewDto comment = await this.CommentService.GetWithTaskAsync(id, base.GetCompanyId());
+        var files = await base.GetFilesAsync(base.GetCompanyId(), id);
+        return JsonSuccess(new { comment, files });
     }
 
     [HttpPost]
-    public async Task<ActionResult> Create([FromBody] CreateCommentViewModel model) {
-        if (!ModelState.IsValid) {
-            return base.JsonFail(base.GetErrors());
-        }
+    public async Task<ActionResult> Create([FromForm] MultipartModel form) {
+        var model = form.DeserializeModel<CreateCommentViewModel>();
+
+        var validationResults = model.Validate();
+        if (validationResults.Any())
+            return BadRequest(validationResults);
+
         var inputDto = Mapper.Map<CreateCommentDto>(model);
         var outputDto = await this.CommentService.CreateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
         await this.TaskService.UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
+        await base.SaveFilesAsync(form.Files, outputDto.Id);
         return JsonSuccess(outputDto);
     }
 
     [HttpPut]
-    public async Task<ActionResult> Update([FromBody] UpdateCommentViewModel model) {
-        if (!ModelState.IsValid) {
-            return base.JsonFail(base.GetErrors());
-        }
+    public async Task<ActionResult> Update([FromForm] MultipartModel form) {
+        var model = form.DeserializeModel<UpdateCommentViewModel>();
+
+        var validationResults = model.Validate();
+        if (validationResults.Any())
+            return BadRequest(validationResults);
+
         var inputDto = Mapper.Map<UpdateCommentDto>(model);
         var outputDto = await this.CommentService.UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
         await this.TaskService.UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
+        await base.SaveFilesAsync(form.Files, outputDto.Id);
+        await base.DeleteFilesAsync(model.DeleteFileNames, outputDto.Id);
         return JsonSuccess(outputDto);
     }
 
@@ -69,6 +79,7 @@ public class ApiCommentController : BaseController {
         var dto = await this.CommentService.GetAsync(id, base.GetCompanyId());
         var result = await this.CommentService.DeletePermanentAsync(dto.Id, base.GetUserId(), base.GetCompanyId());
         await this.TaskService.UpdateStatisticAsync(dto.TaskId, base.GetUserId(), base.GetCompanyId());
+        await base.DeleteFilesAsync(base.GetCompanyId(), id);
         return JsonSuccess(result);
     }
 }

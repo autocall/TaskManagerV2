@@ -1,33 +1,35 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TaskManager.Logic.Enums;
+using TaskManager.Server.Infrastructure;
 
 namespace TaskManager.Server.Models;
 
 public class CreateCommentViewModel {
-    [Required]
+    [NotDefault]
     public DateOnly Date { get; set; }
-    [Required]
+    [NotDefault]
     public decimal WorkHours { get; set; }
     [Required]
     public string Text { get; set; }
-    [Required]
+    [NotDefault]
     public int TaskId { get; set; }
-    [Required]
+    [NotDefault]
     public TaskStatusEnum Status { get; set; }
 }
 
 public class UpdateCommentViewModel {
-    [Required]
+    [NotDefault]
     public int Id { get; set; }
 
-    [Required]
+    [NotDefault]
     public DateOnly Date { get; set; }
-    [Required]
+    [NotDefault]
     public decimal WorkHours { get; set; }
     [Required]
     public string Text { get; set; }
-    [Required]
+    [NotDefault]
     public int TaskId { get; set; }
-    [Required]
+    [NotDefault]
     public TaskStatusEnum Status { get; set; }
+    public List<string> DeleteFileNames { get; set; }
 }

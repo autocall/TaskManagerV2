@@ -16,7 +16,7 @@ export default class CommentModel extends BaseModel implements ICommentData {
 
     Files: FileModel[];
 
-    constructor(data?: any) {
+    constructor(data?: any, files?: any) {
         super(data);
         if (data) {
             this.TaskId = data.TaskId;
@@ -26,6 +26,9 @@ export default class CommentModel extends BaseModel implements ICommentData {
 
             this.Status = data.TaskStatus;
             this.TaskIndex = data.TaskIndex;
+        }
+        if (files) {
+            this.Files = files.map((e: any) => new FileModel(e));
         }
     }
     public static create(timeZoneId: string, task: TaskModel): CommentModel {
@@ -43,6 +46,7 @@ export interface ICommentData {
     Date: string;
     WorkHours: number;
     Text: string;
+    Files: FileModel[] | null;
 }
 
 export class CommentData implements ICommentData {
@@ -51,6 +55,7 @@ export class CommentData implements ICommentData {
     WorkHours: number;
     Text: string;
     Status: TaskStatusEnum | null;
+    Files: FileModel[] | null;
 
     constructor(data: any = null) {
         if (!data) {
@@ -59,12 +64,14 @@ export class CommentData implements ICommentData {
             this.WorkHours = 0;
             this.Text = "";
             //this.Status = skipped;
+            this.Files = null;
         } else {
             this.TaskId = data.TaskId;
             this.Date = data.Date;
             this.WorkHours = data.WorkHours;
             this.Text = data.Text;
             this.Status = data.Status;
+            this.Files = data.Files;
         }
     }
 }

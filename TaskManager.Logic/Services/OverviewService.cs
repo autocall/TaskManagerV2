@@ -17,6 +17,8 @@ public class OverviewService : BaseService {
         var projectService = this.Host.GetService<ProjectService>();
         var taskService = this.Host.GetService<TaskService>();
         var commentService = this.Host.GetService<CommentService>();
+        var fileService = this.Host.GetService<CachedFileService>();
+        var userService = this.Host.GetService<UserService>();
 
         var categories = await categoryService.GetAllAsync(companyId);
         var projects = await projectService.GetAllAsync(companyId);
@@ -25,9 +27,9 @@ public class OverviewService : BaseService {
         var comments = await commentService.GetAllAsync(tasksQuery.Select(x => x.Id), companyId);
         var userIds = tasks.SelectMany(x => new int[] { x.CreatedById, x.ModifiedById })
             .Union(comments.SelectMany(x => new int[] { x.CreatedById, x.ModifiedById })).Distinct().ToList();
-        var users = await this.Host.GetService<UserService>().GetByIdsAsync(userIds);
+        var users = await userService.GetByIdsAsync(userIds);
         var objectIds = tasks.Select(x => x.Id).Union(comments.Select(x => x.Id)).ToList();
-        var files = await this.Host.GetService<FileService>().GetByIdsAsync(companyId, objectIds);
+        var files = await fileService.GetByIdsAsync(companyId, objectIds);
 
         return (categories, projects, tasks, comments, users, files);
     }

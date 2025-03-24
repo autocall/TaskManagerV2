@@ -94,7 +94,7 @@ public class Calendar_UnitTest {
         {
             var response = await httpClient.PostAsync($"{Settings.Site}/Api/Event/Create",
                 new StringContent(
-                    JsonExtension.Serialize(new CreateEventViewModel() {
+                    JsonExtension.Serialize(new {
                         Date = DateOnly.FromDateTime(DateTime.Now),
                         Name = "Test Event",
                     }),

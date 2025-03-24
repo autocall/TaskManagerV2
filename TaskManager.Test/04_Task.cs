@@ -142,7 +142,7 @@ public class Task_UnitTest {
         }
 
         {
-            var response = await httpClient.GetAsync($"{Settings.Site}/Api/File/{dto.Id}/{HttpUtility.UrlEncode(fileName)}");
+            var response = await httpClient.GetAsync($"{Settings.Site}/Api/File/{dto.CompanyId}/{dto.Id}/{HttpUtility.UrlEncode(fileName)}");
             var data = await response.Content.ReadAsStringAsync();
 
             Output.WriteLine($"--- Read File ---");
@@ -178,7 +178,7 @@ public class Task_UnitTest {
         }
 
         {
-            var response = await httpClient.GetAsync($"{Settings.Site}/Api/File/{dto.Id}/{HttpUtility.UrlEncode(fileName)}");
+            var response = await httpClient.GetAsync($"{Settings.Site}/Api/File/{dto.CompanyId}/{dto.Id}/{HttpUtility.UrlEncode(fileName)}");
             var data = await response.Content.ReadAsStringAsync();
 
             Output.WriteLine($"--- Not Found File ---");

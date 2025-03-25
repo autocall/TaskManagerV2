@@ -66,7 +66,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
             }
         } else {
             dispatch(submittingProjectAction());
-            let response = await service.create(model.Name);
+            let response = await service.create(model.Name, model.DefaultColumn);
             dispatch(submittedProjectAction(response));
             if (response.success) {
                 handleClose(true);

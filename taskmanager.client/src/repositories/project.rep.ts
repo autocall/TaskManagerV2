@@ -33,12 +33,13 @@ export default class projectRepository {
         return axios.get(`${API_URL}${action}/${id}`, { headers: this.generateHeaders(action) });
     }
 
-    public create(name: string) {
+    public create(name: string, defaultColumn: TaskColumnEnum) {
         let action = "create";
         return axios.post(
             `${API_URL}${action}/`,
             {
                 name,
+                defaultColumn,
             },
             { headers: this.generateHeaders(action) },
         );

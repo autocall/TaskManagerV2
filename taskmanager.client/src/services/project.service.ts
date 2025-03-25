@@ -1,3 +1,4 @@
+import { TaskColumnEnum } from "../enums/task.column.enum";
 import { testContainer } from "../helpers/test.helper";
 import projectRepository from "../repositories/project.rep";
 import ProjectModel from "./models/project.model";
@@ -45,9 +46,9 @@ export default class projectService {
             });
     }
 
-    public update(id: number, name: string) {
+    public update(id: number, name: string, defaultColumn: TaskColumnEnum) {
         return this.rep
-            .update(id, name)
+            .update(id, name, defaultColumn)
             .then((response) => {
                 return Response.success<any>(response.data);
             })

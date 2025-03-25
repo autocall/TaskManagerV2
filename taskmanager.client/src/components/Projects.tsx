@@ -69,6 +69,7 @@ const Projects: React.FC = () => {
                     <tr>
                         <th className="w-auto">#</th>
                         <th className="w-75">Name</th>
+                        <th className="w-75">Default Column</th>
                         <th className="w-25">Created</th>
                         <th className="w-auto"></th>
                     </tr>
@@ -85,6 +86,7 @@ const Projects: React.FC = () => {
                             <tr key={project.Id}>
                                 <td>{project.Id}</td>
                                 <td>{project.Name}</td>
+                                <td>{project.DefaultColumn}</td>
                                 <td>{stringExtension.dateToShort(project.CreatedDateTime)}</td>
                                 <td
                                     css={css`

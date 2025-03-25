@@ -1,3 +1,4 @@
+import { TaskColumnEnum } from "../enums/task.column.enum";
 import { TaskKindEnum } from "../enums/task.kind.enum";
 import { TaskStatusEnum } from "../enums/task.status.enum";
 import FileModel from "../services/models/file.model";
@@ -13,7 +14,7 @@ export interface TaskState extends ITaskData {
     readonly Description: string;
     readonly ProjectId: number | null;
     readonly CategoryId: number | null;
-    readonly Column: number;
+    readonly Column: TaskColumnEnum;
     readonly Kind: TaskKindEnum | null;
     readonly Status: TaskStatusEnum | null;
     readonly Files: FileModel[] | null;

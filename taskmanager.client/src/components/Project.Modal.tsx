@@ -1,4 +1,4 @@
-import { Button, Modal, Spinner } from "react-bootstrap";
+import { Button, ButtonGroup, Modal, Spinner, ToggleButton } from "react-bootstrap";
 import ProjectModel from "../services/models/project.model";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
@@ -19,6 +19,7 @@ import projectService from "../services/project.service";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { testHelper } from "../helpers/test.helper";
+import { getTaskColumnDescription, TaskColumnEnum } from "../enums/task.column.enum";
 
 interface ProjectModalProps {
     modalData: ProjectModel | null;
@@ -51,13 +52,14 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
                 (val: any) => val && val.toString().length >= 2 && val.toString().length <= 64,
             )
             .required("This field is required!"),
+        DefaultColumn: Yup.number().required("Default Column is required"),
     });
 
     const handleSubmit = async (model: ProjectState) => {
         let service: projectService = new projectService(testHelper.getTestContainer(search));
         if (modalData?.Id) {
             dispatch(submittingProjectAction());
-            let response = await service.update(modalData.Id, model.Name);
+            let response = await service.update(modalData.Id, model.Name, model.DefaultColumn);
             dispatch(submittedProjectAction(response));
             if (response.success) {
                 handleClose(true);
@@ -88,12 +90,34 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
                 </div>
             ) : (
                 <Formik initialValues={state} validationSchema={validationSchema} onSubmit={handleSubmit} backdrop="static">
-                    {({ handleSubmit, handleChange, values, touched, errors }) => (
+                    {({ handleSubmit, handleChange, setFieldValue, values, touched, errors }) => (
                         <Form onSubmit={handleSubmit}>
                             <fieldset disabled={state.loaded == false}>
                                 <Modal.Body>
                                     <FormGroup error={touched.Name && (errors.Name ?? state.errors.Name)}>
                                         <Field name="Name" placeholder="Name" className="form-control" />
+                                    </FormGroup>
+                                    <FormGroup
+                                        label="Default Column"
+                                        className="d-grid gap-2"
+                                        error={touched.DefaultColumn && (errors.DefaultColumn ?? state.errors.DefaultColumn)}>
+                                        <ButtonGroup>
+                                            {(Object.values(TaskColumnEnum) as TaskColumnEnum[])
+                                                .filter((k) => Number(k))
+                                                .map((column) => (
+                                                    <ToggleButton
+                                                        key={"project-default-column" + column}
+                                                        id={"project-default-column" + column}
+                                                        type="radio"
+                                                        variant={values.DefaultColumn == column ? "primary" : "outline-secondary"}
+                                                        name="radio"
+                                                        value={column}
+                                                        checked={values.DefaultColumn == column}
+                                                        onChange={(e) => setFieldValue("DefaultColumn", column)}>
+                                                        {getTaskColumnDescription(column)}
+                                                    </ToggleButton>
+                                                ))}
+                                        </ButtonGroup>
                                     </FormGroup>
                                 </Modal.Body>
 

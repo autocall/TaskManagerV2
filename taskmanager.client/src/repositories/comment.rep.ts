@@ -64,7 +64,7 @@ export default class commentRepository {
         formData.append("modelJson", JSON.stringify({ id, deleteFileNames, ...data }));
         if (files) {
             for (let file of files) {
-                if (file.Blob) {
+                if (file.Blob && file.IsDeleted == false) {
                     formData.append("files", file.Blob);
                 }
             }

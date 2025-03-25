@@ -1,12 +1,14 @@
 import { error } from "console";
 import Response from "../services/models/response";
 import ProjectModel from "../services/models/project.model";
+import { TaskColumnEnum } from "../enums/task.column.enum";
 
 export interface ProjectState {
     readonly submitting: boolean;
     readonly loading: boolean;
     readonly loaded: boolean;
     readonly Name: string;
+    readonly DefaultColumn: number;
     readonly error: string | null;
     readonly errors: { [key: string]: string };
 }
@@ -16,6 +18,7 @@ const initialState: ProjectState = {
     loaded: false,
     submitting: false,
     Name: "",
+    DefaultColumn: TaskColumnEnum.First,
     error: null,
     errors: {},
 };
@@ -31,6 +34,7 @@ export const gotProjectAction = (response: Response<ProjectModel>) =>
     ({
         type: GOTPROJECT,
         Name: response.data?.Name ?? initialState.Name,
+        DefaultColumn: response.data?.DefaultColumn ?? initialState.DefaultColumn,
         error: response.error ?? initialState.error,
         errors: response.errors ?? initialState.errors,
     }) as const;
@@ -40,6 +44,7 @@ export const createProjectAction = () =>
     ({
         type: CREATEPROJECT,
         Name: initialState.Name,
+        DefaultColumn: initialState.DefaultColumn,
         error: initialState.error,
         errors: initialState.errors,
     }) as const;
@@ -65,6 +70,7 @@ export const closeProjectAction = () =>
     ({
         type: CLOSEPROJECT,
         Name: initialState.Name,
+        DefaultColumn: initialState.DefaultColumn,
         error: initialState.error,
         errors: initialState.errors,
     }) as const;

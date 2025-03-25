@@ -42,7 +42,7 @@ export default class taskRepository {
         formData.append("modelJson", JSON.stringify(data));
         if (files) {
             for (let file of files) {
-                if (file.Blob) {
+                if (file.Blob && file.IsDeleted == false) {
                     formData.append("files", file.Blob);
                 }
             }

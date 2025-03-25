@@ -27,7 +27,6 @@ import CategoryModel from "../services/models/category.model";
 import ProjectModel from "../services/models/project.model";
 import overviewService from "../services/overview.service";
 import { getTaskStatusDescription, getTaskStatusVariant, TaskStatusEnum } from "../enums/task.status.enum";
-import CommentModel from "../services/models/comment.model";
 import FileModel from "../services/models/file.model";
 import fileExtension from "../extensions/file.extension";
 
@@ -80,6 +79,15 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
 
     const handleFileDelete = (file: FileModel) => {
         file.IsDeleted = !file.IsDeleted;
+    };
+
+    const handleProjectChanged = (e: any) => {
+        const selectedProjectId = e.target.value;
+        const selectedProject = projects?.find((p) => p.Id.toString() === selectedProjectId);
+        formikRef.current?.setFieldValue("ProjectId", selectedProjectId);
+        if (selectedProject) {
+            formikRef.current?.setFieldValue("Column", selectedProject.DefaultColumn);
+        }
     };
 
     const handleSubmit = async (model: TaskState) => {
@@ -139,7 +147,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
                                         <Field name="Title" placeholder="Title" className="form-control" />
                                     </FormGroup>
                                     <FormGroup label="Project" error={touched.ProjectId && (errors.ProjectId ?? state.errors.ProjectId)}>
-                                        <Field as="select" name="ProjectId" className="form-control">
+                                        <Field as="select" name="ProjectId" className="form-control" onChange={handleProjectChanged}>
                                             <option value="">Select Project</option>
                                             {projects?.map((project) => (
                                                 <option key={"task-project" + project.Id} value={project.Id}>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import authHeader from "./../services/auth-header";
 import { testContainer } from "../helpers/test.helper";
+import { TaskColumnEnum } from "../enums/task.column.enum";
 
 const API_URL = "/api/project/";
 
@@ -43,13 +44,14 @@ export default class projectRepository {
         );
     }
 
-    public update(id: number, name: string) {
+    public update(id: number, name: string, defaultColumn: TaskColumnEnum) {
         let action = "update";
         return axios.put(
             `${API_URL}${action}/`,
             {
                 id,
                 name,
+                defaultColumn,
             },
             { headers: this.generateHeaders(action) },
         );

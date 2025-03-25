@@ -10,7 +10,7 @@ public class LogicMappingProfile : Profile {
         CreateMap<TmUserDto, TmUser>().ReverseMap();
         CreateMap<TmRoleDto, TmRole>().ReverseMap();
         CreateMap<CompanyDto, Company>().ReverseMap();
-        CreateMap<ProjectDto, Project>().ReverseMap();
+        CreateMap<ProjectDto, Project>().CreateProjectMappings().ReverseMap().CreateProjectMappings();
         CreateMap<CategoryDto, Category>().ReverseMap();
         CreateMap<EventDto, Event>().CreateEventMappings().ReverseMap().CreateEventMappings();
 
@@ -19,8 +19,8 @@ public class LogicMappingProfile : Profile {
         CreateMap<CommentDto, Comment>().ReverseMap();
         CreateMap<CommentDto, CommentViewDto>();
 
-        CreateMap<CreateProjectDto, Project>();
-        CreateMap<UpdateProjectDto, Project>();
+        CreateMap<CreateProjectDto, Project>().CreateProjectMappings().ReverseMap().CreateProjectMappings();
+        CreateMap<UpdateProjectDto, Project>().CreateProjectMappings().ReverseMap().CreateProjectMappings();
 
         CreateMap<CreateCategoryDto, Category>();
         CreateMap<UpdateCategoryDto, Category>();
@@ -73,5 +73,17 @@ internal static class LogicMappingProfileExtension {
             .ForMember(dest => dest.Column, opt => opt.MapFrom(src => (TaskColumnEnum)src.Column))
             .ForMember(dest => dest.Kind, opt => opt.MapFrom(src => (TaskKindEnum)src.Kind))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => (TaskStatusEnum)src.Status));
+    }
+
+    internal static IMappingExpression<TDto, TEntity> CreateProjectMappings<TDto, TEntity>(this IMappingExpression<TDto, TEntity> expression)
+        where TDto : IEnumProjectDtoMap where TEntity : IEnumProjectMap {
+        return expression
+            .ForMember(dest => dest.DefaultColumn, opt => opt.MapFrom(src => (int)src.DefaultColumn));
+    }
+
+    internal static IMappingExpression<TEntity, TDto> CreateProjectMappings<TDto, TEntity>(this IMappingExpression<TEntity, TDto> expression)
+        where TDto : IEnumProjectDtoMap where TEntity : IEnumProjectMap {
+        return expression
+            .ForMember(dest => dest.DefaultColumn, opt => opt.MapFrom(src => (TaskColumnEnum)src.DefaultColumn));
     }
 }

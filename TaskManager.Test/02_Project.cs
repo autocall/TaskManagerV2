@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using TaskManager.Common.Extensions;
 using TaskManager.Logic.Dtos;
+using TaskManager.Logic.Enums;
 using TaskManager.Server.Models;
 using TaskManager.Test.Models;
 using Xunit.Abstractions;
@@ -95,6 +96,7 @@ public class Project_UnitTest {
                 new StringContent(
                     JsonExtension.Serialize(new CreateProjectViewModel() {
                         Name = "Test Project",
+                        DefaultColumn = TaskColumnEnum.First
                     }),
                     Encoding.UTF8, "application/json")
             );
@@ -114,6 +116,7 @@ public class Project_UnitTest {
                     JsonExtension.Serialize(new UpdateProjectViewModel() {
                         Id = dto.Id,
                         Name = "Test Project Updated",
+                        DefaultColumn = TaskColumnEnum.Second
                     }),
                     Encoding.UTF8, "application/json")
             );

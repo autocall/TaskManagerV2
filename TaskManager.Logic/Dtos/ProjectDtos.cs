@@ -1,15 +1,23 @@
-﻿namespace TaskManager.Logic.Dtos;
+﻿using TaskManager.Logic.Enums;
 
-public class ProjectDto : BaseCompanyDto {
-    public string Name { get; set; }
+namespace TaskManager.Logic.Dtos;
+public interface IEnumProjectDtoMap {
+    public TaskColumnEnum DefaultColumn { get; set; }
 }
 
-public class CreateProjectDto {
+public class ProjectDto : BaseCompanyDto, IEnumProjectDtoMap {
     public string Name { get; set; }
+    public TaskColumnEnum DefaultColumn { get; set; }
 }
 
-public class UpdateProjectDto {
+public class CreateProjectDto : IEnumProjectDtoMap {
+    public string Name { get; set; }
+    public TaskColumnEnum DefaultColumn { get; set; }
+}
+
+public class UpdateProjectDto : IEnumProjectDtoMap {
     public int Id { get; set; }
 
     public string Name { get; set; }
+    public TaskColumnEnum DefaultColumn { get; set; }
 }

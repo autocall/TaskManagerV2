@@ -7,7 +7,7 @@ namespace TaskManager.Server.Models;
 public class CreateCommentViewModel {
     [NotDefault]
     public DateOnly Date { get; set; }
-    [NotDefault]
+    //[NotDefault] maybe by default
     public decimal WorkHours { get; set; }
     [Required]
     public string Text { get; set; }
@@ -23,7 +23,7 @@ public class UpdateCommentViewModel {
 
     [NotDefault]
     public DateOnly Date { get; set; }
-    [NotDefault]
+    //[NotDefault] maybe by default
     public decimal WorkHours { get; set; }
     [Required]
     public string Text { get; set; }

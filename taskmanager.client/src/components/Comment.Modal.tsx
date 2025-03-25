@@ -62,6 +62,8 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
 
     const handleFileAttach = (model: CommentState) => {
         const files = fileRef.current?.files;
+        console.log('files', files);
+        console.log('model.Files', model.Files);
         model.Files?.push(...Array.from(files ?? []).map((f) => FileModel.createFromBlob(f)));
         formikRef.current?.setFieldValue("Files", model.Files);
     };

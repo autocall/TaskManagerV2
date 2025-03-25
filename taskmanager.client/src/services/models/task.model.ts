@@ -5,7 +5,7 @@ import BaseModel from "./base.model";
 import CommentModel from "./comment.model";
 import FileModel from "./file.model";
 import ProjectModel from "./project.model";
-    
+
 export default class TaskModel extends BaseModel implements ITaskData {
     Index: number | null;
     Title: string;
@@ -22,7 +22,7 @@ export default class TaskModel extends BaseModel implements ITaskData {
     Comments: CommentModel[];
 
     Files: FileModel[];
-    
+
     constructor(data?: any, files?: any) {
         super(data);
         if (data) {
@@ -40,6 +40,8 @@ export default class TaskModel extends BaseModel implements ITaskData {
         }
         if (files) {
             this.Files = files.map((e: any) => new FileModel(e));
+        } else {
+            this.Files = [];
         }
     }
 }
@@ -77,7 +79,7 @@ export class TaskData implements ITaskData {
             this.Status = null;
             this.ProjectId = null;
             this.CategoryId = null;
-            this.Files = null;
+            this.Files = [];
         } else {
             this.Index = data.Index;
             this.Title = data.Title;

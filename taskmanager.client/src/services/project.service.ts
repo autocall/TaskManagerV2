@@ -35,9 +35,9 @@ export default class projectService {
             });
     }
 
-    public create(name: string) {
+    public create(name: string, defaultColumn: TaskColumnEnum) {
         return this.rep
-            .create(name)
+            .create(name, defaultColumn)
             .then((response) => {
                 return Response.success<any>(response.data);
             })

@@ -37,6 +37,7 @@ export default class CommentModel extends BaseModel implements ICommentData {
         model.TaskId = task.Id;
         model.Status = Math.max(task.Status, TaskStatusEnum.InProgress);
         model.TaskIndex = task.Index;
+        model.Files = [];
         return model;
     }
 }
@@ -64,7 +65,7 @@ export class CommentData implements ICommentData {
             this.WorkHours = 0;
             this.Text = "";
             //this.Status = skipped;
-            this.Files = null;
+            this.Files = [];
         } else {
             this.TaskId = data.TaskId;
             this.Date = data.Date;

@@ -1,4 +1,4 @@
-import { Badge, Card, ListGroup } from "react-bootstrap";
+import { Badge, Card, ListGroup, Spinner } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import { Link } from "react-router-dom";
 import stringExtension from "../extensions/string.extension";
@@ -14,6 +14,7 @@ import CommentModel from "../services/models/comment.model";
 interface OverviewTaskProps {
     task: TaskModel;
     currentUser: IJwt | null;
+    processing: boolean;
     handleTaskEdit: (model: TaskModel) => void;
     handleTaskDelete: (model: TaskModel) => void;
     handleCommentAdd: (model: TaskModel) => void;
@@ -24,6 +25,7 @@ interface OverviewTaskProps {
 const OverviewTask: React.FC<OverviewTaskProps> = ({
     task,
     currentUser,
+    processing,
     handleTaskEdit,
     handleTaskDelete,
     handleCommentAdd,
@@ -108,6 +110,11 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({
                         />
                     ))}
                 </ListGroup>
+            )}
+            {processing && (
+                <div className="card-dimmer d-flex justify-content-center align-items-center">
+                    <Spinner animation="border" />
+                </div>
             )}
         </Card>
     );

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../states/store";
 import useAsyncEffect from "use-async-effect";
 import { testHelper } from "../helpers/test.helper";
-import { gettingOverviewAction, gotOverviewAction } from "../states/overview.state";
+import { processedOverviewTaskAction, ProcessingOverviewTaskAction, gettingOverviewAction, gotOverviewAction } from "../states/overview.state";
 import overviewService from "../services/overview.service";
 import authService from "../services/auth.service";
 import { useState } from "react";
@@ -93,9 +93,9 @@ const Overview: React.FC = () => {
     const handleCommentDelete = async (model: CommentModel) => {
         if (await confirm("Delete Comment", `Are you sure you want to delete the comment?`)) {
             let service: commentService = new commentService(testHelper.getTestContainer(search));
-            dispatch(deletingTaskAction()); // TODO: set loading
+            dispatch(ProcessingOverviewTaskAction(model.TaskId));
             let response = await service.delete(model.Id);
-            dispatch(deletedTaskAction(response));
+            dispatch(processedOverviewTaskAction(model.TaskId, response));
             if (response.success) {
                 await load();
             } else {
@@ -262,6 +262,7 @@ const Overview: React.FC = () => {
                                                         <OverviewTask
                                                             key={"task" + task.Id}
                                                             task={task}
+                                                            processing={state.processingTaskId == task.Id}
                                                             currentUser={currentUser}
                                                             handleTaskEdit={handleTaskEdit}
                                                             handleTaskDelete={handleTaskDelete}

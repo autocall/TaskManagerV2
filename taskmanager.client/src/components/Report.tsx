@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { AppState } from "../states/store";
 import { testHelper } from "../helpers/test.helper";
+import { getTaskKindColor, getTaskKindDescription } from "../enums/task.kind.enum";
 
 const Report: React.FC = () => {
     const { search } = useLocation();
@@ -98,7 +99,9 @@ const Report: React.FC = () => {
                 <div data-bs-theme="light">
                     <Card>
                         <Card.Body ref={cardBodyRef}>
-                            <h3 style={{ color: "gray" }}>{date && moment(date).format("dddd, MMMM D, YYYY")} - {state.report!.WorkHours}h</h3>
+                            <h3 style={{ color: "gray" }}>
+                                {date && moment(date).format("dddd, MMMM D, YYYY")} - {state.report!.WorkHours}h
+                            </h3>
                             {state.report!.Projects.map((p, i) => (
                                 <div key={i}>
                                     <span style={{ fontSize: "1.6em" }}>{p.Name}</span>
@@ -113,7 +116,18 @@ const Report: React.FC = () => {
                                         {p.Tasks.map((t, j) => (
                                             <div key={j}>
                                                 <div>
+                                                    <span
+                                                        style={{
+                                                            background: getTaskKindColor(t.Kind),
+                                                            color: "white",
+                                                            fontWeight: "bold",
+                                                            fontSize: "0.8em",
+                                                            padding: "0 0.2em"
+                                                        }}>
+                                                        {getTaskKindDescription(t.Kind)}
+                                                    </span>
                                                     <b style={{ fontSize: "1.2em" }}>
+                                                        {" "}
                                                         {t.Title} <b style={{ color: "green" }}>{t.WorkHours}h</b>
                                                     </b>
                                                 </div>

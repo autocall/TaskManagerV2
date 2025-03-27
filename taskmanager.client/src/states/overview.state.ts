@@ -3,13 +3,15 @@ import CategoryModel from "../services/models/category.model";
 
 export interface OverviewState {
     readonly loading: boolean;
-    readonly categories: CategoryModel[] | null;
+    readonly categories: CategoryModel[];
+    readonly processingTaskId: number | null;
     readonly error: string | null;
 }
 
 const initialState: OverviewState = {
     loading: false,
     categories: [],
+    processingTaskId: null,
     error: null,
 };
 
@@ -27,9 +29,23 @@ export const gotOverviewAction = (response: Response<CategoryModel[]>) =>
         error: response.error ?? initialState.error,
     }) as const;
 
+export const SUBMITTINGOVERVIEWTASK = "ProcessingOverviewComment";
+export const ProcessingOverviewTaskAction = (taskId: number) => ({
+    type: SUBMITTINGOVERVIEWTASK,
+    processingTaskId: taskId,
+});
+
+export const PROCESSEDOVERVIEWTASK = "ProcessedOverviewComment";
+export const processedOverviewTaskAction = (taskId: number, response: Response<any>) => ({
+    type: PROCESSEDOVERVIEWTASK,
+    processingTaskId: null,
+});
+
 type OverviewActions =
     | ReturnType<typeof gettingOverviewAction>
-    | ReturnType<typeof gotOverviewAction>;
+    | ReturnType<typeof gotOverviewAction>
+    | ReturnType<typeof ProcessingOverviewTaskAction>
+    | ReturnType<typeof processedOverviewTaskAction>;
 
 export const overviewReducer: any = (state: OverviewState = initialState, action: OverviewActions) => {
     switch (action.type) {
@@ -44,6 +60,16 @@ export const overviewReducer: any = (state: OverviewState = initialState, action
                 ...state,
                 ...action,
                 loading: false,
+            };
+        case SUBMITTINGOVERVIEWTASK:
+            return {
+                ...state,
+                ...action,
+            };
+        case PROCESSEDOVERVIEWTASK:
+            return {
+                ...state,
+                ...action,
             };
         default:
             return state;

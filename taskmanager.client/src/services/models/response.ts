@@ -18,7 +18,7 @@ export default class Response<T> {
     static fail<T>(exception: any): Response<T> {
         const response = new Response<T>();
         response.success = false;
-        if (exception?.response?.data) {
+            if (exception?.response?.data) {
             response.status = exception.response.status;
             const data = exception?.response?.data;
             if (data.errors) {
@@ -35,7 +35,7 @@ export default class Response<T> {
             if (data.error) {
                 response.error = data.error;
             } else if (data.title) {
-                response.error = data.title;
+                response.error = `(${data.status}) ${data.title}`;
             } else {
                 response.error = "An error occurred";
             }

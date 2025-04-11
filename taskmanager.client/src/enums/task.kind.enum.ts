@@ -27,7 +27,7 @@ const TaskKindVariants: Record<TaskKindEnum, string> = {
 
 const TaskKindColors: Record<TaskKindEnum, string> = {
     [TaskKindEnum.Task]: "blue",
-    [TaskKindEnum.Fix]: "yellow",
+    [TaskKindEnum.Fix]: "orange",
     [TaskKindEnum.Bug]: "red",
     [TaskKindEnum.Feature]: "blue",
     [TaskKindEnum.Improvement]: "green",

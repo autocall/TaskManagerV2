@@ -31,7 +31,7 @@ const Report: React.FC = () => {
 
     useAsyncEffect(async () => {
         // sets default date to today
-        if (!date) setDate(stringExtension.dateToISO(moment().tz(currentUser!.TimeZoneId)));
+        if (!date && currentUser) setDate(stringExtension.dateToISO(moment().tz(currentUser!.TimeZoneId)));
     }, [currentUser]);
 
     useAsyncEffect(async () => {
@@ -74,13 +74,16 @@ const Report: React.FC = () => {
                                 className={!date ? "text-muted" : ""}
                                 type="Date"
                                 value={date}
-                                onChange={async (e) => {
+                                onChange={(e) => {
                                     setDate(e.target.value);
                                 }}
                             />
                         </Col>
                         <Col xs="auto" className="mb-2">
-                            <Button variant="success" onClick={copyCardBodyToClipboard}>
+                            <Button variant="primary" className="me-3" onClick={() => date && load(date)}>
+                                Refresh Report
+                            </Button>
+                            <Button variant="success" className="me-3" onClick={copyCardBodyToClipboard}>
                                 Copy Report
                             </Button>
                         </Col>
@@ -114,7 +117,7 @@ const Report: React.FC = () => {
                                     />
                                     <ul>
                                         {p.Tasks.map((t, j) => (
-                                            <div key={j}>
+                                            <div key={j} style={{ whiteSpace: "pre-line" }}>
                                                 <div>
                                                     <span
                                                         style={{
@@ -122,7 +125,7 @@ const Report: React.FC = () => {
                                                             color: "white",
                                                             fontWeight: "bold",
                                                             fontSize: "0.8em",
-                                                            padding: "0 0.2em"
+                                                            padding: "0 0.2em",
                                                         }}>
                                                         {getTaskKindDescription(t.Kind)}
                                                     </span>

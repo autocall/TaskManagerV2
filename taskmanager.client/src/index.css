@@ -148,6 +148,7 @@ div.invalid div.error {
 
 .column-card {
     margin-bottom: 1em;
+    white-space: pre-line;
 }
 .column-card:last-child {
     margin-bottom: 0;

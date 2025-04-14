@@ -110,7 +110,7 @@ export default class stringExtension {
             return stringExtension.dateToShort_moment(value);
         }
         if (diff <= 24 * 60 * 60) {
-            return "today";
+            return "Today";
         }
         diff = now.diff(value, "days");
         if (diff < 2) {

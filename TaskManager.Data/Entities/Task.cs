@@ -43,8 +43,6 @@ public interface ITaskUpdateMap : IBaseUpdateMap {
     public byte Column { get; set; }
     public byte Kind { get; set; }
     public byte Status { get; set; }
-    public decimal WorkHours { get; set; }
-    public int CommentsCount { get; set; }
 }
 
 public interface ITaskUpdateStatusMap : IBaseUpdateMap {

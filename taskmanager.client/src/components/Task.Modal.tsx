@@ -104,6 +104,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
             let response = await service.create(new TaskData(model));
             dispatch(submittedTaskAction(response));
             if (response.success) {
+                localStorage.setItem("last-project-id", model.ProjectId?.toString() ?? "");
                 handleClose(true);
             }
         }

@@ -56,7 +56,7 @@ public class TaskService : BaseService {
         foreach (var column in columns) {
             foreach (var categoryId in categoryIds) {
                 var order = 0;
-                foreach (var dto in dtos.Where(x => x.Column == column && x.CategoryId == categoryId).OrderBy(x => x.Order)) {
+                foreach (var dto in dtos.Where(x => x.Column == column && x.CategoryId == categoryId).OrderBy(x => x.Order).ThenBy(x => x.Index)) {
                     if (order >= dto.Order) {
                         _l.i($"FixOrder[{dto.Index}]: {dto.Order} -> {order + 1}");
                         dto.Order = (short)(order + 1);

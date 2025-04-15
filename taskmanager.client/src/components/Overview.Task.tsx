@@ -54,7 +54,7 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({
                         <Badge pill bg="primary" className="ms-1">
                             {task.WorkHours}h
                         </Badge>
-                    )} {task.Order}
+                    )}
                 </div>
             </Card.Header>
             {/* Body */}

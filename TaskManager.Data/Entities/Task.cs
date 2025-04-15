@@ -2,7 +2,7 @@
 using TaskManager.Data.Context;
 
 namespace TaskManager.Data.Entities;
-public class Task1 : BaseCompanyEntity, ITaskUpdateMap, ITaskUpdateStatusMap, ITaskUpdateStatisticMap, IEnumTaskMap {
+public class Task1 : BaseCompanyEntity, ITaskUpdateMap, ITaskUpdateStatusMap, ITaskUpdateStatisticMap, ITaskUpdateOrderMap, IEnumTaskMap {
     public int Index { get; set; }
     /// <summary>
     ///     Name </summary>
@@ -19,6 +19,7 @@ public class Task1 : BaseCompanyEntity, ITaskUpdateMap, ITaskUpdateStatusMap, IT
     public byte Column { get; set; }
     public byte Kind { get; set; }
     public byte Status { get; set; }
+    public short Order { get; set; }
     [Column(TypeName = "decimal(9,1)")]
     public decimal WorkHours { get; set; }
     public int CommentsCount { get; set; }
@@ -49,6 +50,10 @@ public interface ITaskUpdateStatusMap : IBaseUpdateMap {
     public byte Status { get; set; }
     public decimal WorkHours { get; set; }
     public int CommentsCount { get; set; }
+}
+
+public interface ITaskUpdateOrderMap : IBaseUpdateMap {
+    public short Order { get; set; }
 }
 
 public interface ITaskUpdateStatisticMap : IBaseUpdateMap {

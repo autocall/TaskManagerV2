@@ -17,6 +17,8 @@ interface OverviewTaskProps {
     processing: boolean;
     handleTaskEdit: (model: TaskModel) => void;
     handleTaskDelete: (model: TaskModel) => void;
+    handleTaskUp: (model: TaskModel) => void;
+    handleTaskDown: (model: TaskModel) => void;
     handleCommentAdd: (model: TaskModel) => void;
     handleCommentEdit: (model: CommentModel) => void;
     handleCommentDelete: (model: CommentModel) => void;
@@ -28,6 +30,8 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({
     processing,
     handleTaskEdit,
     handleTaskDelete,
+    handleTaskUp,
+    handleTaskDown,
     handleCommentAdd,
     handleCommentEdit,
     handleCommentDelete,
@@ -50,7 +54,7 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({
                         <Badge pill bg="primary" className="ms-1">
                             {task.WorkHours}h
                         </Badge>
-                    )}
+                    )} {task.Order}
                 </div>
             </Card.Header>
             {/* Body */}
@@ -72,7 +76,7 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({
                                 title={file.FileName}
                             />
                         ))}
-                        <span className="extra-text" style={{ wordBreak: "normal" }}>
+                        <span className="extra-text" style={{ wordBreak: "normal" }} title="Created Date">
                             {stringExtension.dateToLong(task.CreatedDateTime, currentUser!.TimeZoneId)}
                         </span>
                     </div>
@@ -83,6 +87,14 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({
                         </div>
                     ) : null}
                     <div className="extra-link" style={{ whiteSpace: "normal", wordBreak: "normal" }}>
+                        <Link to="#" onClick={() => handleTaskUp(task)}>
+                            &uarr;
+                        </Link>{" "}
+                        {" "}
+                        <Link to="#" onClick={() => handleTaskDown(task)}>
+                            &darr;
+                        </Link>{" "}
+                        |{" "}
                         <Link to="#" onClick={() => handleCommentAdd(task)}>
                             Comment
                         </Link>{" "}

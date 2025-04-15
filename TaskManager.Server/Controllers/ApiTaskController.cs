@@ -75,6 +75,20 @@ public class ApiTaskController : BaseFileController {
         return JsonSuccess(outputDto);
     }
 
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult> Up(int id) {
+        var result = await this.Service.UpAsync(id, base.GetUserId(), base.GetCompanyId());
+
+        return JsonSuccess(result);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult> Down(int id) {
+        var result = await this.Service.DownAsync(id, base.GetUserId(), base.GetCompanyId());
+
+        return JsonSuccess(result);
+    }
+
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id) {
         var result = await this.Service.DeletePermanentAsync(id, base.GetUserId(), base.GetCompanyId());

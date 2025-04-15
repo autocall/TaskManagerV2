@@ -103,6 +103,16 @@ export default class stringExtension {
         return stringExtension.dateToFromNowShort_moment(moment.tz(value, timeZoneId));
     }
 
+    public static commentDateToLong(date: string, timeZoneId: string):string {
+        const now = moment.tz(timeZoneId).startOf("day");
+        const input = moment(date).startOf("day");
+        const diff = now.diff(input, "days");
+        if (diff === 0) {
+            return "Today";
+        }
+        return input.format("ddd, D MMM YYYY");
+    }
+
     private static dateToFromNowShort_moment(value: moment.Moment): string {
         let now = moment();
         let diff = now.diff(value, "seconds");

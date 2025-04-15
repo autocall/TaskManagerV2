@@ -24,7 +24,7 @@ public class OverviewService : BaseService {
         var projects = await projectService.GetAllAsync(companyId);
         var tasks = await taskService.GetAllAsync(filter, companyId);
         var tasksQuery = await taskService.GetAllQueryAsync(filter, companyId);
-        var comments = await commentService.GetAllAsync(tasksQuery.Select(x => x.Id), companyId);
+        var comments = await commentService.GetAllAsync(tasksQuery.Select(x => x.Id), filter, companyId);
         var userIds = tasks.SelectMany(x => new int[] { x.CreatedById, x.ModifiedById })
             .Union(comments.SelectMany(x => new int[] { x.CreatedById, x.ModifiedById })).Distinct().ToList();
         var users = await userService.GetByIdsAsync(userIds);

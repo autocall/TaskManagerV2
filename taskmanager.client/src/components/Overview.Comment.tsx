@@ -6,6 +6,7 @@ import SeeMoreText from "./shared/seemore-text";
 import fileExtension from "../extensions/file.extension";
 import CommentModel from "../services/models/comment.model";
 import IJwt from "../types/jwt.type";
+import moment from "moment";
 
 interface OverviewCommentProps {
     comment: CommentModel;
@@ -22,7 +23,7 @@ const OverviewComment: React.FC<OverviewCommentProps> = ({ comment, currentUser,
             <div className={flex}>
                 <span className="text-muted">
                     {comment.CreatedUser && comment.CreatedById != currentUser!.UserId && <span>{comment.CreatedUser.UserName} ● </span>}
-                    {stringExtension.dateToFromNowShort(comment.Date, currentUser!.TimeZoneId)}
+                    <span title="Reported Date">{stringExtension.commentDateToLong(comment.Date, currentUser!.TimeZoneId)}</span>
                 </span>
                 {comment.WorkHours > 0 && (
                     <div>
@@ -46,7 +47,7 @@ const OverviewComment: React.FC<OverviewCommentProps> = ({ comment, currentUser,
                             title={file.FileName}
                         />
                     ))}
-                    <span className="extra-text">{stringExtension.dateToLong(comment.CreatedDateTime, currentUser!.TimeZoneId)}</span>
+                    <span className="extra-text" title="Created Date">{stringExtension.dateToLong(comment.CreatedDateTime, currentUser!.TimeZoneId)}</span>
                 </div>
                 <div className="extra-link">
                     <Link to="#" onClick={() => handleEdit(comment)}>

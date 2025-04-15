@@ -83,4 +83,14 @@ export default class taskRepository {
         let action = "delete";
         return axios.delete(`${API_URL}${action}/${id}`, { headers: this.generateHeaders(action) });
     }
+
+    public up(id: number) {
+        let action = "up";
+        return axios.put(`${API_URL}${action}/${id}`, null, { headers: this.generateHeaders(action) });
+    }
+
+    public down(id: number) {
+        let action = "down";
+        return axios.put(`${API_URL}${action}/${id}`, null, { headers: this.generateHeaders(action) });
+    }
 }

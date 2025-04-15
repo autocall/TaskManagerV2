@@ -67,4 +67,26 @@ export default class taskService {
                 return Response.fail<any>(exception);
             });
     }
+    
+    public up(id: number) {
+        return this.rep
+            .up(id)
+            .then((response) => {
+                return Response.success<any>(response.data);
+            })
+            .catch((exception) => {
+                return Response.fail<any>(exception);
+            });
+    }
+    
+    public down(id: number) {
+        return this.rep
+            .down(id)
+            .then((response) => {
+                return Response.success<any>(response.data);
+            })
+            .catch((exception) => {
+                return Response.fail<any>(exception);
+            });
+    }
 }

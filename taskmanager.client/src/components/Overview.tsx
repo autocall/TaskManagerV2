@@ -83,6 +83,24 @@ const Overview: React.FC = () => {
             }
         }
     };
+    const handleTaskUp = async (model: TaskModel) => {
+        let service: taskService = new taskService(testHelper.getTestContainer(search));
+        dispatch(deletingTaskAction()); // TODO: set loading
+        let response = await service.up(model.Id);
+        dispatch(deletedTaskAction(response));
+        if (response.success) {
+            await load();
+        }
+    }
+    const handleTaskDown = async (model: TaskModel) => {
+        let service: taskService = new taskService(testHelper.getTestContainer(search));
+        dispatch(deletingTaskAction()); // TODO: set loading
+        let response = await service.down(model.Id);
+        dispatch(deletedTaskAction(response));
+        if (response.success) {
+            await load();
+        }
+    }
 
     const handleCommentAdd = (model: TaskModel) => {
         let comment = CommentModel.create(currentUser!.TimeZoneId, model);
@@ -266,6 +284,8 @@ const Overview: React.FC = () => {
                                                             currentUser={currentUser}
                                                             handleTaskEdit={handleTaskEdit}
                                                             handleTaskDelete={handleTaskDelete}
+                                                            handleTaskUp={handleTaskUp}
+                                                            handleTaskDown={handleTaskDown}
                                                             handleCommentAdd={handleCommentAdd}
                                                             handleCommentEdit={handleCommentEdit}
                                                             handleCommentDelete={handleCommentDelete}

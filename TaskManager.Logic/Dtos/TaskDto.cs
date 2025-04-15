@@ -17,6 +17,7 @@ public class TaskDto : BaseCompanyDto, IEnumTaskDtoMap {
     public TaskColumnEnum Column { get; set; }
     public TaskKindEnum Kind { get; set; }
     public TaskStatusEnum Status { get; set; }
+    public short Order { get; set; }
     public decimal WorkHours { get; set; }
     public int CommentsCount { get; set; }
 }

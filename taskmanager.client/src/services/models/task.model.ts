@@ -15,6 +15,7 @@ export default class TaskModel extends BaseModel implements ITaskData {
     Column: TaskColumnEnum;
     Kind: TaskKindEnum | null;
     Status: TaskStatusEnum;
+    Order: number;
     WorkHours: number;
     CommentsCount: number;
 
@@ -35,6 +36,7 @@ export default class TaskModel extends BaseModel implements ITaskData {
             this.Column = data.Column;
             this.Kind = data.Kind;
             this.Status = data.Status;
+            this.Order = data.Order;
             this.WorkHours = data.WorkHours;
             this.CommentsCount = data.CommentsCount;
         }

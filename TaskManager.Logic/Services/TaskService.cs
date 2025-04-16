@@ -43,32 +43,7 @@ public class TaskService : BaseService {
         var query = await this.GetAllQueryAsync(filter, companyId);
         var models = await query.ToListAsync();
         var dtos = Mapper.Map<List<TaskDto>>(models.OrderByDescending(x => x.Order).ThenByDescending(x => x.Index));
-        await this.FixOrdersAsync(dtos, companyId);
         return dtos;
-    }
-
-    /// <summary>
-    ///     If the order in the column and category is the same </summary>
-    private async Task<int> FixOrdersAsync(List<TaskDto> dtos, int companyId) {
-        int modifiedCount = 0;
-        var categoryIds = dtos.Select(x => x.CategoryId).Distinct().ToList();
-        var columns = dtos.Select(x => x.Column).Distinct().ToList();
-        foreach (var column in columns) {
-            foreach (var categoryId in categoryIds) {
-                var order = 0;
-                foreach (var dto in dtos.Where(x => x.Column == column && x.CategoryId == categoryId).OrderBy(x => x.Order).ThenBy(x => x.Index)) {
-                    if (order >= dto.Order) {
-                        _l.i($"FixOrder[{dto.Index}]: {dto.Order} -> {order + 1}");
-                        dto.Order = (short)(order + 1);
-                        var model = Mapper.Map<Task1>(dto);
-                        await Rep(companyId).UpdateAsync<ITaskUpdateOrderMap>(model, TmUser.SystemUserId);
-                        modifiedCount++;
-                    }
-                    order = dto.Order;
-                }
-            }
-        }
-        return modifiedCount;
     }
 
     public async Task<TaskDto> GetAsync(int id, int companyId) {
@@ -128,7 +103,7 @@ public class TaskService : BaseService {
         await this.Rep(companyId).UpdateAsync<ITaskUpdateStatisticMap>(task, userId);
     }
 
-    private async Task<Dictionary<int, short>> MoveAsync(int taskId, int userId, int companyId, bool moveUp) {
+    private async Task<short?> MoveAsync(int taskId, int userId, int companyId, bool moveUp) {
         // Loads the task to be moved
         var currentModel = await this.Rep(companyId).GetAll(false).Where(e => e.Id == taskId)
             .Select(x => new Task1 {
@@ -149,57 +124,27 @@ public class TaskService : BaseService {
         var query = this.Rep(companyId).GetAll(false)
             .Where(x => x.CategoryId == currentModel.CategoryId && x.Column == currentModel.Column);
 
-        // Finds the next task to swap with, based on direction
-        IQueryable<short> orderQuery = moveUp ?
-            query.Where(x => x.Order > currentOrder)
-                 .OrderBy(x => x.Order)
-                 .Select(x => x.Order) :
-            query.Where(x => x.Order < currentOrder)
-                 .OrderByDescending(x => x.Order)
-                 .Select(x => x.Order);
+        short? targetOrder = moveUp ?
+            await query.MaxAsync(x => (short?)x.Order) :
+            await query.MinAsync(x => (short?)x.Order);
 
-        var targetOrder = await orderQuery.DefaultIfEmpty(short.MinValue).FirstOrDefaultAsync();
-        var targetModels = await query.Where(x => x.Order == targetOrder)
-            .Select(x => new Task1 {
-                Id = x.Id
-            })
-            .ToListAsync();
-
-        if (!targetModels.Any()) {
+        if (targetOrder == null) {
             return null;
         }
 
-        // Selects minimal values
-        if (moveUp) {
-            currentOrder = Math.Min(currentOrder, targetOrder);
-            targetOrder = (short)(currentOrder + 1);
-        } else {
-            targetOrder = Math.Min(currentOrder, targetOrder);
-            currentOrder = (short)(targetOrder + 1);
-        }
-
-        // Updates target tasks
-        foreach (var targetModel in targetModels) {
-            targetModel.Order = currentOrder;
-            await Rep(companyId).UpdateAsync<ITaskUpdateOrderMap>(targetModel, userId);
-        }
-
         // Updates the current task
-        currentModel.Order = targetOrder;
+        currentModel.Order = (short)(moveUp ? targetOrder + 1 : targetOrder - 1);
         await Rep(companyId).UpdateAsync<ITaskUpdateOrderMap>(currentModel, userId);
 
-        // Returns Id -> Order
-        var result = targetModels.ToDictionary(x => x.Id, x => x.Order);
-        result[currentModel.Id] = currentModel.Order;
-
-        return result;
+        // Returns Order
+        return currentModel.Order;
     }
 
-    public async Task<Dictionary<int, short>> UpAsync(int taskId, int userId, int companyId) {
+    public async Task<short?> UpAsync(int taskId, int userId, int companyId) {
         return await MoveAsync(taskId, userId, companyId, moveUp: true);
     }
 
-    public async Task<Dictionary<int, short>> DownAsync(int taskId, int userId, int companyId) {
+    public async Task<short?> DownAsync(int taskId, int userId, int companyId) {
         return await MoveAsync(taskId, userId, companyId, moveUp: false);
     }
 

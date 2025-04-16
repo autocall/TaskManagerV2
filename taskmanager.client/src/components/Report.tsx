@@ -99,7 +99,7 @@ const Report: React.FC = () => {
                     </Col>
                 </Row>
             ) : (
-                <div data-bs-theme="light">
+                <div data-bs-theme="light" className="mb-2">
                     <Card>
                         <Card.Body ref={cardBodyRef}>
                             <h3 style={{ color: "gray" }}>

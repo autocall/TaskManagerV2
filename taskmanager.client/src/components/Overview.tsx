@@ -31,6 +31,7 @@ import CommentModel from "../services/models/comment.model";
 import CommentModal from "./Comment.Modal";
 import commentService from "../services/comment.service";
 import CategoryModel from "../services/models/category.model";
+import OverviewStatistic from "./Overview.Statistic";
 
 const Overview: React.FC = () => {
     const { search } = useLocation();
@@ -199,6 +200,7 @@ const Overview: React.FC = () => {
             <CommentModal modalData={modalCommentData} onClose={handleCommentClose} />
             <Col lg="auto" className="d-none d-lg-block" style={{ width: "280px" }}>
                 <Calendar />
+                <OverviewStatistic categories={state.categories} />
             </Col>
             {/* Col(scroll-content) - moves toolbar to scroll-container */}
             {/* Col(main-section) + div(scroll-content) - fixes toolbar */}

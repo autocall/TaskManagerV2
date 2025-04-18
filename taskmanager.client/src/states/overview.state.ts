@@ -29,23 +29,34 @@ export const gotOverviewAction = (response: Response<CategoryModel[]>) =>
         error: response.error ?? initialState.error,
     }) as const;
 
-export const SUBMITTINGOVERVIEWTASK = "ProcessingOverviewComment";
-export const ProcessingOverviewTaskAction = (taskId: number) => ({
-    type: SUBMITTINGOVERVIEWTASK,
-    processingTaskId: taskId,
-});
+export const SUBMITTINGOVERVIEWTASK = "ProcessingOverviewTask";
+export const processingOverviewTaskAction = (taskId: number) =>
+    ({
+        type: SUBMITTINGOVERVIEWTASK,
+        processingTaskId: taskId,
+    }) as const;
 
-export const PROCESSEDOVERVIEWTASK = "ProcessedOverviewComment";
-export const processedOverviewTaskAction = (taskId: number, response: Response<any>) => ({
-    type: PROCESSEDOVERVIEWTASK,
-    processingTaskId: null,
-});
+export const PROCESSEDOVERVIEWTASK = "ProcessedOverviewTask";
+export const processedOverviewTaskAction = (taskId: number, response: Response<any>) =>
+    ({
+        type: PROCESSEDOVERVIEWTASK,
+        processingTaskId: null,
+        error: response.error ?? initialState.error,
+    }) as const;
+
+export const RELOADOVERVIEWCATEGORIES = "ReloadOverviewCategories";
+export const reloadOverviewCategoriesAction = (categories: CategoryModel[]) =>
+    ({
+        type: RELOADOVERVIEWCATEGORIES,
+        categories: categories,
+    }) as const;
 
 type OverviewActions =
     | ReturnType<typeof gettingOverviewAction>
     | ReturnType<typeof gotOverviewAction>
-    | ReturnType<typeof ProcessingOverviewTaskAction>
-    | ReturnType<typeof processedOverviewTaskAction>;
+    | ReturnType<typeof processingOverviewTaskAction>
+    | ReturnType<typeof processedOverviewTaskAction>
+    | ReturnType<typeof reloadOverviewCategoriesAction>;
 
 export const overviewReducer: any = (state: OverviewState = initialState, action: OverviewActions) => {
     switch (action.type) {
@@ -67,6 +78,11 @@ export const overviewReducer: any = (state: OverviewState = initialState, action
                 ...action,
             };
         case PROCESSEDOVERVIEWTASK:
+            return {
+                ...state,
+                ...action,
+            };
+        case RELOADOVERVIEWCATEGORIES:
             return {
                 ...state,
                 ...action,

@@ -7,7 +7,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../states/store";
 import useAsyncEffect from "use-async-effect";
 import { testHelper } from "../helpers/test.helper";
-import { processedOverviewTaskAction, ProcessingOverviewTaskAction, gettingOverviewAction, gotOverviewAction } from "../states/overview.state";
+import {
+    processedOverviewTaskAction,
+    processingOverviewTaskAction,
+    gettingOverviewAction,
+    gotOverviewAction,
+    reloadOverviewCategoriesAction,
+} from "../states/overview.state";
 import overviewService from "../services/overview.service";
 import authService from "../services/auth.service";
 import { useState } from "react";
@@ -17,7 +23,6 @@ import TaskModal from "./Task.Modal";
 import { useConfirm } from "./shared/confirm";
 import TaskModel from "../services/models/task.model";
 import taskService from "../services/task.service";
-import { deletedTaskAction, deletingTaskAction } from "../states/task.state";
 import { TaskColumnEnum } from "../enums/task.column.enum";
 import { getTaskStatusDescription, TaskStatusEnum } from "../enums/task.status.enum";
 import { getOverviewTaskKinds, getTaskKindDescription, getTaskKindVariant, TaskKindEnum } from "../enums/task.kind.enum";
@@ -25,12 +30,11 @@ import ProjectModel from "../services/models/project.model";
 import CommentModel from "../services/models/comment.model";
 import CommentModal from "./Comment.Modal";
 import commentService from "../services/comment.service";
-import { useToast } from "./shared/toast-manager";
+import CategoryModel from "../services/models/category.model";
 
 const Overview: React.FC = () => {
     const { search } = useLocation();
     let dispatch = useDispatch();
-    const { toast } = useToast();
     let state = useSelector((s: AppState) => s.overviewState);
     const [currentUser, setCurrentUser] = useState<IJwt | null>(null);
     const [modalTaskData, setModalTaskData] = useState<TaskModel | null>(null);
@@ -75,32 +79,35 @@ const Overview: React.FC = () => {
     const handleTaskDelete = async (model: TaskModel) => {
         if (await confirm("Delete Task", `Are you sure you want to delete the task '${model.Index}'?`)) {
             let service: taskService = new taskService(testHelper.getTestContainer(search));
-            dispatch(deletingTaskAction()); // TODO: set loading
+            dispatch(processingOverviewTaskAction(model.Id));
             let response = await service.delete(model.Id);
-            dispatch(deletedTaskAction(response));
+            dispatch(processedOverviewTaskAction(model.Id, response));
             if (response.success) {
-                await load();
+                let categories = deleteTaskById(model.Id);
+                dispatch(reloadOverviewCategoriesAction(categories));
             }
         }
     };
     const handleTaskUp = async (model: TaskModel) => {
         let service: taskService = new taskService(testHelper.getTestContainer(search));
-        dispatch(deletingTaskAction()); // TODO: set loading
+        dispatch(processingOverviewTaskAction(model.Id));
         let response = await service.up(model.Id);
-        dispatch(deletedTaskAction(response));
+        dispatch(processedOverviewTaskAction(model.Id, response));
         if (response.success) {
-            await load();
+            let categories = reorderTaskById(model.Id, response.data);
+            dispatch(reloadOverviewCategoriesAction(categories));
         }
-    }
+    };
     const handleTaskDown = async (model: TaskModel) => {
         let service: taskService = new taskService(testHelper.getTestContainer(search));
-        dispatch(deletingTaskAction()); // TODO: set loading
+        dispatch(processingOverviewTaskAction(model.Id));
         let response = await service.down(model.Id);
-        dispatch(deletedTaskAction(response));
+        dispatch(processedOverviewTaskAction(model.Id, response));
         if (response.success) {
-            await load();
+            let categories = reorderTaskById(model.Id, response.data);
+            dispatch(reloadOverviewCategoriesAction(categories));
         }
-    }
+    };
 
     const handleCommentAdd = (model: TaskModel) => {
         let comment = CommentModel.create(currentUser!.TimeZoneId, model);
@@ -111,15 +118,64 @@ const Overview: React.FC = () => {
     const handleCommentDelete = async (model: CommentModel) => {
         if (await confirm("Delete Comment", `Are you sure you want to delete the comment?`)) {
             let service: commentService = new commentService(testHelper.getTestContainer(search));
-            dispatch(ProcessingOverviewTaskAction(model.TaskId));
+            dispatch(processingOverviewTaskAction(model.TaskId));
             let response = await service.delete(model.Id);
             dispatch(processedOverviewTaskAction(model.TaskId, response));
             if (response.success) {
-                await load();
-            } else {
-                toast({ message: response.error, type: "danger" });
+                let categories = deleteCommentById(model.Id);
+                dispatch(reloadOverviewCategoriesAction(categories));
             }
         }
+    };
+
+    /** gets regenerated categories */
+    const deleteTaskById = (taskId: number): CategoryModel[] => {
+        return state.categories.map((category) => {
+            let taskIndex = category.Tasks.findIndex((task) => task.Id === taskId);
+            if (taskIndex === -1) return category;
+            let newTasks = [...category.Tasks.slice(0, taskIndex), ...category.Tasks.slice(taskIndex + 1)];
+            return {
+                ...category,
+                Tasks: newTasks,
+            };
+        });
+    };
+
+    /** gets regenerated categories */
+    const deleteCommentById = (commentId: number): CategoryModel[] => {
+        return state.categories.map((category) => {
+            let newTasks = category.Tasks.map((task) => {
+                let commentIndex = task.Comments.findIndex((comment) => comment.Id === commentId);
+                if (commentIndex === -1) return task;
+                let newComments = [...task.Comments.slice(0, commentIndex), ...task.Comments.slice(commentIndex + 1)];
+                return {
+                    ...task,
+                    Comments: newComments,
+                };
+            });
+            return {
+                ...category,
+                Tasks: newTasks,
+            };
+        });
+    };
+
+    /** gets regenerated categories */
+    const reorderTaskById = (taskId: number, newOrder: number): CategoryModel[] => {
+        return state.categories.map((category) => {
+            let taskIndex = category.Tasks.findIndex((t) => t.Id === taskId);
+            if (taskIndex === -1) return category;
+            let updatedTasks = [...category.Tasks];
+            updatedTasks[taskIndex] = {
+                ...updatedTasks[taskIndex],
+                Order: newOrder,
+            };
+            updatedTasks.sort((a, b) => b.Order - a.Order);
+            return {
+                ...category,
+                Tasks: updatedTasks,
+            };
+        });
     };
 
     const handleTaskClose = async (reload: boolean) => {

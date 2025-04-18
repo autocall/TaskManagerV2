@@ -39,7 +39,7 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({
     const flex: string = "d-flex justify-content-between align-items-start";
 
     return (
-        <Card key={"task" + task.Id} className="column-card" border={getTaskKindVariant(task.Kind)}>
+        <Card key={"task" + task.Id} className="column-card" border={getTaskKindVariant(task.Kind)} style={{ position: "relative" }}>
             {/* Header */}
             <Card.Header className={flex + " " + getTaskKindVariant(task.Kind)}>
                 <div className="extra-text">
@@ -90,19 +90,18 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({
                         <Link to="#" onClick={() => handleTaskUp(task)}>
                             &uarr;
                         </Link>{" "}
-                        {" "}
                         <Link to="#" onClick={() => handleTaskDown(task)}>
                             &darr;
-                        </Link>{" "}
-                        |{" "}
+                        </Link>
+                        {" | "}
                         <Link to="#" onClick={() => handleCommentAdd(task)}>
                             Comment
-                        </Link>{" "}
-                        |{" "}
+                        </Link>
+                        {" | "}
                         <Link to="#" onClick={() => handleTaskEdit(task)}>
                             Edit
-                        </Link>{" "}
-                        |{" "}
+                        </Link>
+                        {" | "}
                         <Link to="#" onClick={() => handleTaskDelete(task)}>
                             Delete
                         </Link>
@@ -124,8 +123,8 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({
                 </ListGroup>
             )}
             {processing && (
-                <div className="card-dimmer d-flex justify-content-center align-items-center">
-                    <Spinner animation="border" />
+                <div className="loading-overlay">
+                    <Spinner animation="border" variant="primary" />
                 </div>
             )}
         </Card>

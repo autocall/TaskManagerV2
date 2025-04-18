@@ -23,7 +23,7 @@ public class TaskService : BaseService {
         }
         if (filter.Status.HasValue) {
             query = query.Where(x => x.Status == (byte)filter.Status.Value);
-        } else {
+        } else if (filter.Date.HasValue == false) {
             query = query.Where(x => x.Status != (byte)TaskStatusEnum.Canceled && x.Status != (byte)TaskStatusEnum.Closed);
         }
         if (filter.ProjectId.HasValue) {

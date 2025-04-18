@@ -7,6 +7,7 @@ import TaskModel, { TaskData, ITaskData } from "../services/models/task.model";
 
 export interface TaskState extends ITaskData {
     readonly submitting: boolean;
+    readonly submittingTaskId: number | null;
     readonly loading: boolean;
     readonly loaded: boolean;
     readonly Index: number | null;
@@ -27,6 +28,7 @@ const initialState: TaskState = {
     loading: true, // prevents reinitialization of fields
     loaded: false,
     submitting: false,
+    submittingTaskId: null,
     ...new TaskData(),
     error: null,
     errors: {},
@@ -80,20 +82,7 @@ export const closeTaskAction = () =>
         error: initialState.error,
         errors: initialState.errors,
     }) as const;
-
-export const DELETINGTASK = "DeletingTask";
-export const deletingTaskAction = () =>
-    ({
-        type: DELETINGTASK,
-    }) as const;
-
-export const DELETEDTASK = "DeletedTask";
-export const deletedTaskAction = (response: Response<any>) =>
-    ({
-        type: DELETEDTASK,
-        error: response.error ?? initialState.error,
-    }) as const;
-
+    
 type TaskActions =
     | ReturnType<typeof gettingTaskAction>
     | ReturnType<typeof gotTaskAction>

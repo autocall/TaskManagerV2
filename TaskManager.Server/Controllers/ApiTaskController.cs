@@ -77,6 +77,9 @@ public class ApiTaskController : BaseFileController {
 
     [HttpPut("{id:int}")]
     public async Task<ActionResult> Up(int id) {
+#if DEBUG
+        await Task.Delay(TimeSpan.FromSeconds(0.5));
+#endif
         var result = await this.Service.UpAsync(id, base.GetUserId(), base.GetCompanyId());
 
         return JsonSuccess(result);
@@ -84,6 +87,9 @@ public class ApiTaskController : BaseFileController {
 
     [HttpPut("{id:int}")]
     public async Task<ActionResult> Down(int id) {
+#if DEBUG
+        await Task.Delay(TimeSpan.FromSeconds(0.5));
+#endif
         var result = await this.Service.DownAsync(id, base.GetUserId(), base.GetCompanyId());
 
         return JsonSuccess(result);

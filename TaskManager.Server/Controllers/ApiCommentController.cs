@@ -77,11 +77,6 @@ public class ApiCommentController : BaseFileController {
 
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id) {
-#if DEBUG
-        await Task.Delay(TimeSpan.FromSeconds(1));
-        return base.NotFound();
-        throw new Exception("123");
-#endif
         var dto = await this.CommentService.GetAsync(id, base.GetCompanyId());
         var result = await this.CommentService.DeletePermanentAsync(dto.Id, base.GetUserId(), base.GetCompanyId());
         await this.TaskService.UpdateStatisticAsync(dto.TaskId, base.GetUserId(), base.GetCompanyId());

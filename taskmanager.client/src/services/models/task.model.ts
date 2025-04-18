@@ -30,7 +30,7 @@ export default class TaskModel extends BaseModel implements ITaskData {
             ? this.Comments
             : (() => {
                   const user = new authService(null).getCurrentUser();
-                  const now = moment.tz(user!.TimeZoneId).format("YYYY-MM-DD");
+                  const now = moment.tz(user!.TimeZoneId).format("YYYY-MM-DD"); // TODO: Move to method parameters
 
                   const todayComments = this.Comments.filter((x) => x.Date == now);
                   if (todayComments.length > 0) return todayComments;

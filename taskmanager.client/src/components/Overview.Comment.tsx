@@ -6,7 +6,6 @@ import SeeMoreText from "./shared/seemore-text";
 import fileExtension from "../extensions/file.extension";
 import CommentModel from "../services/models/comment.model";
 import IJwt from "../types/jwt.type";
-import moment from "moment";
 
 interface OverviewCommentProps {
     comment: CommentModel;

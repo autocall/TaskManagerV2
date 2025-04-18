@@ -1,63 +1,70 @@
-import { Badge, Card, Container } from "react-bootstrap";
+import { Alert, Badge, Card, Container, Spinner } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
-import CategoryModel from "../services/models/category.model";
 import useAsyncEffect from "use-async-effect";
 import { useDispatch } from "react-redux";
-import moment from "moment";
-import authService from "../services/auth.service";
-import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { AppState } from "../states/store";
+import overviewService from "../services/overview.service";
+import { testHelper } from "../helpers/test.helper";
+import { gettingStatisticAction, gotStatisticAction } from "../states/statistic.state";
+import { forwardRef, useImperativeHandle } from "react";
 
-interface OverviewStatisticProps {
-    categories: CategoryModel[];
-}
+export type OverviewStatisticRef = {
+    load: () => void;
+  };
 
-const OverviewStatistic: React.FC<OverviewStatisticProps> = ({ categories }: OverviewStatisticProps) => {
+const OverviewStatistic = forwardRef<OverviewStatisticRef>((props, ref) => {
+    const { search } = useLocation();
     let dispatch = useDispatch();
-    const [todayHours, setTodayHours] = useState<number>(0);
-    const [weekHours, setWeekHours] = useState<number>(0);
+    let state = useSelector((s: AppState) => s.statisticState);
 
-    useAsyncEffect(() => {
-        const user = new authService(null).getCurrentUser();
-        const format = "YYYY-MM-DD";
-        const nowTz = moment.tz( user!.TimeZoneId);
-        const now = nowTz.format(format);
-        const weekStart = nowTz.startOf("week").format(format);
-        const weekEnd = nowTz.endOf("week").format(format);
+    useAsyncEffect(async () => {
+        await load();
+    }, [dispatch]);
 
-        const todayHours = categories
-            .flatMap((category) => category.Tasks)
-            .flatMap((task) => task.Comments)
-            .filter((comment) => comment.Date === now)
-            .reduce((sum, comment) => sum + comment.WorkHours, 0);
-        setTodayHours(todayHours);
+    useImperativeHandle(ref, () => ({
+        load
+    }));
 
-        const weekHours = categories
-            .flatMap((category) => category.Tasks)
-            .flatMap((task) => task.Comments)
-            .filter((comment) => comment.Date >= weekStart && comment.Date <= weekEnd)
-            .reduce((sum, comment) => sum + comment.WorkHours, 0);
-        setWeekHours(weekHours);
-    }, [dispatch, categories]);
+    const load = async () => {
+        let service: overviewService = new overviewService(testHelper.getTestContainer(search));
+        dispatch(gettingStatisticAction());
+        let response = await service.getStatistic();
+        dispatch(gotStatisticAction(response));
+    };
 
     return (
         <Container fluid className="mt-2">
-            <Card key="statistic" className="column-card">
-                <Card.Body>
-                    <div className="d-flex justify-content-between align-items-center mb-2">
-                        <span>Today Hours</span>
-                        <Badge pill bg="primary">
-                            {todayHours}h
-                        </Badge>
-                    </div>
-                    <div className="d-flex justify-content-between align-items-center">
-                        <span>Week Hours</span>
-                        <Badge pill bg="primary">
-                            {weekHours}h
-                        </Badge>
-                    </div>
-                </Card.Body>
-            </Card>
+            {!state.error && (
+                <Card key="statistic" className="column-card" style={{ position: "relative" }}>
+                    <Card.Body>
+                        <div className="d-flex justify-content-between align-items-center mb-2">
+                            <span>Today Hours</span>
+                            {state.statistic && (
+                                <Badge pill bg="primary">
+                                    {state.statistic?.TodayHours}h
+                                </Badge>
+                            )}
+                        </div>
+                        <div className="d-flex justify-content-between align-items-center">
+                            <span>Week Hours</span>
+                            {state.statistic && (
+                                <Badge pill bg="primary">
+                                    {state.statistic?.WeekHours}h
+                                </Badge>
+                            )}
+                        </div>
+                    </Card.Body>
+                    {state.loading && (
+                        <div className="loading-overlay">
+                            <Spinner animation="border" variant="primary" />
+                        </div>
+                    )}
+                </Card>
+            )}
+            {state.error && <Alert variant="danger">{state.error}</Alert>}
         </Container>
     );
-};
+});
 export default OverviewStatistic;

@@ -1,9 +1,11 @@
 import Response from "../services/models/response";
 import CategoryModel from "../services/models/category.model";
+import StatisticModel from "../services/models/statistic.model";
 
 export interface OverviewState {
     readonly loading: boolean;
     readonly categories: CategoryModel[];
+    readonly statistic: StatisticModel | null;
     readonly processingTaskId: number | null;
     readonly error: string | null;
 }
@@ -11,6 +13,7 @@ export interface OverviewState {
 const initialState: OverviewState = {
     loading: false,
     categories: [],
+    statistic: null,
     processingTaskId: null,
     error: null,
 };

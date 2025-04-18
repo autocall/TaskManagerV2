@@ -27,7 +27,7 @@ public class CommentService : BaseService {
 
     public async Task<CommentViewDto> GetWithTaskAsync(int id, int companyId) {
         var commentModel = await Rep(companyId).GetByIdAsync(id);
-        var indexState  = await base.Rep<Task1>(companyId).GetAll(false)
+        var indexState = await base.Rep<Task1>(companyId).GetAll(false)
             .Where(x => x.Id == commentModel.TaskId).Select(x => new { x.Index, x.Status }).FirstAsync();
         var commentViewDto = Mapper.Map<CommentViewDto>(Mapper.Map<CommentDto>(commentModel));
         commentViewDto.TaskIndex = indexState.Index;
@@ -54,5 +54,20 @@ public class CommentService : BaseService {
 
     public async Task<int> DeletePermanentAsync(int id, int userId, int companyId) {
         return await Rep(companyId).DeleteAsync(id);
+    }
+
+    public async Task<StatisticDto> GetStatisticAsync(DayOfWeek FirstDayOfWeek, int userId, int companyId) {
+        var profileService = Host.GetService<ProfileService>();
+        var calendarService = Host.GetService<CalendarService>();
+        var now = await profileService.GetNowAsync(userId);
+        var nowDate = DateOnly.FromDateTime(now);
+        var firstDayOfWeek = calendarService.GetFirstDayOfWeek(nowDate, FirstDayOfWeek);
+        var lastDayOfWeek = firstDayOfWeek.AddDays(7);
+        var todayHours = await Rep(companyId).GetAll(false).Where(x => x.Date == nowDate).SumAsync(x => x.WorkHours);
+        var weekHours = await Rep(companyId).GetAll(false).Where(x => x.Date >= firstDayOfWeek && x.Date <= lastDayOfWeek).SumAsync(x => x.WorkHours);
+        return new StatisticDto() {
+            TodayHours = todayHours,
+            WeekHours = weekHours,
+        };
     }
 }

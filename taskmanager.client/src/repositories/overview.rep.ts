@@ -50,4 +50,9 @@ export default class overviewRepository {
         }
         return axios.get(`${API_URL}${action}?` + new URLSearchParams(query).toString(), { headers: this.generateHeaders(action) });
     }
+
+    public getStatistic(firstDayOfWeek: number) {
+        let action = "getStatistic";
+        return axios.get(`${API_URL}${action}?firstDayOfWeek=${firstDayOfWeek}`, { headers: this.generateHeaders(action) });
+    }
 }

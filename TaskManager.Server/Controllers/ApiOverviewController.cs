@@ -18,7 +18,8 @@ namespace OverviewManager.Server.Controllers;
 [Route("Api/Overview/[action]")]
 public class ApiOverviewController : BaseController {
 
-    private OverviewService Service => Host.GetService<OverviewService>();
+    private OverviewService OverviewService => Host.GetService<OverviewService>();
+    private CommentService CommentService => Host.GetService<CommentService>();
 
     #region [ .ctor ]
 
@@ -29,10 +30,19 @@ public class ApiOverviewController : BaseController {
     [HttpGet]
     public async Task<ActionResult> Get([FromQuery] FilterViewModel filter) {
 #if DEBUG
-        await Task.Delay(TimeSpan.FromSeconds(0.0));
+        await Task.Delay(TimeSpan.FromSeconds(0.2));
 #endif
         var filterDto = Mapper.Map<FilterDto>(filter);
-        var data = await this.Service.GetAsync(filterDto, base.GetCompanyId());
+        var data = await this.OverviewService.GetAsync(filterDto, base.GetCompanyId());
         return JsonSuccess(new { data.categories, data.projects, data.tasks, data.comments, data.users, data.files });
+    }
+
+    [HttpGet]
+    public async Task<ActionResult> GetStatistic(DayOfWeek firstDayOfWeek) {
+#if DEBUG
+        await Task.Delay(TimeSpan.FromSeconds(0.2));
+#endif
+        var statistic = await this.CommentService.GetStatisticAsync(firstDayOfWeek, base.GetUserId(), base.GetCompanyId());
+        return JsonSuccess(statistic);
     }
 }

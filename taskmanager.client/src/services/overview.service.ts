@@ -9,6 +9,8 @@ import UserModel from "./models/user.model";
 import FileModel from "./models/file.model";
 import { TaskKindEnum } from "../enums/task.kind.enum";
 import { TaskStatusEnum } from "../enums/task.status.enum";
+import StatisticModel from "./models/statistic.model";
+import calendarService from "./calendar.service";
 
 export default class overviewService {
     private rep: overviewRepository;
@@ -47,6 +49,18 @@ export default class overviewService {
             })
             .catch((exception) => {
                 return Response.fail<CategoryModel[]>(exception);
+            });
+    }
+
+    public getStatistic(): Promise<Response<StatisticModel>> {
+        return this.rep
+            .getStatistic(calendarService.getFirstDayOfWeek())
+            .then((response) => {
+                let model = new StatisticModel(response.data);
+                return Response.success<StatisticModel>(model);
+            })
+            .catch((exception) => {
+                return Response.fail<StatisticModel>(exception);
             });
     }
 

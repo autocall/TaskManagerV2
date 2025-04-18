@@ -54,6 +54,11 @@ public class CalendarService : BaseService {
         return dtos;
     }
 
+    public DateOnly GetFirstDayOfWeek(DateOnly date, DayOfWeek firstDayOfWeek) {
+        var week = this.Calendar.GetWeekOfYear(date.ToDateTime(default), CalendarWeekRule.FirstDay, firstDayOfWeek);
+        return this.GetFirstDateOfWeek(week, date.Year, firstDayOfWeek);
+    }
+
     #region [ Generator ]
 
     private int GetWeekOfYear(DateOnly date, DayOfWeek firstDayOfWeek) {

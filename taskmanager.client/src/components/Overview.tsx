@@ -16,7 +16,7 @@ import {
 } from "../states/overview.state";
 import overviewService from "../services/overview.service";
 import authService from "../services/auth.service";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import IJwt from "../types/jwt.type";
 import OverviewTask from "./Overview.Task";
 import TaskModal from "./Task.Modal";
@@ -31,7 +31,7 @@ import CommentModel from "../services/models/comment.model";
 import CommentModal from "./Comment.Modal";
 import commentService from "../services/comment.service";
 import CategoryModel from "../services/models/category.model";
-import OverviewStatistic from "./Overview.Statistic";
+import OverviewStatistic, { OverviewStatisticRef } from "./Overview.Statistic";
 
 const Overview: React.FC = () => {
     const { search } = useLocation();
@@ -48,6 +48,7 @@ const Overview: React.FC = () => {
     const [filterProjectId, setFilterProjectId] = useState<number | null>(null);
     const [filterDate, setFilterDate] = useState<string>("");
     const { confirm, ConfirmDialog } = useConfirm();
+    const statisticRef = useRef<OverviewStatisticRef>(null);
 
     useAsyncEffect(async () => {
         await load();
@@ -86,6 +87,7 @@ const Overview: React.FC = () => {
             if (response.success) {
                 let categories = deleteTaskById(model.Id);
                 dispatch(reloadOverviewCategoriesAction(categories));
+                statisticRef.current?.load();
             }
         }
     };
@@ -125,6 +127,7 @@ const Overview: React.FC = () => {
             if (response.success) {
                 let categories = deleteCommentById(model.Id);
                 dispatch(reloadOverviewCategoriesAction(categories));
+                statisticRef.current?.load();
             }
         }
     };
@@ -185,6 +188,7 @@ const Overview: React.FC = () => {
         setModalTaskData(null);
         if (reload) {
             await load();
+            statisticRef.current?.load();
         }
     };
 
@@ -192,6 +196,7 @@ const Overview: React.FC = () => {
         setModalCommentData(null);
         if (reload) {
             await load();
+            statisticRef.current?.load();
         }
     };
 
@@ -202,7 +207,7 @@ const Overview: React.FC = () => {
             <CommentModal modalData={modalCommentData} onClose={handleCommentClose} />
             <Col lg="auto" className="d-none d-lg-block" style={{ width: "280px" }}>
                 <Calendar />
-                <OverviewStatistic categories={state.categories} />
+                <OverviewStatistic ref={statisticRef} />
             </Col>
             {/* Col(scroll-content) - moves toolbar to scroll-container */}
             {/* Col(main-section) + div(scroll-content) - fixes toolbar */}

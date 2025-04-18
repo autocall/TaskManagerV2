@@ -13,6 +13,7 @@ import { overviewReducer, OverviewState } from "./overview.state";
 import { taskReducer, TaskState } from "./task.state";
 import { commentReducer, CommentState } from "./comment.state";
 import { reportReducer, ReportState } from "./report.state";
+import { statisticReducer, StatisticState } from "./statistic.state";
 
 export interface AppState {
     readonly loginState: LoginState;
@@ -22,6 +23,7 @@ export interface AppState {
     readonly categoriesState: CategoriesState;
     readonly categoryState: CategoryState;
     readonly overviewState: OverviewState;
+    readonly statisticState: StatisticState;
     readonly taskState: TaskState;
     readonly commentState: CommentState;
     readonly calendarState: CalendarState;
@@ -39,6 +41,7 @@ const rootReducer = combineReducers<AppState>({
     categoriesState: categoriesReducer,
     categoryState: categoryReducer,
     overviewState: overviewReducer,
+    statisticState: statisticReducer,
     taskState: taskReducer,
     commentState: commentReducer,
     eventState: eventReducer,

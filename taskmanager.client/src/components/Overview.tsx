@@ -152,6 +152,7 @@ const Overview: React.FC = () => {
                 return {
                     ...task,
                     Comments: newComments,
+                    filteredComments: task.filteredComments,
                 };
             });
             return {
@@ -170,6 +171,7 @@ const Overview: React.FC = () => {
             updatedTasks[taskIndex] = {
                 ...updatedTasks[taskIndex],
                 Order: newOrder,
+                filteredComments: updatedTasks[taskIndex].filteredComments,
             };
             updatedTasks.sort((a, b) => b.Order - a.Order);
             return {

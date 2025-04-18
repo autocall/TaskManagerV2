@@ -1,4 +1,4 @@
-import { Badge, Card, ListGroup, Spinner } from "react-bootstrap";
+import { Badge, Button, Card, ListGroup, Spinner } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import { Link } from "react-router-dom";
 import stringExtension from "../extensions/string.extension";
@@ -10,6 +10,7 @@ import fileExtension from "../extensions/file.extension";
 import TaskModel from "../services/models/task.model";
 import OverviewComment from "./Overview.Comment";
 import CommentModel from "../services/models/comment.model";
+import { useState } from "react";
 
 interface OverviewTaskProps {
     task: TaskModel;
@@ -36,6 +37,8 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({
     handleCommentEdit,
     handleCommentDelete,
 }: OverviewTaskProps) => {
+    const [showAllComments, setShowAllComments] = useState(false);
+
     const flex: string = "d-flex justify-content-between align-items-start";
 
     return (
@@ -111,7 +114,14 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({
             {/* Comments */}
             {task.Comments?.length > 0 && (
                 <ListGroup className="list-group-flush mx-2">
-                    {task.Comments.map((comment) => (
+                    {task.Comments.length > task.filteredComments(false).length && (
+                        <ListGroup.Item className="text-center pt-0">
+                            <Link to="#" className="badge-text" onClick={() => setShowAllComments(!showAllComments)}>
+                                {showAllComments ? "Hide comments" : `Show comments (${task.Comments.length - task.filteredComments(false).length})`}
+                            </Link>
+                        </ListGroup.Item>
+                    )}
+                    {task.filteredComments(showAllComments).map((comment) => (
                         <OverviewComment
                             key={"comment" + comment.Id}
                             comment={comment}

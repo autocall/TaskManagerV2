@@ -47,7 +47,9 @@ const OverviewComment: React.FC<OverviewCommentProps> = ({ comment, currentUser,
                             title={file.FileName}
                         />
                     ))}
-                    <span className="extra-text" title="Created Date">{stringExtension.dateToLong(comment.CreatedDateTime, currentUser!.TimeZoneId)}</span>
+                    <span className="extra-text" title="Created Date">
+                        {stringExtension.dateToLong(comment.CreatedDateTime, currentUser!.TimeZoneId)}
+                    </span>
                 </div>
                 <div className="extra-link">
                     <Link to="#" onClick={() => handleEdit(comment)}>

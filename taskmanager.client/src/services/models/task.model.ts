@@ -1,6 +1,8 @@
+import moment from "moment";
 import { TaskColumnEnum } from "../../enums/task.column.enum";
 import { TaskKindEnum } from "../../enums/task.kind.enum";
 import { TaskStatusEnum } from "../../enums/task.status.enum";
+import authService from "../auth.service";
 import BaseModel from "./base.model";
 import CommentModel from "./comment.model";
 import FileModel from "./file.model";
@@ -21,6 +23,20 @@ export default class TaskModel extends BaseModel implements ITaskData {
 
     Project: ProjectModel | null;
     Comments: CommentModel[];
+
+    /** Extra */
+    filteredComments(showAllComments: boolean): CommentModel[] {
+        return showAllComments
+            ? this.Comments
+            : (() => {
+                  const user = new authService(null).getCurrentUser();
+                  const now = moment.tz(user!.TimeZoneId).format("YYYY-MM-DD");
+
+                  const todayComments = this.Comments.filter((x) => x.Date == now);
+                  if (todayComments.length > 0) return todayComments;
+                  return this.Comments.slice(-1);
+              })();
+    }
 
     Files: FileModel[];
 

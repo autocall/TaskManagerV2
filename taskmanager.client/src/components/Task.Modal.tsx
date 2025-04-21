@@ -56,6 +56,10 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
                 let response = await service.get(modalData.Id);
                 dispatch(gotTaskAction(response));
             } else {
+                // sets the default column by the project
+                if (modalData.ProjectId) {
+                    modalData.Column = overviewService.projects!.find((p) => p.Id === modalData.ProjectId)!.DefaultColumn;
+                }
                 dispatch(createTaskAction(modalData));
             }
         }

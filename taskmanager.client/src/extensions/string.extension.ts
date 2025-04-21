@@ -15,6 +15,11 @@ export default class stringExtension {
         }
     }
 
+    public static parseDate(value: string): Date {
+        const [year, month, day] = value.split("-").map(Number);
+        return new Date(year, month - 1, day);
+    }
+
     public static dateTimeToShort(value: moment.Moment): string {
         let now = moment();
         if (now.year() == value.year()) {
@@ -103,7 +108,7 @@ export default class stringExtension {
         return stringExtension.dateToFromNowShort_moment(moment.tz(value, timeZoneId));
     }
 
-    public static commentDateToLong(date: string, timeZoneId: string):string {
+    public static commentDateToLong(date: string, timeZoneId: string): string {
         const now = moment.tz(timeZoneId).startOf("day");
         const input = moment(date).startOf("day");
         const diff = now.diff(input, "days");

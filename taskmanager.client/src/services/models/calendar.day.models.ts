@@ -1,6 +1,7 @@
 import moment from "moment";
 import { EventTypeEnum } from "../../enums/event.type.enum";
 import calendarService from "../calendar.service";
+import stringExtension from "../../extensions/string.extension";
 
 export class CalendarDayModel {
     Date: Date;
@@ -13,7 +14,7 @@ export class CalendarDayModel {
     Events: CalendarEventModel[];
 
     constructor(data: any) {
-        this.Date = new Date(data.Date);
+        this.Date = stringExtension.parseDate(data.Date);
         this.DayOfWeek = data.DayOfWeek;
         this.Day = data.Day;
         this.Month = data.Month;

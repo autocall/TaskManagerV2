@@ -53,7 +53,7 @@ public class ReportService : BaseService {
         foreach (var comment in comments.OrderByDescending(x => x.CreatedDateTime)) {
             commentDtos.Add(Mapper.Map<ReportCommentDto>(Mapper.Map<CommentDto>(comment)));
         }
-        foreach (var task in tasks) {
+        foreach (var task in tasks.OrderBy(x => x.Kind)) {
             var taskDto = Mapper.Map<ReportTaskDto>(Mapper.Map<TaskDto>(task));
             taskDto.Comments = commentDtos.Where(x => x.TaskId == task.Id).ToList();
             taskDto.WorkHours = taskDto.Comments.Sum(x => x.WorkHours);

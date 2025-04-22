@@ -10,9 +10,21 @@ export default class reportService {
         this.rep = new reportRepository(test);
     }
 
-    public get(date: string) {
+    public getByDate(date: string) {
         return this.rep
-            .get(date)
+            .getByDate(date)
+            .then((response) => {
+                let model = new ReportModel(response.data);
+                return Response.success<ReportModel>(model);
+            })
+            .catch((exception) => {
+                return Response.fail<any>(exception);
+            });
+    }
+
+    public getByRange(dateFrom: string, dateTo: string) {
+        return this.rep
+            .getByRange(dateFrom, dateTo)
             .then((response) => {
                 let model = new ReportModel(response.data);
                 return Response.success<ReportModel>(model);

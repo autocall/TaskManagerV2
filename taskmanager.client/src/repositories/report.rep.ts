@@ -22,12 +22,15 @@ export default class reportRepository {
         return authHeader();
     }
 
-    public get(date: string) {
-        let action = "get";
-        let query = {};
-        if (date) {
-            query = { ...query, Date: date };
-        }
+    public getByDate(date: string) {
+        let action = "getByDate";
+        let query = { date };
+        return axios.get(`${API_URL}${action}?` + new URLSearchParams(query).toString(), { headers: this.generateHeaders(action) });
+    }
+
+    public getByRange(dateFrom: string, dateTo: string) {
+        let action = "getByRange";
+        let query = { dateFrom, dateTo };
         return axios.get(`${API_URL}${action}?` + new URLSearchParams(query).toString(), { headers: this.generateHeaders(action) });
     }
 }

@@ -21,6 +21,7 @@ const Report: React.FC = () => {
     let state = useSelector((s: AppState) => s.reportState);
     const [currentUser, setCurrentUser] = useState<IJwt | null>(null);
     const [date, setDate] = useState<string>("");
+    const [dateFrom, setDateFrom] = useState<string>("");
     const cardBodyRef = useRef<HTMLDivElement>(null);
     const { toast } = useToast();
 
@@ -36,13 +37,13 @@ const Report: React.FC = () => {
 
     useAsyncEffect(async () => {
         // loads report when date changes
-        if (date) await load(date);
-    }, [date]);
+        if (date) await load();
+    }, [date, dateFrom]);
 
-    const load = async (date: string) => {
+    const load = async () => {
         let service: reportService = new reportService(testHelper.getTestContainer(search));
         dispatch(gettingReportAction());
-        let response = await service.get(date);
+        let response = dateFrom ? await service.getByRange(date, dateFrom) : await service.getByDate(date);
         dispatch(gotReportAction(response));
     };
 
@@ -71,6 +72,16 @@ const Report: React.FC = () => {
                     <Row>
                         <Col xs="auto" className="mb-2">
                             <Form.Control
+                                className={!dateFrom ? "text-muted" : ""}
+                                type="Date"
+                                value={dateFrom}
+                                onChange={(e) => {
+                                    setDateFrom(e.target.value);
+                                }}
+                            />
+                        </Col>
+                        <Col xs="auto" className="mb-2">
+                            <Form.Control
                                 className={!date ? "text-muted" : ""}
                                 type="Date"
                                 value={date}
@@ -80,7 +91,7 @@ const Report: React.FC = () => {
                             />
                         </Col>
                         <Col xs="auto" className="mb-2">
-                            <Button variant="primary" className="me-3" onClick={() => date && load(date)}>
+                            <Button variant="primary" className="me-3" onClick={() => date && load()}>
                                 Refresh Report
                             </Button>
                             <Button variant="success" className="me-3" onClick={copyCardBodyToClipboard}>
@@ -103,7 +114,8 @@ const Report: React.FC = () => {
                     <Card>
                         <Card.Body ref={cardBodyRef}>
                             <h3 style={{ color: "gray" }}>
-                                {date && moment(date).format("dddd, MMMM D, YYYY")} - {state.report!.WorkHours}h
+                            {dateFrom && moment(dateFrom).format("M/D/YYYY") + ' - ' + moment(date).format("M/D/YYYY")}
+                            {!dateFrom && date && moment(date).format("dddd, MMMM D, YYYY")} - {state.report!.WorkHours}h
                             </h3>
                             {state.report!.Projects.map((p, i) => (
                                 <div key={i}>
@@ -134,14 +146,16 @@ const Report: React.FC = () => {
                                                         {t.Title} <b style={{ color: "green" }}>{t.WorkHours}h</b>
                                                     </b>
                                                 </div>
-                                                <div style={{ fontSize: "1.0em", color: "gray" }}>{t.Description}</div>
-                                                <ul>
-                                                    {t.Comments.map((c, k) => (
-                                                        <li key={k}>
-                                                            <span style={{ fontSize: "1.2em" }}>{c.Text}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
+                                                {!dateFrom && <div style={{ fontSize: "1.0em", color: "gray" }}>{t.Description}</div>}
+                                                {!dateFrom && (
+                                                    <ul>
+                                                        {t.Comments.map((c, k) => (
+                                                            <li key={k}>
+                                                                <span style={{ fontSize: "1.2em" }}>{c.Text}</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
                                             </div>
                                         ))}
                                     </ul>

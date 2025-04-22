@@ -43,7 +43,7 @@ export function getTaskKindVariant(kind: TaskKindEnum | null): string {
 }
 
 export function getTaskKindColor(kind: TaskKindEnum | null): string {
-    return (kind && TaskKindColors[kind]) || "white";
+    return (kind && TaskKindColors[kind]) || "gray";
 }
 
 export function getOverviewTaskKinds(): TaskKindEnum[] {

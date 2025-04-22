@@ -29,11 +29,25 @@ public class ApiReportController : BaseController {
     #endregion [ .ctor ]
 
     [HttpGet]
-    public async Task<ActionResult> Get([Required] DateOnly date) {
+    public async Task<ActionResult> GetByDate([Required] DateOnly date) {
 #if DEBUG
         await Task.Delay(TimeSpan.FromSeconds(0.5));
 #endif
         var dto = await this.Service.GetAsync(date, base.GetUserId(), base.GetCompanyId());
+        return JsonSuccess(dto);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult> GetByRange([Required] DateOnly dateFrom, [Required] DateOnly dateTo) {
+#if DEBUG
+        await Task.Delay(TimeSpan.FromSeconds(0.5));
+#endif
+        if (dateFrom > dateTo) {
+            var tmp = dateFrom;
+            dateFrom = dateTo;
+            dateTo = tmp;
+        }
+        var dto = await this.Service.GetAsync(dateFrom, dateTo, base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(dto);
     }
 }

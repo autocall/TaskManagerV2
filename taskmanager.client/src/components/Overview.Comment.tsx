@@ -6,6 +6,7 @@ import SeeMoreText from "./shared/seemore-text";
 import fileExtension from "../extensions/file.extension";
 import CommentModel from "../services/models/comment.model";
 import IJwt from "../types/jwt.type";
+import { getFileIcon } from "../helpers/file-icons";
 
 interface OverviewCommentProps {
     comment: CommentModel;
@@ -42,9 +43,9 @@ const OverviewComment: React.FC<OverviewCommentProps> = ({ comment, currentUser,
                             target="_blank"
                             to={`api/file/${file.CompanyId}/${file.Id}/${file.FileName}`}
                             key={"file" + file.Id + file.FileName}
-                            className={`file bi ${fileExtension.getFileIcon(file.FileName)}`}
-                            title={file.FileName}
-                        />
+                            title={file.FileName}>
+                            <img src={getFileIcon(file.FileName)} alt="file icon" className="file-icon" />
+                        </Link>
                     ))}
                     <span className="extra-text" title="Created Date">
                         {stringExtension.dateToLong(comment.CreatedDateTime, currentUser!.TimeZoneId)}

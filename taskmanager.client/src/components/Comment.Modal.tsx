@@ -25,6 +25,7 @@ import { getTaskStatusDescription, getTaskStatusVariant, TaskStatusEnum } from "
 import FieldHours from "./shared/field-hours";
 import FileModel from "../services/models/file.model";
 import fileExtension from "../extensions/file.extension";
+import { getFileIcon } from "../helpers/file-icons";
 
 interface CommentModalProps {
     modalData: CommentModel | null;
@@ -62,8 +63,8 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
 
     const handleFileAttach = (model: CommentState) => {
         const files = fileRef.current?.files;
-        console.log('files', files);
-        console.log('model.Files', model.Files);
+        console.log("files", files);
+        console.log("model.Files", model.Files);
         model.Files?.push(...Array.from(files ?? []).map((f) => FileModel.createFromBlob(f)));
         formikRef.current?.setFieldValue("Files", model.Files);
     };
@@ -165,16 +166,16 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
                                         <span key={"task-file" + file.Id + file.FileName} className="me-2">
                                             {file.IsDeleted ? (
                                                 <span className="text-muted text-decoration-line-through">
-                                                    <i className={`bi ${fileExtension.getFileIcon(file.FileName)}`}></i>
-                                                    {file.FileName}
+                                                    <img src={getFileIcon(file.FileName)} alt="file icon" className="file-icon-attach" />
+                                                    <span>{file.FileName}</span>
                                                 </span>
                                             ) : (
                                                 <Link
                                                     to={`api/file/${file.CompanyId}/${file.Id}/${file.FileName}`}
                                                     target="_blank"
                                                     title={file.FileName}>
-                                                    <i className={`bi ${fileExtension.getFileIcon(file.FileName)}`}></i>
-                                                    {file.FileName}
+                                                    <img src={getFileIcon(file.FileName)} alt="file icon" className="file-icon-attach" />
+                                                    <span>{file.FileName}</span>
                                                 </Link>
                                             )}
                                             <Link

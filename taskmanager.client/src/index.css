@@ -213,11 +213,22 @@ html {
 }
 
 .card-dimmer {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: rgba(255, 255, 255, 0.6);
-	z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.6);
+    z-index: 10;
+}
+
+.file-icon,
+.file-icon-attach {
+    height: 2.5rem;
+    margin: 0.5rem 0.5rem 0 0;
+    vertical-align: middle;
+}
+
+.file-icon-attach {
+    margin-top: 0;
 }

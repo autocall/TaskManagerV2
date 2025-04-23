@@ -29,6 +29,7 @@ import overviewService from "../services/overview.service";
 import { getTaskStatusDescription, getTaskStatusVariant, TaskStatusEnum } from "../enums/task.status.enum";
 import FileModel from "../services/models/file.model";
 import fileExtension from "../extensions/file.extension";
+import { getFileIcon } from "../helpers/file-icons";
 
 interface TaskModalProps {
     modalData: TaskModel | null;
@@ -251,16 +252,16 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
                                         <span key={"task-file" + file.Id + file.FileName} className="me-2">
                                             {file.IsDeleted ? (
                                                 <span className="text-muted text-decoration-line-through">
-                                                    <i className={`bi ${fileExtension.getFileIcon(file.FileName)}`}></i>
-                                                    {file.FileName}
+                                                    <img src={getFileIcon(file.FileName)} alt="file icon" className="file-icon-attach" />
+                                                    <span>{file.FileName}</span>
                                                 </span>
                                             ) : (
                                                 <Link
                                                     to={`api/file/${file.CompanyId}/${file.Id}/${file.FileName}`}
                                                     target="_blank"
                                                     title={file.FileName}>
-                                                    <i className={`bi ${fileExtension.getFileIcon(file.FileName)}`}></i>
-                                                    {file.FileName}
+                                                    <img src={getFileIcon(file.FileName)} alt="file icon" className="file-icon-attach" />
+                                                    <span>{file.FileName}</span>
                                                 </Link>
                                             )}
                                             <Link

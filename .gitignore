@@ -7,3 +7,4 @@ bin
 /TaskManager.Server/appsettings.Production.json
 /TaskManager.Common/Settings.Production.cs
 /taskmanager.client/cypress/downloads
+/TaskManager.Server/Data

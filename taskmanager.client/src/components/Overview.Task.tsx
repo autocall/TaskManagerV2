@@ -11,6 +11,7 @@ import TaskModel from "../services/models/task.model";
 import OverviewComment from "./Overview.Comment";
 import CommentModel from "../services/models/comment.model";
 import { useState } from "react";
+import { getFileIcon } from "../helpers/file-icons";
 
 interface OverviewTaskProps {
     task: TaskModel;
@@ -75,9 +76,9 @@ const OverviewTask: React.FC<OverviewTaskProps> = ({
                                 target="_blank"
                                 to={`api/file/${file.CompanyId}/${file.Id}/${file.FileName}`}
                                 key={"file" + file.Id + file.FileName}
-                                className={`file bi ${fileExtension.getFileIcon(file.FileName)}`}
-                                title={file.FileName}
-                            />
+                                title={file.FileName}>
+                                <img src={getFileIcon(file.FileName)} alt="file icon" className="file-icon" />
+                            </Link>
                         ))}
                         <span className="extra-text" style={{ wordBreak: "normal" }} title="Created Date">
                             {stringExtension.dateToLong(task.CreatedDateTime, currentUser!.TimeZoneId)}

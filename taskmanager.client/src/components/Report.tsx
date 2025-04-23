@@ -113,10 +113,10 @@ const Report: React.FC = () => {
                 <div data-bs-theme="light" className="mb-2">
                     <Card>
                         <Card.Body ref={cardBodyRef}>
-                            <h3 style={{ color: "gray" }}>
+                        <b style={{ color: "DarkGray", fontSize: "1.2em" }}>
                                 {dateFrom && moment(dateFrom).format("M/D/YYYY") + " - " + moment(date).format("M/D/YYYY")}
                                 {!dateFrom && date && moment(date).format("dddd, MMMM D, YYYY")} - {state.report!.WorkHours}h
-                            </h3>
+                            </b>
                             <div style={{ margin: "0 0 1em 0" }}>
                                 {Object.entries(state.report!.KindHours).map(([k, h]) => (
                                     <>
@@ -135,19 +135,20 @@ const Report: React.FC = () => {
                                     </>
                                 ))}
                             </div>
+                            <hr
+                                style={{
+                                    border: "none",
+                                    borderTop: "1px solid lightgray",
+                                    margin: "0.5em 0",
+                                }}
+                            />
                             {state.report!.Projects.map((p, i) => (
                                 <div key={i}>
                                     <span style={{ fontSize: "1.4em" }}>
-                                        {p.Name} {dateFrom && p.WorkHours + "h"}
+                                        {p.Name}
                                     </span>
-                                    <hr
-                                        style={{
-                                            border: "none",
-                                            borderTop: "1px solid lightgray",
-                                            margin: "0.5em 0",
-                                        }}
-                                    />
-                                    <ul>
+                                    <b style={{ color: "DarkGray", fontSize: "1.2em" }}> {dateFrom && p.WorkHours}h</b>
+                                    <ul style={{ margin: 0 }}>
                                         {p.Tasks.map((t, j) => (
                                             <div key={j} style={{ whiteSpace: "pre-line" }}>
                                                 <div>
@@ -163,10 +164,10 @@ const Report: React.FC = () => {
                                                         }}>
                                                         {getTaskKindDescription(t.Kind)}
                                                     </span>
-                                                    <b style={{ fontSize: "1.2em" }}>
+                                                    <span style={{ fontSize: "1.2em", fontWeight: 650 }}>
                                                         {" "}
-                                                        {t.Title} <b style={{ color: "green" }}>{t.WorkHours}h</b>
-                                                    </b>
+                                                        {t.Title} <span style={{ color: "green" }}>{t.WorkHours}h</span>
+                                                    </span>
                                                 </div>
                                                 {!dateFrom && <div style={{ fontSize: "1.0em", color: "gray" }}>{t.Description}</div>}
                                                 {!dateFrom && (
@@ -181,6 +182,13 @@ const Report: React.FC = () => {
                                             </div>
                                         ))}
                                     </ul>
+                                    <hr
+                                        style={{
+                                            border: "none",
+                                            borderTop: "1px solid lightgray",
+                                            margin: "0.5em 0",
+                                        }}
+                                    />
                                 </div>
                             ))}
                         </Card.Body>

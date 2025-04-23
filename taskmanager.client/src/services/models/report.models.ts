@@ -5,10 +5,23 @@ import TaskModel from "./task.model";
 export class ReportModel {
     WorkHours: number;
     public Projects: ReportProjectModel[];
+    public KindHours: { [kind: number]: number };
 
     constructor(data: any) {
         this.WorkHours = data.WorkHours;
         this.Projects = data.Projects.map((p: any) => new ReportProjectModel(p));
+        this.KindHours = {};
+        for (let p of this.Projects) {
+            for (let t of p.Tasks) {
+                for (let c of t.Comments) {
+                    if (!this.KindHours[t.Kind as number]) {
+                        this.KindHours[t.Kind as number] = 0;
+                    }
+                    this.KindHours[t.Kind as number] += c.WorkHours;
+                }
+            }
+        }
+        console.log(this.KindHours);
     }
 }
 

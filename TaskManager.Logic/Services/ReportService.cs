@@ -41,7 +41,7 @@ public class ReportService : BaseService {
 
     public async Task<ReportDto> GetAsync(DateOnly dateFrom, DateOnly dateTo, int userId, int companyId) {
         var comments = await UnitOfWork.GetRepository<Comment>(companyId).GetAll(false)
-            .Where(x => x.Date >= dateFrom).Where(x => x.Date <= dateTo).ToListAsync();
+            .Where(x => x.Date >= dateFrom).Where(x => x.Date <= dateTo && x.WorkHours != 0).ToListAsync();
         var taskIds = comments.Select(e => e.TaskId).ToList();
         var tasks = await UnitOfWork.GetRepository<Task1>(companyId).GetAll(false).Where(x => taskIds.Contains(x.Id)).ToListAsync();
         var projectIds = tasks.Select(e => e.ProjectId).ToList();

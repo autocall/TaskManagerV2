@@ -42,11 +42,6 @@ public class ApiReportController : BaseController {
 #if DEBUG
         await Task.Delay(TimeSpan.FromSeconds(0.5));
 #endif
-        if (dateFrom > dateTo) {
-            var tmp = dateFrom;
-            dateFrom = dateTo;
-            dateTo = tmp;
-        }
         var dto = await this.Service.GetAsync(dateFrom, dateTo, base.GetUserId(), base.GetCompanyId());
         return JsonSuccess(dto);
     }

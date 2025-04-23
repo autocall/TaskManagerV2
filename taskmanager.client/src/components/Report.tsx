@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { AppState } from "../states/store";
 import { testHelper } from "../helpers/test.helper";
-import { getTaskKindColor, getTaskKindDescription } from "../enums/task.kind.enum";
+import { getTaskKindColor, getTaskKindDescription, TaskKindEnum } from "../enums/task.kind.enum";
 
 const Report: React.FC = () => {
     const { search } = useLocation();
@@ -43,7 +43,7 @@ const Report: React.FC = () => {
     const load = async () => {
         let service: reportService = new reportService(testHelper.getTestContainer(search));
         dispatch(gettingReportAction());
-        let response = dateFrom ? await service.getByRange(date, dateFrom) : await service.getByDate(date);
+        let response = dateFrom ? await service.getByRange(dateFrom, date) : await service.getByDate(date);
         dispatch(gotReportAction(response));
     };
 
@@ -114,12 +114,32 @@ const Report: React.FC = () => {
                     <Card>
                         <Card.Body ref={cardBodyRef}>
                             <h3 style={{ color: "gray" }}>
-                            {dateFrom && moment(dateFrom).format("M/D/YYYY") + ' - ' + moment(date).format("M/D/YYYY")}
-                            {!dateFrom && date && moment(date).format("dddd, MMMM D, YYYY")} - {state.report!.WorkHours}h
+                                {dateFrom && moment(dateFrom).format("M/D/YYYY") + " - " + moment(date).format("M/D/YYYY")}
+                                {!dateFrom && date && moment(date).format("dddd, MMMM D, YYYY")} - {state.report!.WorkHours}h
                             </h3>
+                            <div style={{ margin: "0 0 1em 0" }}>
+                                {Object.entries(state.report!.KindHours).map(([k, h]) => (
+                                    <>
+                                        <span
+                                            style={{
+                                                background: getTaskKindColor(parseInt(k) as TaskKindEnum),
+                                                color: "white",
+                                                fontWeight: "bold",
+                                                fontSize: "0.8em",
+                                                padding: "0 0.4em",
+                                                borderRadius: "0.375rem",
+                                                display: "inline-block",
+                                            }}>
+                                            {getTaskKindDescription(parseInt(k) as TaskKindEnum)} {h}h
+                                        </span>{" "}
+                                    </>
+                                ))}
+                            </div>
                             {state.report!.Projects.map((p, i) => (
                                 <div key={i}>
-                                    <span style={{ fontSize: "1.6em" }}>{p.Name}</span>
+                                    <span style={{ fontSize: "1.4em" }}>
+                                        {p.Name} {dateFrom && p.WorkHours + "h"}
+                                    </span>
                                     <hr
                                         style={{
                                             border: "none",
@@ -137,7 +157,9 @@ const Report: React.FC = () => {
                                                             color: "white",
                                                             fontWeight: "bold",
                                                             fontSize: "0.8em",
-                                                            padding: "0 0.2em",
+                                                            padding: "0 0.4em",
+                                                            borderRadius: "0.375rem",
+                                                            display: "inline-block",
                                                         }}>
                                                         {getTaskKindDescription(t.Kind)}
                                                     </span>

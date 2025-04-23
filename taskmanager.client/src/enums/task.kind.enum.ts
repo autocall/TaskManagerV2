@@ -26,12 +26,12 @@ const TaskKindVariants: Record<TaskKindEnum, string> = {
 };
 
 const TaskKindColors: Record<TaskKindEnum, string> = {
-    [TaskKindEnum.Task]: "blue",
-    [TaskKindEnum.Fix]: "orange",
+    [TaskKindEnum.Task]: "RoyalBlue",
+    [TaskKindEnum.Fix]: "DarkOrange",
     [TaskKindEnum.Bug]: "red",
-    [TaskKindEnum.Feature]: "blue",
-    [TaskKindEnum.Improvement]: "green",
-    [TaskKindEnum.Support]: "green",
+    [TaskKindEnum.Feature]: "DodgerBlue",
+    [TaskKindEnum.Improvement]: "ForestGreen",
+    [TaskKindEnum.Support]: "LightSkyBlue",
 };
 
 export function getTaskKindDescription(kind: TaskKindEnum | null): string {

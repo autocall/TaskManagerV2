@@ -275,6 +275,19 @@ const Overview: React.FC = () => {
                                     </Col>
                                     <Col xs="auto" className="mb-2">
                                         <Form.Select
+                                            className={!filterProjectId ? "text-muted" : ""}
+                                            value={filterProjectId || ""}
+                                            onChange={(e) => setFilterProjectId(parseInt(e.target.value))}>
+                                            <option value="">Filter Project</option>
+                                            {projects?.map((project) => (
+                                                <option key={"filter-project" + project.Id} value={project.Id}>
+                                                    {project.Name}
+                                                </option>
+                                            ))}
+                                        </Form.Select>
+                                    </Col>
+                                    <Col xs="auto" className="mb-2">
+                                        <Form.Select
                                             className={!filterStatus ? "text-muted" : ""}
                                             value={filterStatus || ""}
                                             onChange={(e) => setFilterStatus(parseInt(e.target.value) as TaskStatusEnum)}>
@@ -286,19 +299,6 @@ const Overview: React.FC = () => {
                                                         {getTaskStatusDescription(status)}
                                                     </option>
                                                 ))}
-                                        </Form.Select>
-                                    </Col>
-                                    <Col xs="auto" className="mb-2">
-                                        <Form.Select
-                                            className={!filterProjectId ? "text-muted" : ""}
-                                            value={filterProjectId || ""}
-                                            onChange={(e) => setFilterProjectId(parseInt(e.target.value))}>
-                                            <option value="">Filter Project</option>
-                                            {projects?.map((project) => (
-                                                <option key={"filter-project" + project.Id} value={project.Id}>
-                                                    {project.Name}
-                                                </option>
-                                            ))}
                                         </Form.Select>
                                     </Col>
                                     <Col xs="auto" className="mb-2">

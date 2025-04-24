@@ -1,7 +1,7 @@
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import { Routes, Route, Link, NavigateFunction, useNavigate, NavLink } from "react-router-dom";
+import { Routes, Route, Link, NavigateFunction, useNavigate, NavLink, Navigate } from "react-router-dom";
 import "./App.css";
 import React, { Suspense, lazy, useState, useEffect } from "react";
 import authService from "./services/auth.service";
@@ -12,6 +12,7 @@ import useAsyncEffect from "use-async-effect";
 import Overview from "./components/Overview";
 import Calendar from "./components/Calendar";
 import Report from "./components/Report";
+import AuthRoute from "./components/shared/auth-route";
 const Profile = lazy(() => import("./components/Profile"));
 const LogIn = lazy(() => import("./components/LogIn"));
 const SignUp = lazy(() => import("./components/SignUp"));
@@ -22,7 +23,7 @@ const App: React.FC = () => {
     const service = new authService(null);
     const navigate: NavigateFunction = useNavigate();
 
-    const [currentUser, setCurrentUser] = useState<IJwt | undefined>(undefined);
+    const [currentUser, setCurrentUser] = useState<IJwt | undefined | null>(undefined);
     const [identity, setIdentity] = useState<any>(undefined);
     const [theme, setTheme] = useState<string>(localStorage.getItem("theme") || ThemeEnum.Light);
 
@@ -38,10 +39,12 @@ const App: React.FC = () => {
             } else {
                 if (response.status === 401) {
                     service.logout();
-                    setCurrentUser(undefined);
+                    setCurrentUser(null);
                     navigate("/login");
                 }
             }
+        } else {
+            setCurrentUser(null);
         }
     }, []);
 
@@ -78,94 +81,134 @@ const App: React.FC = () => {
 
     return (
         <div className="wrapper">
-            <Navbar className="bg-dark d-flex" variant="dark">
+            <Navbar className="bg-dark d-flex" variant="dark" expand="md">
                 {!currentUser ? (
                     <Container>
+                        <Navbar.Toggle aria-controls="main-navbar" />
                         <Nav className="flex-grow-1"></Nav>
-                        <Nav>
-                            {themeDropdown}
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/login">
-                                Login
-                            </NavLink>
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/signup">
-                                Sign Up
-                            </NavLink>
-                        </Nav>
+                        <Navbar.Collapse id="main-navbar">
+                            <Nav className="me-auto"></Nav>
+                            <Nav>
+                                {themeDropdown}
+                                <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/login">
+                                    Login
+                                </NavLink>
+                                <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/signup">
+                                    Sign Up
+                                </NavLink>
+                            </Nav>
+                        </Navbar.Collapse>
                     </Container>
                 ) : (
                     <Container>
-                        <Nav className="flex-grow-1">
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/">
-                                Overview
-                            </NavLink>
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/calendar">
-                                Calendar
-                            </NavLink>
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/projects">
-                                Projects
-                            </NavLink>
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/categories">
-                                Categories
-                            </NavLink>
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/report">
-                                Report
-                            </NavLink>
-                        </Nav>
-                        <Nav>
-                            {themeDropdown}
-                            <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/profile">
-                                <span className="d-none d-sm-block">
-                                    {currentUser.Email} ({currentUser.Roles})
-                                </span>
-                                <span className="d-block d-sm-none">Profile</span>
-                            </NavLink>
-                            <Link id="logout" className="nav-link" to="/login" onClick={logOut}>
-                                Logout
-                            </Link>
-                        </Nav>
+                        <Navbar.Toggle aria-controls="main-navbar" />
+                        <Navbar.Collapse id="main-navbar">
+                            <Nav className="me-auto">
+                                <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/">
+                                    Overview
+                                </NavLink>
+                                <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/calendar">
+                                    Calendar
+                                </NavLink>
+                                <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/projects">
+                                    Projects
+                                </NavLink>
+                                <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/categories">
+                                    Categories
+                                </NavLink>
+                                <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/report">
+                                    Report
+                                </NavLink>
+                            </Nav>
+                            <Nav>
+                                {themeDropdown}
+                                <NavLink className={({ isActive }) => `nav-link${isActive ? " active" : ""}`} to="/profile">
+                                    <span className="d-none d-sm-block">
+                                        {currentUser.Email} ({currentUser.Roles})
+                                    </span>
+                                    <span className="d-block d-sm-none">Profile</span>
+                                </NavLink>
+                                <Link id="logout" className="nav-link" to="/login" onClick={logOut}>
+                                    Logout
+                                </Link>
+                            </Nav>
+                        </Navbar.Collapse>
                     </Container>
                 )}
             </Navbar>
             <Container className="mt-3 content" fluid>
                 <Routes>
-                    <Route path="/" element={<Overview />} />
-                    <Route path="/calendar" element={<Calendar />} />
                     <Route
                         path="/login"
                         element={
-                            <Suspense fallback={<div>Loading...</div>}>
-                                <LogIn />
-                            </Suspense>
+                            <AuthRoute allowAuthenticated={false} currentUser={currentUser}>
+                                <Suspense fallback={<div>Loading...</div>}>
+                                    <LogIn />
+                                </Suspense>
+                            </AuthRoute>
                         }
                     />
                     <Route
                         path="/signup"
                         element={
-                            <Suspense fallback={<div>Loading...</div>}>
-                                <SignUp />
-                            </Suspense>
+                            <AuthRoute allowAuthenticated={false} currentUser={currentUser}>
+                                <Suspense fallback={<div>Loading...</div>}>
+                                    <SignUp />
+                                </Suspense>
+                            </AuthRoute>
+                        }
+                    />
+                    <Route
+                        path="/"
+                        element={
+                            <AuthRoute allowAuthenticated={true} currentUser={currentUser}>
+                                <Overview />
+                            </AuthRoute>
+                        }
+                    />
+                    <Route
+                        path="/calendar"
+                        element={
+                            <AuthRoute allowAuthenticated={true} currentUser={currentUser}>
+                                <Calendar />
+                            </AuthRoute>
                         }
                     />
                     <Route
                         path="/projects"
                         element={
-                            <Suspense fallback={<div>Loading...</div>}>
-                                <Projects />
-                            </Suspense>
+                            <AuthRoute allowAuthenticated={true} currentUser={currentUser}>
+                                <Suspense fallback={<div>Loading...</div>}>
+                                    <Projects />
+                                </Suspense>
+                            </AuthRoute>
                         }
                     />
                     <Route
                         path="/categories"
                         element={
-                            <Suspense fallback={<div>Loading...</div>}>
-                                <Categories />
-                            </Suspense>
+                            <AuthRoute allowAuthenticated={true} currentUser={currentUser}>
+                                <Suspense fallback={<div>Loading...</div>}>
+                                    <Categories />
+                                </Suspense>
+                            </AuthRoute>
                         }
                     />
-                    <Route path="/report" element={<Report />} />
+                    <Route
+                        path="/report"
+                        element={
+                            <AuthRoute allowAuthenticated={true} currentUser={currentUser}>
+                                <Report />
+                            </AuthRoute>
+                        }
+                    />
                     <Route
                         path="/profile"
-                        element={<Suspense fallback={<div>Loading...</div>}>{identity ? <Profile /> : <div>Loading...</div>}</Suspense>}
+                        element={
+                            <AuthRoute allowAuthenticated={true} currentUser={currentUser}>
+                                <Suspense fallback={<div>Loading...</div>}>{identity ? <Profile /> : <div>Loading...</div>}</Suspense>
+                            </AuthRoute>
+                        }
                     />
                 </Routes>
             </Container>

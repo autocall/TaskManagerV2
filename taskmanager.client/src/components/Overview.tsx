@@ -128,6 +128,7 @@ const Overview: React.FC = () => {
                 let categories = deleteCommentById(model.Id);
                 dispatch(reloadOverviewCategoriesAction(categories));
                 statisticRef.current?.load();
+                // reload the task
             }
         }
     };

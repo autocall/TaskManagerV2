@@ -113,7 +113,7 @@ const Report: React.FC = () => {
                 <div data-bs-theme="light" className="mb-2">
                     <Card>
                         <Card.Body ref={cardBodyRef}>
-                        <b style={{ color: "DarkGray", fontSize: "1.2em" }}>
+                            <b style={{ color: "DarkGray", fontSize: "1.2em" }}>
                                 {dateFrom && moment(dateFrom).format("M/D/YYYY") + " - " + moment(date).format("M/D/YYYY")}
                                 {!dateFrom && date && moment(date).format("dddd, MMMM D, YYYY")} - {state.report!.WorkHours}h
                             </b>
@@ -144,10 +144,8 @@ const Report: React.FC = () => {
                             />
                             {state.report!.Projects.map((p, i) => (
                                 <div key={i}>
-                                    <span style={{ fontSize: "1.4em" }}>
-                                        {p.Name}
-                                    </span>
-                                    <b style={{ color: "DarkGray", fontSize: "1.2em" }}> {dateFrom && p.WorkHours}h</b>
+                                    <span style={{ fontSize: "1.4em" }}>{p.Name}</span>
+                                    <b style={{ color: "DarkGray", fontSize: "1.2em" }}> {dateFrom && p.WorkHours + "h"}</b>
                                     <ul style={{ margin: 0 }}>
                                         {p.Tasks.map((t, j) => (
                                             <div key={j} style={{ whiteSpace: "pre-line" }}>

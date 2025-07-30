@@ -28,7 +28,7 @@ const OverviewStatistic = forwardRef<OverviewStatisticRef>((props, ref) => {
     }));
 
     const load = async () => {
-        let service: overviewService = new overviewService(testHelper.getTestContainer(search));
+        let service = new overviewService(testHelper.getTestContainer(search));
         dispatch(gettingStatisticAction());
         let response = await service.getStatistic();
         dispatch(gotStatisticAction(response));

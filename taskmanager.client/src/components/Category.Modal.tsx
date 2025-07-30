@@ -33,7 +33,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ modalData, onClose }) => 
     useAsyncEffect(async () => {
         if (modalData != null) {
             if (modalData.Id) {
-                let service: categoryService = new categoryService(testHelper.getTestContainer(search));
+                let service = new categoryService(testHelper.getTestContainer(search));
                 dispatch(gettingCategoryAction());
                 let response = await service.get(modalData.Id);
                 dispatch(gotCategoryAction(response));
@@ -54,7 +54,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ modalData, onClose }) => 
     });
 
     const handleSubmit = async (model: CategoryState) => {
-        let service: categoryService = new categoryService(testHelper.getTestContainer(search));
+        let service = new categoryService(testHelper.getTestContainer(search));
         if (modalData?.Id) {
             dispatch(submittingCategoryAction());
             let response = await service.update(modalData.Id, model.Name, model.Color);

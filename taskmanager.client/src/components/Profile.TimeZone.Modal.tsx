@@ -31,7 +31,7 @@ const ProfileTimeZoneModal: React.FC<ProfileTimeZoneModalProps> = ({ modalData, 
 
     useAsyncEffect(async () => {
         if (modalData != null) {
-            let service: profileService = new profileService(testHelper.getTestContainer(search));
+            let service = new profileService(testHelper.getTestContainer(search));
             dispatch(gettingProfileTimeZoneAction());
             let response = await service.getTimeZones();
             dispatch(gotProfileTimeZoneAction(response));
@@ -43,7 +43,7 @@ const ProfileTimeZoneModal: React.FC<ProfileTimeZoneModalProps> = ({ modalData, 
     });
 
     const handleSubmit = async (model: ProfileTimeZoneState) => {
-        let service: profileService = new profileService(testHelper.getTestContainer(search));
+        let service = new profileService(testHelper.getTestContainer(search));
         dispatch(submittingProfileTimeZoneAction());
         let response = await service.setTimeZoneId(model.TimeZoneId);
         dispatch(submittedProfileTimeZoneAction(response));

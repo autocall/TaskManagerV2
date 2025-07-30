@@ -43,7 +43,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
     useAsyncEffect(async () => {
         if (modalData != null) {
             if (modalData.Id) {
-                let service: commentService = new commentService(testHelper.getTestContainer(search));
+                let service = new commentService(testHelper.getTestContainer(search));
                 dispatch(gettingCommentAction());
                 let response = await service.get(modalData.Id);
                 dispatch(gotCommentAction(response));
@@ -74,7 +74,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
     };
 
     const handleSubmit = async (model: CommentState) => {
-        let service: commentService = new commentService(testHelper.getTestContainer(search));
+        let service = new commentService(testHelper.getTestContainer(search));
         if (modalData?.Id) {
             dispatch(submittingCommentAction());
             let response = await service.update(modalData.Id, new CommentData(model));
@@ -95,7 +95,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
     const handleDelete = async () => {
         if (!modalData?.Id) return;
         if (await confirm("Delete Comment", `Are you sure you want to delete the comment?`)) {
-            let service: commentService = new commentService(testHelper.getTestContainer(search));
+            let service = new commentService(testHelper.getTestContainer(search));
             dispatch(submittingCommentAction());
             let response = await service.delete(modalData.Id);
             dispatch(submittedCommentAction(response));

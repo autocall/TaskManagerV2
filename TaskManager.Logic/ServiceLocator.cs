@@ -10,7 +10,7 @@ public static class ServiceLocator {
 
     public static ServicesHost GetHost() {
         if (_serviceProvider == null)
-            throw new InvalidOperationException("ServiceProvider не инициализирован!");
+            throw new InvalidOperationException("ServiceProvider has not been initialized!");
 
         using var scope = _serviceProvider.CreateScope();
         return scope.ServiceProvider.GetRequiredService<ServicesHost>();

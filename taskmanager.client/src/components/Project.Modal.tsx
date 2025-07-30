@@ -34,7 +34,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
     useAsyncEffect(async () => {
         if (modalData != null) {
             if (modalData.Id) {
-                let service: projectService = new projectService(testHelper.getTestContainer(search));
+                let service = new projectService(testHelper.getTestContainer(search));
                 dispatch(gettingProjectAction());
                 let response = await service.get(modalData.Id);
                 dispatch(gotProjectAction(response));
@@ -56,7 +56,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
     });
 
     const handleSubmit = async (model: ProjectState) => {
-        let service: projectService = new projectService(testHelper.getTestContainer(search));
+        let service = new projectService(testHelper.getTestContainer(search));
         if (modalData?.Id) {
             dispatch(submittingProjectAction());
             let response = await service.update(modalData.Id, model.Name, model.DefaultColumn);

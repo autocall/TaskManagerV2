@@ -25,7 +25,7 @@ const Projects: React.FC = () => {
     }, [dispatch]);
 
     const load = async () => {
-        let service: projectService = new projectService(testHelper.getTestContainer(search));
+        let service = new projectService(testHelper.getTestContainer(search));
         dispatch(gettingProjectsAction());
         let response = await service.getAll();
         dispatch(gotProjectsAction(response));
@@ -34,7 +34,7 @@ const Projects: React.FC = () => {
     const handleEdit = (model: ProjectModel) => setModalData(model);
     const handleDelete = async (model: ProjectModel) => {
         if (await confirm("Delete Project", `Are you sure you want to delete the project '${model.Name}'?`)) {
-            let service: projectService = new projectService(testHelper.getTestContainer(search));
+            let service = new projectService(testHelper.getTestContainer(search));
             dispatch(deletingProjectAction());
             let response = await service.delete(model.Id);
             dispatch(deletedProjectAction(response));

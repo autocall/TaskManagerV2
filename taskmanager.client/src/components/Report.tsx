@@ -41,7 +41,7 @@ const Report: React.FC = () => {
     }, [date, dateFrom]);
 
     const load = async () => {
-        let service: reportService = new reportService(testHelper.getTestContainer(search));
+        let service = new reportService(testHelper.getTestContainer(search));
         dispatch(gettingReportAction());
         let response = dateFrom ? await service.getByRange(dateFrom, date) : await service.getByDate(date);
         dispatch(gotReportAction(response));

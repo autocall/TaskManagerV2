@@ -52,7 +52,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
 
         if (modalData != null) {
             if (modalData.Id) {
-                let service: taskService = new taskService(testHelper.getTestContainer(search));
+                let service = new taskService(testHelper.getTestContainer(search));
                 dispatch(gettingTaskAction());
                 let response = await service.get(modalData.Id);
                 dispatch(gotTaskAction(response));
@@ -96,7 +96,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
     };
 
     const handleSubmit = async (model: TaskState) => {
-        let service: taskService = new taskService(testHelper.getTestContainer(search));
+        let service = new taskService(testHelper.getTestContainer(search));
         if (modalData?.Id) {
             dispatch(submittingTaskAction());
             let response = await service.update(modalData.Id, new TaskData(model));
@@ -118,7 +118,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
     const handleDelete = async () => {
         if (!modalData?.Id) return;
         if (await confirm("Delete Task", `Are you sure you want to delete the task '#${modalData.Index}'?`)) {
-            let service: taskService = new taskService(testHelper.getTestContainer(search));
+            let service = new taskService(testHelper.getTestContainer(search));
             dispatch(submittingTaskAction());
             let response = await service.delete(modalData.Id);
             dispatch(submittedTaskAction(response));

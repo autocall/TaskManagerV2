@@ -39,7 +39,7 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
     useAsyncEffect(async () => {
         if (modalData != null) {
             if (modalData.Id) {
-                let service: eventService = new eventService(testHelper.getTestContainer(search));
+                let service = new eventService(testHelper.getTestContainer(search));
                 dispatch(gettingEventAction());
                 let response = await service.get(modalData.Id);
                 dispatch(gotEventAction(response));
@@ -65,7 +65,7 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
     });
 
     const handleSubmit = async (model: EventState) => {
-        let service: eventService = new eventService(testHelper.getTestContainer(search));
+        let service = new eventService(testHelper.getTestContainer(search));
         if (modalData?.Id) {
             dispatch(submittingEventAction());
             let response = await service.update(modalData.Id, new EventData(model));
@@ -86,7 +86,7 @@ const EventModal: React.FC<EventModalProps> = ({ modalData, onClose }) => {
     const handleDelete = async () => {
         if (!modalData?.Id) return;
         if (await confirm("Delete Event", `Are you sure you want to delete the event '${modalData.Name}'?`)) {
-            let service: eventService = new eventService(testHelper.getTestContainer(search));
+            let service = new eventService(testHelper.getTestContainer(search));
             dispatch(submittingEventAction());
             let response = await service.delete(modalData.Id);
             dispatch(submittedEventAction(response));

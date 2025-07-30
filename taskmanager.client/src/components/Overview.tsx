@@ -16,7 +16,7 @@ import {
 } from "../states/overview.state";
 import overviewService from "../services/overview.service";
 import authService from "../services/auth.service";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import IJwt from "../types/jwt.type";
 import OverviewTask from "./Overview.Task";
 import TaskModal from "./Task.Modal";
@@ -47,20 +47,39 @@ const Overview: React.FC = () => {
     const [filterStatus, setFilterStatus] = useState<TaskStatusEnum | null>(null);
     const [filterProjectId, setFilterProjectId] = useState<number | null>(null);
     const [filterDate, setFilterDate] = useState<string>("");
+    const [scrollPosition, setScrollPosition] = useState<number | null>(null); // [scroll:1: hides the container during scroll restory
     const { confirm, ConfirmDialog } = useConfirm();
     const statisticRef = useRef<OverviewStatisticRef>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     useAsyncEffect(async () => {
         await load();
     }, [dispatch, filterTextTrigger, filterKind, filterStatus, filterProjectId, filterDate]);
+    // [scroll:2]: restores the scroll position
+    useEffect(() => {
+        if  (!state.loading) {
+            if (scrollRef.current && scrollPosition) {
+                scrollRef.current.scrollTop = scrollPosition;
+                setScrollPosition(null);
+            }
+        }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state.loading]);
 
     const load = async () => {
+        // [scroll:3]: saves the scroll position
+        if (scrollRef.current && scrollRef.current.scrollTop > 0) {
+            setScrollPosition(scrollRef.current.scrollTop);
+        }
         let user = new authService(null).getCurrentUser();
         setCurrentUser(user);
 
-        let service: overviewService = new overviewService(testHelper.getTestContainer(search));
+        let service = new overviewService(testHelper.getTestContainer(search));
         dispatch(gettingOverviewAction());
+        console.log(`filterDate: ${filterDate} filterStatus:${filterStatus}`);
         let response = await service.get(filterText, filterKind, filterStatus, filterProjectId, filterDate);
+        console.log(`response: ${response.data.length}`);
         setProjects(overviewService.projects);
         dispatch(gotOverviewAction(response));
     };
@@ -80,7 +99,7 @@ const Overview: React.FC = () => {
     const handleTaskEdit = (model: TaskModel) => setModalTaskData(model);
     const handleTaskDelete = async (model: TaskModel) => {
         if (await confirm("Delete Task", `Are you sure you want to delete the task '${model.Index}'?`)) {
-            let service: taskService = new taskService(testHelper.getTestContainer(search));
+            let service = new taskService(testHelper.getTestContainer(search));
             dispatch(processingOverviewTaskAction(model.Id));
             let response = await service.delete(model.Id);
             dispatch(processedOverviewTaskAction(model.Id, response));
@@ -92,7 +111,7 @@ const Overview: React.FC = () => {
         }
     };
     const handleTaskUp = async (model: TaskModel) => {
-        let service: taskService = new taskService(testHelper.getTestContainer(search));
+        let service = new taskService(testHelper.getTestContainer(search));
         dispatch(processingOverviewTaskAction(model.Id));
         let response = await service.up(model.Id);
         dispatch(processedOverviewTaskAction(model.Id, response));
@@ -102,7 +121,7 @@ const Overview: React.FC = () => {
         }
     };
     const handleTaskDown = async (model: TaskModel) => {
-        let service: taskService = new taskService(testHelper.getTestContainer(search));
+        let service = new taskService(testHelper.getTestContainer(search));
         dispatch(processingOverviewTaskAction(model.Id));
         let response = await service.down(model.Id);
         dispatch(processedOverviewTaskAction(model.Id, response));
@@ -120,7 +139,7 @@ const Overview: React.FC = () => {
 
     const handleCommentDelete = async (model: CommentModel) => {
         if (await confirm("Delete Comment", `Are you sure you want to delete the comment?`)) {
-            let service: commentService = new commentService(testHelper.getTestContainer(search));
+            let service = new commentService(testHelper.getTestContainer(search));
             dispatch(processingOverviewTaskAction(model.TaskId));
             let response = await service.delete(model.Id);
             dispatch(processedOverviewTaskAction(model.TaskId, response));
@@ -212,7 +231,12 @@ const Overview: React.FC = () => {
             </Col>
             {/* Col(scroll-content) - moves toolbar to scroll-container */}
             {/* Col(main-section) + div(scroll-content) - fixes toolbar */}
-            <Col md={true} /*className="main-section"*/ className="scroll-content">
+            <Col
+                ref={scrollRef}
+                // [scroll:4]: sets visibility by scrollPosition
+                style={{ visibility: !scrollPosition ? "visible" : "hidden" }}
+                md={true}
+                /*className="main-section"*/ className="scroll-content">
                 {state.error && <Alert variant="danger">{state.error}</Alert>}
                 {state.loading ? (
                     <Row style={{ textAlign: "center", marginTop: "1em" }}>
@@ -325,7 +349,6 @@ const Overview: React.FC = () => {
                                                 setFilterKind(null);
                                                 setFilterStatus(null);
                                                 setFilterProjectId(null);
-                                                load();
                                             }}>
                                             Reset
                                         </Button>

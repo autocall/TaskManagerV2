@@ -25,7 +25,7 @@ const Categories: React.FC = () => {
     }, [dispatch]);
 
     const load = async () => {
-        let service: categoryService = new categoryService(testHelper.getTestContainer(search));
+        let service = new categoryService(testHelper.getTestContainer(search));
         dispatch(gettingCategoriesAction());
         let response = await service.getAll();
         dispatch(gotCategoriesAction(response));
@@ -33,7 +33,7 @@ const Categories: React.FC = () => {
     const handleAdd = () => setModalData(new CategoryModel());
     const handleEdit = (model: CategoryModel) => setModalData(model);
     const handleUp = async (model: CategoryModel) => {
-        let service: categoryService = new categoryService(testHelper.getTestContainer(search));
+        let service = new categoryService(testHelper.getTestContainer(search));
         dispatch(deletingCategoryAction());
         let response = await service.updateOrder(model.Id, +1);
         dispatch(deletedCategoryAction(response));
@@ -42,7 +42,7 @@ const Categories: React.FC = () => {
         }
     };
     const handleDown = async (model: CategoryModel) => {
-        let service: categoryService = new categoryService(testHelper.getTestContainer(search));
+        let service = new categoryService(testHelper.getTestContainer(search));
         dispatch(deletingCategoryAction());
         let response = await service.updateOrder(model.Id, -1);
         dispatch(deletedCategoryAction(response));
@@ -52,7 +52,7 @@ const Categories: React.FC = () => {
     };
     const handleDelete = async (model: CategoryModel) => {
         if (await confirm("Delete Category", `Are you sure you want to delete the category '${model.Name}'?`)) {
-            let service: categoryService = new categoryService(testHelper.getTestContainer(search));
+            let service = new categoryService(testHelper.getTestContainer(search));
             dispatch(deletingCategoryAction());
             let response = await service.delete(model.Id);
             dispatch(deletedCategoryAction(response));

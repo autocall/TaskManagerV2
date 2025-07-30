@@ -22,7 +22,7 @@ const Calendar: React.FC = () => {
 
     const load = async () => {
         //setShowManageDay(null); delete code
-        let service: calendarService = new calendarService(testHelper.getTestContainer(search));
+        let service = new calendarService(testHelper.getTestContainer(search));
         dispatch(gettingCalendarAction());
         //const start = performance.now();
         let response = await service.getCurrent();

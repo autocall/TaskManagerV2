@@ -57,7 +57,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ loading, calendar, load }) 
     const handleCompleteEvent = async (model: CalendarEventModel) => {
         setManageDay(null);
         if (await confirm("Complete Event", `Are you sure you want to complete the event '${model.Name}'?`)) {
-            let service: eventService = new eventService(testHelper.getTestContainer(search));
+            let service = new eventService(testHelper.getTestContainer(search));
             dispatch(gettingCalendarAction());
             await service.completeEvent(model.Id);
             await load();

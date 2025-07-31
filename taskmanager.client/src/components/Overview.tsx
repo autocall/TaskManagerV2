@@ -77,9 +77,7 @@ const Overview: React.FC = () => {
 
         let service = new overviewService(testHelper.getTestContainer(search));
         dispatch(gettingOverviewAction());
-        console.log(`filterDate: ${filterDate} filterStatus:${filterStatus}`);
         let response = await service.get(filterText, filterKind, filterStatus, filterProjectId, filterDate);
-        console.log(`response: ${response.data.length}`);
         setProjects(overviewService.projects);
         dispatch(gotOverviewAction(response));
     };

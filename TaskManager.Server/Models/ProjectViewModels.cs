@@ -9,6 +9,7 @@ public class CreateProjectViewModel {
     public string Name { get; set; }
     [NotDefault]
     public TaskColumnEnum DefaultColumn { get; set; }
+    public string GitHubRepo { get; set; }
 }
 
 public class UpdateProjectViewModel {
@@ -19,5 +20,6 @@ public class UpdateProjectViewModel {
     public string Name { get; set; }
     [NotDefault]
     public TaskColumnEnum DefaultColumn { get; set; }
+    public string GitHubRepo { get; set; }
 
 }

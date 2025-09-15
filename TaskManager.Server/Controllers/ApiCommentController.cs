@@ -23,6 +23,7 @@ public class ApiCommentController : BaseFileController {
 
     private CommentService CommentService => Host.GetService<CommentService>();
     private TaskService TaskService => Host.GetService<TaskService>();
+    private GitHubService GitHubService => Host.GetService<GitHubService>();
 
     #region [ .ctor ]
 
@@ -53,7 +54,8 @@ public class ApiCommentController : BaseFileController {
             return BadRequest(validationResults);
 
         var inputDto = Mapper.Map<CreateCommentDto>(model);
-        var outputDto = await this.CommentService.CreateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
+        var gitHubCommitDto = await this.GitHubService.GetCommitAsync(model.TaskId, model.CommitHash, base.GetUserId(), base.GetCompanyId());
+        var outputDto = await this.CommentService.CreateAsync(inputDto, gitHubCommitDto, base.GetUserId(), base.GetCompanyId());
         await this.TaskService.UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
         await base.SaveFilesAsync(form.Files, outputDto.Id);
         return JsonSuccess(outputDto);
@@ -68,7 +70,8 @@ public class ApiCommentController : BaseFileController {
             return BadRequest(validationResults);
 
         var inputDto = Mapper.Map<UpdateCommentDto>(model);
-        var outputDto = await this.CommentService.UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
+        var gitHubCommitDto = await this.GitHubService.GetCommitAsync(model.TaskId, model.CommitHash, base.GetUserId(), base.GetCompanyId());
+        var outputDto = await this.CommentService.UpdateAsync(inputDto, gitHubCommitDto, base.GetUserId(), base.GetCompanyId());
         await this.TaskService.UpdateAsync(inputDto, base.GetUserId(), base.GetCompanyId());
         await base.SaveFilesAsync(form.Files, outputDto.Id);
         await base.DeleteFilesAsync(model.DeleteFileNames, outputDto.Id);

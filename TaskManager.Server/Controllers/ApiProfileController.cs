@@ -63,18 +63,20 @@ public class ApiProfileController : BaseController {
         return await accountController.ReturnIdentityAsync(user);
     }
 
+    /// <summary>
+    ///     /profile/getgithub does not work </summary>
     [HttpGet]
-    public async Task<ActionResult> GetGitHubToken() {
-        var token = await this.Service.GetGitHubTokenAsync(GetUserId());
-        return JsonSuccess(new { Token = token });
+    public async Task<ActionResult> GetGitHub1() {
+        var result = await this.Service.GetGitHubAsync(GetUserId());
+        return JsonSuccess(new { Owner = result.owner, Token = result.token });
     }
 
     [HttpPut]
-    public async Task<ActionResult> SetGitHubToken([FromBody] UpdateGitHubTokenViewModel model) {
+    public async Task<ActionResult> SetGitHub([FromBody] UpdateGitHubTokenViewModel model) {
         if (!ModelState.IsValid) {
             return base.JsonFail(base.GetErrors());
         }
-        await this.Service.SetGitHubTokenAsync(GetUserId(), model.Token);
+        await this.Service.SetGitHubAsync(GetUserId(), model.Owner, model.Token);
         return JsonSuccess();
     }
 }

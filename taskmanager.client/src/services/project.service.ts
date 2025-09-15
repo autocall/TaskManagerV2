@@ -35,9 +35,9 @@ export default class projectService {
             });
     }
 
-    public create(name: string, defaultColumn: TaskColumnEnum) {
+    public create(name: string, defaultColumn: TaskColumnEnum, gitHubRepo: string) {
         return this.rep
-            .create(name, defaultColumn)
+            .create(name, defaultColumn, gitHubRepo)
             .then((response) => {
                 return Response.success<any>(response.data);
             })
@@ -46,9 +46,9 @@ export default class projectService {
             });
     }
 
-    public update(id: number, name: string, defaultColumn: TaskColumnEnum) {
+    public update(id: number, name: string, defaultColumn: TaskColumnEnum, gitHubRepo: string) {
         return this.rep
-            .update(id, name, defaultColumn)
+            .update(id, name, defaultColumn, gitHubRepo)
             .then((response) => {
                 return Response.success<any>(response.data);
             })

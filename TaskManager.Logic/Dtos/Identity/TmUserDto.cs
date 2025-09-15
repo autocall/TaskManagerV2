@@ -5,6 +5,7 @@ public class TmUserDto {
     public string Email { get; set; }
     public string UserName { get; set; }
     public string TimeZoneId { get; set; }
+    public string GitHubOwner { get; set; }
     public string GitHubToken { get; set; }
     public DateTime CreatedDateTime { get; set; }
     public DateTime ModifiedDateTime { get; set; }

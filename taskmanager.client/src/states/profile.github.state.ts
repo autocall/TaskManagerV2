@@ -1,56 +1,59 @@
 import Response from "../services/models/response";
 
-export interface ProfileGitHubTokenState {
+export interface ProfileGitHubState {
     readonly submitting: boolean;
     readonly loading: boolean;
     readonly loaded: boolean;
+    readonly Owner: string | "";
     readonly Token: string | "";
     readonly error: string | null;
     readonly errors: { [key: string]: string };
 }
 
-const initialState: ProfileGitHubTokenState = {
+const initialState: ProfileGitHubState = {
     loading: true, // prevents reinitialization of fields
     loaded: false,
     submitting: false,
+    Owner: "",
     Token: "",
     error: null,
     errors: {},
 };
 
-export const GETTINGPROFILETIMEZONE = "GettingProfileGitHubToken";
-export const gettingProfileGitHubTokenAction = () =>
+export const GETTINGPROFILETIMEZONE = "GettingProfileGitHub";
+export const gettingProfileGitHubAction = () =>
     ({
         type: GETTINGPROFILETIMEZONE,
     }) as const;
 
-export const GOTPROFILETIMEZONE = "GotProfileGitHubToken";
-export const gotProfileGitHubTokenAction = (response: Response<{ Token: string }>) =>
+export const GOTPROFILETIMEZONE = "GotProfileGitHub";
+export const gotProfileGitHubAction = (response: Response<{ Owner: string, Token: string }>) =>
     ({
         type: GOTPROFILETIMEZONE,
+        Owner: response.data?.Owner ?? initialState.Owner,
         Token: response.data?.Token ?? initialState.Token,
         error: response.error ?? initialState.error,
         errors: response.errors ?? initialState.errors,
     }) as const;
 
-export const SUBMITTINGPROFILETIMEZONE = "SubmittingProfileGitHubToken";
-export const submittingProfileGitHubTokenAction = () =>
+export const SUBMITTINGPROFILETIMEZONE = "SubmittingProfileGitHub";
+export const submittingProfileGitHubAction = () =>
     ({
         type: SUBMITTINGPROFILETIMEZONE,
         error: initialState.error,
         errors: initialState.errors,
     }) as const;
 
-export const SUBMITTEDPROFILETIMEZONE = "SubmittedProfileGitHubToken";
-export const submittedProfileGitHubTokenAction = (response: Response<any>) =>
+export const SUBMITTEDPROFILETIMEZONE = "SubmittedProfileGitHub";
+export const submittedProfileGitHubAction = (response: Response<any>) =>
     ({
         type: SUBMITTEDPROFILETIMEZONE,
         error: response.error ?? initialState.error,
         errors: response.errors ?? initialState.errors,
     }) as const;
 
-export const CLOSEPROFILETIMEZONE = "CloseProfileGitHubToken";
-export const closeProfileGitHubTokenAction = () =>
+export const CLOSEPROFILETIMEZONE = "CloseProfileGitHub";
+export const closeProfileGitHubAction = () =>
     ({
         type: CLOSEPROFILETIMEZONE,
         Token: initialState.Token,
@@ -58,14 +61,14 @@ export const closeProfileGitHubTokenAction = () =>
         errors: initialState.errors,
     }) as const;
 
-type ProfileGitHubTokenActions =
-    | ReturnType<typeof gettingProfileGitHubTokenAction>
-    | ReturnType<typeof gotProfileGitHubTokenAction>
-    | ReturnType<typeof submittingProfileGitHubTokenAction>
-    | ReturnType<typeof submittedProfileGitHubTokenAction>
-    | ReturnType<typeof closeProfileGitHubTokenAction>;
+type ProfileGitHubActions =
+    | ReturnType<typeof gettingProfileGitHubAction>
+    | ReturnType<typeof gotProfileGitHubAction>
+    | ReturnType<typeof submittingProfileGitHubAction>
+    | ReturnType<typeof submittedProfileGitHubAction>
+    | ReturnType<typeof closeProfileGitHubAction>;
 
-export const profileGitHubTokenReducer: any = (state: ProfileGitHubTokenState = initialState, action: ProfileGitHubTokenActions) => {
+export const profileGitHubReducer: any = (state: ProfileGitHubState = initialState, action: ProfileGitHubActions) => {
     switch (action.type) {
         case GETTINGPROFILETIMEZONE:
             return {

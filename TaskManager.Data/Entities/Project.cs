@@ -9,11 +9,13 @@ public class Project : BaseCompanyEntity, IProjectUpdateMap, IEnumProjectMap {
     [Column(TypeName = "nvarchar(64)")]
     public string Name { get; set; }
     public byte DefaultColumn { get; set; }
+    public string GitHubRepo { get; set; }
 }
 
 public interface IProjectUpdateMap : IBaseUpdateMap {
     public string Name { get; set; }
     public byte DefaultColumn { get; set; }
+    public string GitHubRepo { get; set; }
 }
 
 public interface IEnumProjectMap {

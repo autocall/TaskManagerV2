@@ -35,20 +35,21 @@ export default class profileService {
             });
     }
 
-    public getGitHubToken(): Promise<Response<{ Token: string }>> {
+    public getGitHub(): Promise<Response<{ Owner: string, Token: string }>> {
         return this.rep
-            .getGitHubToken()
+            .getGitHub()
             .then((response) => {
-                return Response.success<{ Token: string }>({ Token: response.data.Token });
+                console.log(response);
+                return Response.success<{ Owner: string, Token: string }>({ Owner: response.data.Owner, Token: response.data.Token });
             })
             .catch((exception) => {
-                return Response.fail<{ Token: string }>(exception);
+                return Response.fail<{ Owner: string, Token: string }>(exception);
             });
     }
 
-    public setGitHubToken(token: string): Promise<Response<any>> {
+    public setGitHub(owner: string, token: string): Promise<Response<any>> {
         return this.rep
-            .setGitHubToken(token)
+            .setGitHub(owner, token)
             .then((response) => {
                 return Response.success<any>(response.data);
             })

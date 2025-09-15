@@ -8,11 +8,13 @@ public interface IEnumProjectDtoMap {
 public class ProjectDto : BaseCompanyDto, IEnumProjectDtoMap {
     public string Name { get; set; }
     public TaskColumnEnum DefaultColumn { get; set; }
+    public string GitHubRepo { get; set; }
 }
 
 public class CreateProjectDto : IEnumProjectDtoMap {
     public string Name { get; set; }
     public TaskColumnEnum DefaultColumn { get; set; }
+    public string GitHubRepo { get; set; }
 }
 
 public class UpdateProjectDto : IEnumProjectDtoMap {
@@ -20,4 +22,5 @@ public class UpdateProjectDto : IEnumProjectDtoMap {
 
     public string Name { get; set; }
     public TaskColumnEnum DefaultColumn { get; set; }
+    public string GitHubRepo { get; set; }
 }

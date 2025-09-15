@@ -49,6 +49,12 @@ const OverviewComment: React.FC<OverviewCommentProps> = ({ comment, currentUser,
                     ))}
                     <span className="extra-text" title="Created Date">
                         {stringExtension.dateToLong(comment.CreatedDateTime, currentUser!.TimeZoneId)}
+                        {comment.CommitHash && (
+                            <span className="ms-2">
+                                <i className="bi bi-github me-1" title="GitHub changes"></i>
+                                {comment.CommitAdditions}(+), {comment.CommitDeletions}(-)
+                            </span>
+                        )}
                     </span>
                 </div>
                 <div className="extra-link">

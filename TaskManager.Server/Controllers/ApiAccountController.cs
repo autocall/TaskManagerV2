@@ -51,6 +51,7 @@ public class ApiAccountController : BaseController {
                     UserName = user.UserName,
                     Email = user.Email,
                     TimeZone = ProfileService.GetTimeZoneById(user.TimeZoneId),
+                    GitHubOwner = user.GitHubOwner,
                     GitHubToken = user.GitHubToken.TruncateToken(),
                     Roles = roles
                 });
@@ -150,6 +151,8 @@ public class ApiAccountController : BaseController {
             UserName = user.UserName,
             Email = user.Email,
             TimeZone = ProfileService.GetTimeZoneById(user.TimeZoneId),
+            GitHubOwner = user.GitHubOwner,
+            GitHubToken = user.GitHubToken.TruncateToken(),
             Roles = (await Host.UserManager.GetRolesAsync(user)).ToList()
         };
         return base.JsonSuccess(new {

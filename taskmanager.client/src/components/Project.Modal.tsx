@@ -59,14 +59,14 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
         let service = new projectService(testHelper.getTestContainer(search));
         if (modalData?.Id) {
             dispatch(submittingProjectAction());
-            let response = await service.update(modalData.Id, model.Name, model.DefaultColumn);
+            let response = await service.update(modalData.Id, model.Name, model.DefaultColumn, model.GitHubRepo);
             dispatch(submittedProjectAction(response));
             if (response.success) {
                 handleClose(true);
             }
         } else {
             dispatch(submittingProjectAction());
-            let response = await service.create(model.Name, model.DefaultColumn);
+            let response = await service.create(model.Name, model.DefaultColumn, model.GitHubRepo);
             dispatch(submittedProjectAction(response));
             if (response.success) {
                 handleClose(true);
@@ -96,6 +96,9 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ modalData, onClose }) => {
                                 <Modal.Body>
                                     <FormGroup error={touched.Name && (errors.Name ?? state.errors.Name)}>
                                         <Field name="Name" placeholder="Name" className="form-control" />
+                                    </FormGroup>
+                                    <FormGroup error={touched.GitHubRepo && (errors.GitHubRepo ?? state.errors.GitHubRepo)}>
+                                        <Field name="GitHubRepo" placeholder="GitHub Repo" className="form-control" />
                                     </FormGroup>
                                     <FormGroup
                                         label="Default Column"

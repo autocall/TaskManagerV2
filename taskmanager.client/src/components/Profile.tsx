@@ -4,14 +4,14 @@ import useAsyncEffect from "use-async-effect";
 import { Link } from "react-router-dom";
 import { ProfileTimeZoneModel } from "../services/models/timezone.model";
 import ProfileTimeZoneModal from "./Profile.TimeZone.Modal";
-import ProfileGitHubTokenModal from "./Profile.GitHubToken.Modal";
+import ProfileGitHubModal from "./Profile.GitHub.Modal";
 import IdentityModel from "../services/models/identity.model";
-import { ProfileGitHubTokenModel } from "../services/models/githubtoken.model";
+import { ProfileGitHubModel } from "../services/models/github.model";
 
 const Profile: React.FC = () => {
     const [currentUser, setCurrentUser] = useState<IdentityModel | undefined>(undefined);
     const [profileTimeZoneModalData, setProfileTimeZoneModalData] = useState<ProfileTimeZoneModel | null>(null);
-    const [profileGitHubTokenModalData, setProfileGitHubTokenModalData] = useState<ProfileGitHubTokenModel | null>(null);
+    const [profileGitHubModalData, setProfileGitHubModalData] = useState<ProfileGitHubModel | null>(null);
 
     useAsyncEffect(async () => {
         setCurrentUser(window.identity);
@@ -21,8 +21,10 @@ const Profile: React.FC = () => {
         setProfileTimeZoneModalData(new ProfileTimeZoneModel({ TimeZoneId: currentUser!.TimeZone.Id ?? null }));
     };
 
-    const handleChangeGitHubToken = () => {
-        setProfileGitHubTokenModalData(new ProfileGitHubTokenModel({ GitHubToken: currentUser!.GitHubToken ?? null }));
+    const handleChangeGitHub = () => {
+        setProfileGitHubModalData(
+            new ProfileGitHubModel({ GitHubOwner: currentUser!.GitHubOwner ?? null, GitHub: currentUser!.GitHubToken ?? null }),
+        );
     };
 
     const handleCloseTimeZone = async (reload: boolean) => {
@@ -32,8 +34,8 @@ const Profile: React.FC = () => {
         }
     };
 
-    const handleCloseGitHubToken = async (reload: boolean) => {
-        setProfileGitHubTokenModalData(null);
+    const handleCloseGitHub = async (reload: boolean) => {
+        setProfileGitHubModalData(null);
         if (reload) {
             window.location.reload();
         }
@@ -41,7 +43,7 @@ const Profile: React.FC = () => {
     return (
         <Container className="scroll-content">
             <ProfileTimeZoneModal modalData={profileTimeZoneModalData} onClose={handleCloseTimeZone} />
-            <ProfileGitHubTokenModal modalData={profileGitHubTokenModalData} onClose={handleCloseGitHubToken} />
+            <ProfileGitHubModal modalData={profileGitHubModalData} onClose={handleCloseGitHub} />
             <Row className="justify-content-center">
                 <Col className="text-center" style={{ maxWidth: "38rem" }}>
                     <Card>
@@ -88,11 +90,11 @@ const Profile: React.FC = () => {
                                     </Row>
                                     <Row css={{ minHeight: "2rem" }}>
                                         <Col css={{ textAlign: "right", color: "gray" }} xs="4">
-                                            GitHub Token
+                                            GitHub
                                         </Col>
                                         <Col css={{ textAlign: "left" }}>
-                                            {currentUser.GitHubToken ?? "none"}&nbsp;
-                                            <Link to="#" onClick={() => handleChangeGitHubToken()}>
+                                            {currentUser.GitHubOwner ?? "none"}&nbsp;
+                                            <Link to="#" onClick={() => handleChangeGitHub()}>
                                                 Change
                                             </Link>
                                         </Col>

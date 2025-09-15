@@ -3,6 +3,7 @@ using TaskManager.Data.Entities;
 using TaskManager.Logic.Dtos;
 using TaskManager.Logic.Dtos.Identity;
 using TaskManager.Logic.Enums;
+using TaskManager.Logic.WebServices.Responses;
 
 namespace TaskManager.Logic.Mapping;
 public class LogicMappingProfile : Profile {
@@ -37,6 +38,11 @@ public class LogicMappingProfile : Profile {
 
         CreateMap<CreateTaskDto, Task1>().CreateTaskMappings().ReverseMap().CreateTaskMappings();
         CreateMap<UpdateTaskDto, Task1>().CreateTaskMappings().ReverseMap().CreateTaskMappings();
+
+        CreateMap<GitHubCommitResponse, GitHubCommitDto>()
+            .ForMember(dest => dest.CommitAdditions, opt => opt.MapFrom(src => src.Stats.Additions))
+            .ForMember(dest => dest.CommitDeletions, opt => opt.MapFrom(src => src.Stats.Deletions));
+        CreateMap<GitHubCommitDto, Comment>();
 
         CreateMap<CommentDto, ReportCommentDto>();
         CreateMap<TaskDto, ReportTaskDto>();

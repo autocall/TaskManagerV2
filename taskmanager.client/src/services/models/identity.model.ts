@@ -6,6 +6,7 @@ export default class IdentityModel {
     public Email: string;
     public TimeZone: TimeZoneModel;
     public Roles: string;
+    public GitHubOwner: string;
     public GitHubToken: string;
 
     constructor(data: any) {
@@ -14,6 +15,7 @@ export default class IdentityModel {
         this.Email = data.Email;
         this.TimeZone = new TimeZoneModel(data.TimeZone);
         this.Roles = data.Roles;
+        this.GitHubOwner = data.GitHubOwner;
         this.GitHubToken = data.GitHubToken;
     }
 }

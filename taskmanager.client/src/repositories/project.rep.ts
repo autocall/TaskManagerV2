@@ -33,19 +33,20 @@ export default class projectRepository {
         return axios.get(`${API_URL}${action}/${id}`, { headers: this.generateHeaders(action) });
     }
 
-    public create(name: string, defaultColumn: TaskColumnEnum) {
+    public create(name: string, defaultColumn: TaskColumnEnum, gitHubRepo: string) {
         let action = "create";
         return axios.post(
             `${API_URL}${action}/`,
             {
                 name,
                 defaultColumn,
+                gitHubRepo,
             },
             { headers: this.generateHeaders(action) },
         );
     }
 
-    public update(id: number, name: string, defaultColumn: TaskColumnEnum) {
+    public update(id: number, name: string, defaultColumn: TaskColumnEnum, gitHubRepo: string) {
         let action = "update";
         return axios.put(
             `${API_URL}${action}/`,
@@ -53,6 +54,7 @@ export default class projectRepository {
                 id,
                 name,
                 defaultColumn,
+                gitHubRepo,
             },
             { headers: this.generateHeaders(action) },
         );

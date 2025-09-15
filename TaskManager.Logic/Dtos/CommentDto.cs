@@ -12,7 +12,10 @@ public class CommentDto : BaseCompanyDto {
     public DateOnly Date { get; set; }
     public decimal WorkHours { get; set; }
     public string Text { get; set; }
+
     public string CommitHash { get; set; }
+    public int? CommitAdditions { get; set; }
+    public int? CommitDeletions { get; set; }
 }
 
 public class CommentViewDto : CommentDto {
@@ -25,8 +28,11 @@ public class CreateCommentDto : ITaskUpdateStatusDtoMap {
     public DateOnly Date { get; set; }
     public decimal WorkHours { get; set; }
     public string Text { get; set; }
-    public string CommitHash { get; set; }
     public TaskStatusEnum Status { get; set; }
+
+    public string CommitHash { get; set; }
+    public int? CommitAdditions { get; set; }
+    public int? CommitDeletions { get; set; }
 }
 
 public class UpdateCommentDto : ITaskUpdateStatusDtoMap {
@@ -36,6 +42,9 @@ public class UpdateCommentDto : ITaskUpdateStatusDtoMap {
     public DateOnly Date { get; set; }
     public decimal WorkHours { get; set; }
     public string Text { get; set; }
-    public string CommitHash { get; set; }
     public TaskStatusEnum Status { get; set; }
+
+    public string CommitHash { get; set; }
+    public int? CommitAdditions { get; set; }
+    public int? CommitDeletions { get; set; }
 }

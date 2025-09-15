@@ -1,8 +1,11 @@
 ﻿using LinqToDB;
+using Newtonsoft.Json;
+using TaskManager.Common.Extensions;
 using TaskManager.Data.Entities;
 using TaskManager.Data.Repositories;
 using TaskManager.Logic.Dtos;
 using TaskManager.Logic.Enums;
+using TaskManager.Logic.WebServices;
 
 namespace TaskManager.Logic.Services;
 public class CommentService : BaseService {
@@ -35,15 +38,18 @@ public class CommentService : BaseService {
         return commentViewDto;
     }
 
-    public async Task<CommentDto> CreateAsync(CreateCommentDto dto, int userId, int companyId) {
+    public async Task<CommentDto> CreateAsync(CreateCommentDto dto, GitHubCommitDto commit, int userId, int companyId) {
         var model = new Comment();
         Mapper.Map(dto, model);
+        Mapper.Map(commit, model);
         await Rep(companyId).InsertAsync(model, userId);
         return await this.GetAsync(model.Id, companyId);
     }
 
-    public async Task<CommentDto> UpdateAsync(UpdateCommentDto dto, int userId, int companyId) {
+    public async Task<CommentDto> UpdateAsync(UpdateCommentDto dto, GitHubCommitDto commit, int userId, int companyId) {
         var inModel = Mapper.Map<Comment>(dto);
+        Console.WriteLine(JsonExtension.Serialize(commit));
+        Mapper.Map(commit, inModel);
         await Rep(companyId).UpdateAsync<ICommentUpdateMap>(inModel, userId);
         return await this.GetAsync(dto.Id, companyId);
     }

@@ -9,7 +9,7 @@ import { categoriesReducer, CategoriesState } from "./categories.state";
 import { calendarReducer, CalendarState } from "./calendar.state";
 import { eventReducer, EventState } from "./event.state";
 import { profileTimeZoneReducer, ProfileTimeZoneState } from "./profile.timezone.state";
-import { profileGitHubTokenReducer, ProfileGitHubTokenState } from "./profile.githubtoken.state";
+import { profileGitHubReducer, ProfileGitHubState } from "./profile.github.state";
 import { overviewReducer, OverviewState } from "./overview.state";
 import { taskReducer, TaskState } from "./task.state";
 import { commentReducer, CommentState } from "./comment.state";
@@ -30,7 +30,7 @@ export interface AppState {
     readonly calendarState: CalendarState;
     readonly eventState: EventState;
     readonly profileTimeZoneState: ProfileTimeZoneState;
-    readonly profileGitHubTokenState: ProfileGitHubTokenState;
+    readonly profileGitHubState: ProfileGitHubState;
     readonly reportState: ReportState;
 }
 
@@ -48,7 +48,7 @@ const rootReducer = combineReducers<AppState>({
     commentState: commentReducer,
     eventState: eventReducer,
     profileTimeZoneState: profileTimeZoneReducer,
-    profileGitHubTokenState: profileGitHubTokenReducer,
+    profileGitHubState: profileGitHubReducer,
     reportState: reportReducer
 });
 

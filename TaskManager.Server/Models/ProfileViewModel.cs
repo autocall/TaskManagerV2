@@ -7,5 +7,6 @@ public class UpdateTimeZoneViewModel {
     public string TimeZoneId { get; set; }
 }
 public class UpdateGitHubTokenViewModel {
+    public string Owner { get; set; }
     public string Token { get; set; }
 }

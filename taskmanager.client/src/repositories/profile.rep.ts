@@ -38,16 +38,17 @@ export default class profileRepository {
         );
     }
 
-    public getGitHubToken() {
-        let action = "getgithubtoken";
+    public getGitHub() {
+        let action = "getgithub1";
         return axios.get(API_URL + action, { headers: this.generateHeaders(action) });
     }
 
-    public setGitHubToken(token: string) {
-        let action = "setgithubtoken";
+    public setGitHub(owner: string, token: string) {
+        let action = "setgithub";
         return axios.put(
             API_URL + action,
             {
+                owner: owner,
                 token: token,
             },
             { headers: this.generateHeaders(action) },

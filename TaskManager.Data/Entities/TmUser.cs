@@ -14,7 +14,11 @@ public class TmUser : IdentityUser<int> {
     public string TimeZoneId { get; set; }
 
     /// <summary>
-    ///     GitHub access tokens </summary>
+    ///     GitHub Owner </summary>
+    [Column(TypeName = "varchar(50)")]
+    public string GitHubOwner { get; set; }
+    /// <summary>
+    ///     GitHub access token </summary>
     [Column(TypeName = "varchar(200)")]
     public string GitHubToken { get; set; }
 

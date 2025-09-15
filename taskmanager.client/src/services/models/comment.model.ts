@@ -10,10 +10,13 @@ export default class CommentModel extends BaseModel implements ICommentData {
     Date: string;
     WorkHours: number;
     Text: string;
-    CommitHash: string;
 
     Status: TaskStatusEnum | null;
     TaskIndex: number | null;
+
+    CommitHash: string;
+    CommitAdditions: number | null;
+    CommitDeletions: number | null;
 
     Files: FileModel[];
 
@@ -24,10 +27,13 @@ export default class CommentModel extends BaseModel implements ICommentData {
             this.Date = data.Date;
             this.WorkHours = data.WorkHours;
             this.Text = data.Text;
-            this.CommitHash = data.CommitHash;
 
             this.Status = data.TaskStatus;
             this.TaskIndex = data.TaskIndex;
+            
+            this.CommitHash = data.CommitHash;
+            this.CommitAdditions = data.CommitAdditions;
+            this.CommitDeletions = data.CommitDeletions;
         }
         if (files) {
             this.Files = files.map((e: any) => new FileModel(e));
@@ -58,8 +64,10 @@ export class CommentData implements ICommentData {
     Date: string;
     WorkHours: number;
     Text: string;
-    CommitHash: string;
     Status: TaskStatusEnum | null;
+    CommitHash: string;
+    CommitAdditions: number | null;
+    CommitDeletions: number | null;
     Files: FileModel[] | null;
 
     constructor(data: any = null) {
@@ -76,8 +84,10 @@ export class CommentData implements ICommentData {
             this.Date = data.Date;
             this.WorkHours = data.WorkHours;
             this.Text = data.Text;
-            this.CommitHash = data.CommitHash ?? '';
             this.Status = data.Status;
+            this.CommitHash = data.CommitHash ?? '';
+            this.CommitAdditions = data.CommitAdditions;
+            this.CommitDeletions = data.CommitDeletions;
             this.Files = data.Files;
         }
     }

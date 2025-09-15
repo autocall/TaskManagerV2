@@ -28,21 +28,22 @@ public class ProfileService : BaseService {
         return user.TimeZoneId;
     }
 
-    public async Task SetGitHubTokenAsync(int userId, string gitHubToken) {
+    public async Task SetGitHubAsync(int userId, string gitHubOwner, string gitHubToken) {
         var user = await this.Host.UserManager.FindByIdAsync(userId.ToString());
         if (user == null) {
             throw new Exception("User not found");
         }
+        user.GitHubOwner = String.IsNullOrWhiteSpace(gitHubOwner) == false ? gitHubOwner : null;
         user.GitHubToken = String.IsNullOrWhiteSpace(gitHubToken) == false ? gitHubToken : null;
         await this.Host.UserManager.UpdateAsync(user);
     }
 
-    public async Task<string> GetGitHubTokenAsync(int userId) {
+    public async Task<(string owner, string token)> GetGitHubAsync(int userId) {
         var user = await this.Host.UserManager.FindByIdAsync(userId.ToString());
         if (user == null) {
             throw new Exception("User not found");
         }
-        return user.GitHubToken.TruncateToken();
+        return (user.GitHubOwner, user.GitHubToken.TruncateToken());
     }
 
     /// <summary>

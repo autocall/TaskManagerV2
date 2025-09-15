@@ -172,7 +172,7 @@ const Report: React.FC = () => {
                                                     <ul>
                                                         {t.Comments.map((c, k) => (
                                                             <li key={k}>
-                                                                <span style={{ fontSize: "1.2em" }}>{c.Text}</span>
+                                                                <div style={{ fontSize: "1.2em" }}>{c.Text}</div>
                                                                 {c.CommitHash && (
                                                                     <span style={{ fontSize: "0.8em", color: "grey" }}>
                                                                         {" "}GitHub code lines: {c.CommitAdditions}(+), {c.CommitDeletions}(-)

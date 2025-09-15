@@ -13,6 +13,11 @@ public class TmUser : IdentityUser<int> {
     [Column(TypeName = "varchar(64)")]
     public string TimeZoneId { get; set; }
 
+    /// <summary>
+    ///     GitHub access tokens </summary>
+    [Column(TypeName = "varchar(200)")]
+    public string GitHubToken { get; set; }
+
     [Required]
     [Column(TypeName = "smalldatetime")]
     public DateTime CreatedDateTime { get; set; }

@@ -1,4 +1,6 @@
-﻿using TaskManager.Logic.Dtos;
+﻿using TaskManager.Common;
+using TaskManager.Common.Extensions;
+using TaskManager.Logic.Dtos;
 using TaskManager.Logic.Helpers;
 
 namespace TaskManager.Logic.Services;
@@ -24,6 +26,23 @@ public class ProfileService : BaseService {
             throw new Exception("User not found");
         }
         return user.TimeZoneId;
+    }
+
+    public async Task SetGitHubTokenAsync(int userId, string gitHubToken) {
+        var user = await this.Host.UserManager.FindByIdAsync(userId.ToString());
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+        user.GitHubToken = String.IsNullOrWhiteSpace(gitHubToken) == false ? gitHubToken : null;
+        await this.Host.UserManager.UpdateAsync(user);
+    }
+
+    public async Task<string> GetGitHubTokenAsync(int userId) {
+        var user = await this.Host.UserManager.FindByIdAsync(userId.ToString());
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+        return user.GitHubToken.TruncateToken();
     }
 
     /// <summary>

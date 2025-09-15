@@ -56,6 +56,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
     const validationSchema = Yup.object().shape({
         Date: Yup.string().required("This field is required!"),
         Status: Yup.number().required("Status is required"),
+        CommitHash: Yup.string().max(40),
         Text: Yup.string()
             .test("len", "The name must be at least 2 characters long", (val: any) => val && val.toString().length >= 2)
             .required("This field is required!"),
@@ -63,8 +64,6 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
 
     const handleFileAttach = (model: CommentState) => {
         const files = fileRef.current?.files;
-        console.log("files", files);
-        console.log("model.Files", model.Files);
         model.Files?.push(...Array.from(files ?? []).map((f) => FileModel.createFromBlob(f)));
         formikRef.current?.setFieldValue("Files", model.Files);
     };
@@ -153,6 +152,13 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
                                                 ))}
                                         </ButtonGroup>
                                     </FormGroup>
+                                    {window.identity.GitHubToken && (
+                                        <FormGroup
+                                            label="GitHub Commit Hash"
+                                            error={touched.CommitHash && (errors.CommitHash ?? state.errors.CommitHash)}>
+                                            <Field name="CommitHash" placeholder="SHA-1" className="form-control" />
+                                        </FormGroup>
+                                    )}
                                     <FormGroup label="Text" error={touched.Text && (errors.Text ?? state.errors.Text)}>
                                         <Field as="textarea" name="Text" placeholder="Text" className="form-control" rows={4} />
                                     </FormGroup>

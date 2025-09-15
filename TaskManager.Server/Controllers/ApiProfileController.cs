@@ -62,4 +62,19 @@ public class ApiProfileController : BaseController {
         var accountController = new ApiAccountController(Host, Config, SignInManager);
         return await accountController.ReturnIdentityAsync(user);
     }
+
+    [HttpGet]
+    public async Task<ActionResult> GetGitHubToken() {
+        var token = await this.Service.GetGitHubTokenAsync(GetUserId());
+        return JsonSuccess(new { Token = token });
+    }
+
+    [HttpPut]
+    public async Task<ActionResult> SetGitHubToken([FromBody] UpdateGitHubTokenViewModel model) {
+        if (!ModelState.IsValid) {
+            return base.JsonFail(base.GetErrors());
+        }
+        await this.Service.SetGitHubTokenAsync(GetUserId(), model.Token);
+        return JsonSuccess();
+    }
 }

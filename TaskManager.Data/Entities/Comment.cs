@@ -11,6 +11,8 @@ public class Comment : BaseCompanyEntity, ICommentUpdateMap {
     /// <see cref="TmDbContext">remarks</see>
     [Column(TypeName = "nvarchar(max)")]
     public string Text { get; set; }
+    [Column(TypeName = "varchar(40)")]
+    public string CommitHash { get; set; }
     [Column(TypeName = "decimal(9,1)")]
     public decimal WorkHours { get; set; }
 
@@ -22,5 +24,6 @@ public interface ICommentUpdateMap : IBaseUpdateMap {
     public DateOnly Date { get; set; }
     public int TaskId { get; set; }
     public string Text { get; set; }
+    public string CommitHash { get; set; }
     public decimal WorkHours { get; set; }
 }

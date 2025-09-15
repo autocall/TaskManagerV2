@@ -1,76 +1,71 @@
 import Response from "../services/models/response";
-import { TimeZoneModel } from "../services/models/timezone.model";
 
-export interface ProfileTimeZoneState {
+export interface ProfileGitHubTokenState {
     readonly submitting: boolean;
     readonly loading: boolean;
     readonly loaded: boolean;
-    readonly TimeZones: TimeZoneModel[];
-    readonly TimeZoneId: string | "";
+    readonly Token: string | "";
     readonly error: string | null;
     readonly errors: { [key: string]: string };
 }
 
-const initialState: ProfileTimeZoneState = {
+const initialState: ProfileGitHubTokenState = {
     loading: true, // prevents reinitialization of fields
     loaded: false,
     submitting: false,
-    TimeZones: [],
-    TimeZoneId: "",
+    Token: "",
     error: null,
     errors: {},
 };
 
-export const GETTINGPROFILETIMEZONE = "GettingProfileTimeZone";
-export const gettingProfileTimeZoneAction = () =>
+export const GETTINGPROFILETIMEZONE = "GettingProfileGitHubToken";
+export const gettingProfileGitHubTokenAction = () =>
     ({
         type: GETTINGPROFILETIMEZONE,
     }) as const;
 
-export const GOTPROFILETIMEZONE = "GotProfileTimeZone";
-export const gotProfileTimeZoneAction = (response: Response<{ TimeZones: TimeZoneModel[]; TimeZoneId: string }>) =>
+export const GOTPROFILETIMEZONE = "GotProfileGitHubToken";
+export const gotProfileGitHubTokenAction = (response: Response<{ Token: string }>) =>
     ({
         type: GOTPROFILETIMEZONE,
-        TimeZones: response.data?.TimeZones ?? initialState.TimeZones,
-        TimeZoneId: response.data?.TimeZoneId ?? initialState.TimeZoneId,
+        Token: response.data?.Token ?? initialState.Token,
         error: response.error ?? initialState.error,
         errors: response.errors ?? initialState.errors,
     }) as const;
 
-export const SUBMITTINGPROFILETIMEZONE = "SubmittingProfileTimeZone";
-export const submittingProfileTimeZoneAction = () =>
+export const SUBMITTINGPROFILETIMEZONE = "SubmittingProfileGitHubToken";
+export const submittingProfileGitHubTokenAction = () =>
     ({
         type: SUBMITTINGPROFILETIMEZONE,
         error: initialState.error,
         errors: initialState.errors,
     }) as const;
 
-export const SUBMITTEDPROFILETIMEZONE = "SubmittedProfileTimeZone";
-export const submittedProfileTimeZoneAction = (response: Response<any>) =>
+export const SUBMITTEDPROFILETIMEZONE = "SubmittedProfileGitHubToken";
+export const submittedProfileGitHubTokenAction = (response: Response<any>) =>
     ({
         type: SUBMITTEDPROFILETIMEZONE,
         error: response.error ?? initialState.error,
         errors: response.errors ?? initialState.errors,
     }) as const;
 
-export const CLOSEPROFILETIMEZONE = "CloseProfileTimeZone";
-export const closeProfileTimeZoneAction = () =>
+export const CLOSEPROFILETIMEZONE = "CloseProfileGitHubToken";
+export const closeProfileGitHubTokenAction = () =>
     ({
         type: CLOSEPROFILETIMEZONE,
-        TimeZones: initialState.TimeZones,
-        TimeZoneId: initialState.TimeZoneId,
+        Token: initialState.Token,
         error: initialState.error,
         errors: initialState.errors,
     }) as const;
 
-type ProfileTimeZoneActions =
-    | ReturnType<typeof gettingProfileTimeZoneAction>
-    | ReturnType<typeof gotProfileTimeZoneAction>
-    | ReturnType<typeof submittingProfileTimeZoneAction>
-    | ReturnType<typeof submittedProfileTimeZoneAction>
-    | ReturnType<typeof closeProfileTimeZoneAction>;
+type ProfileGitHubTokenActions =
+    | ReturnType<typeof gettingProfileGitHubTokenAction>
+    | ReturnType<typeof gotProfileGitHubTokenAction>
+    | ReturnType<typeof submittingProfileGitHubTokenAction>
+    | ReturnType<typeof submittedProfileGitHubTokenAction>
+    | ReturnType<typeof closeProfileGitHubTokenAction>;
 
-export const profileTimeZoneReducer: any = (state: ProfileTimeZoneState = initialState, action: ProfileTimeZoneActions) => {
+export const profileGitHubTokenReducer: any = (state: ProfileGitHubTokenState = initialState, action: ProfileGitHubTokenActions) => {
     switch (action.type) {
         case GETTINGPROFILETIMEZONE:
             return {

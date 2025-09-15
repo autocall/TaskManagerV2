@@ -6,3 +6,6 @@ public class UpdateTimeZoneViewModel {
     [Required]
     public string TimeZoneId { get; set; }
 }
+public class UpdateGitHubTokenViewModel {
+    public string Token { get; set; }
+}

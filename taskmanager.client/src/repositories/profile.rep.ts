@@ -22,6 +22,11 @@ export default class profileRepository {
         return authHeader();
     }
 
+    public getTimeZones() {
+        let action = "gettimezones";
+        return axios.get(API_URL + action, { headers: this.generateHeaders(action) });
+    }
+
     public setTimeZoneId(timeZoneId: string) {
         let action = "settimezone";
         return axios.put(
@@ -33,8 +38,19 @@ export default class profileRepository {
         );
     }
 
-    public getTimeZones() {
-        let action = "gettimezones";
+    public getGitHubToken() {
+        let action = "getgithubtoken";
         return axios.get(API_URL + action, { headers: this.generateHeaders(action) });
+    }
+
+    public setGitHubToken(token: string) {
+        let action = "setgithubtoken";
+        return axios.put(
+            API_URL + action,
+            {
+                token: token,
+            },
+            { headers: this.generateHeaders(action) },
+        );
     }
 }

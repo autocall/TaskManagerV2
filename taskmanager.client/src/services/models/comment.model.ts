@@ -10,6 +10,7 @@ export default class CommentModel extends BaseModel implements ICommentData {
     Date: string;
     WorkHours: number;
     Text: string;
+    CommitHash: string;
 
     Status: TaskStatusEnum | null;
     TaskIndex: number | null;
@@ -23,6 +24,7 @@ export default class CommentModel extends BaseModel implements ICommentData {
             this.Date = data.Date;
             this.WorkHours = data.WorkHours;
             this.Text = data.Text;
+            this.CommitHash = data.CommitHash;
 
             this.Status = data.TaskStatus;
             this.TaskIndex = data.TaskIndex;
@@ -47,6 +49,7 @@ export interface ICommentData {
     Date: string;
     WorkHours: number;
     Text: string;
+    CommitHash: string;
     Files: FileModel[] | null;
 }
 
@@ -55,6 +58,7 @@ export class CommentData implements ICommentData {
     Date: string;
     WorkHours: number;
     Text: string;
+    CommitHash: string;
     Status: TaskStatusEnum | null;
     Files: FileModel[] | null;
 
@@ -64,6 +68,7 @@ export class CommentData implements ICommentData {
             //this.Date = skipped;
             this.WorkHours = 0;
             this.Text = "";
+            this.CommitHash = "";
             //this.Status = skipped;
             this.Files = [];
         } else {
@@ -71,6 +76,7 @@ export class CommentData implements ICommentData {
             this.Date = data.Date;
             this.WorkHours = data.WorkHours;
             this.Text = data.Text;
+            this.CommitHash = data.CommitHash ?? '';
             this.Status = data.Status;
             this.Files = data.Files;
         }

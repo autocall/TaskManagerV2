@@ -10,6 +10,7 @@ export interface CommentState extends ICommentData {
     readonly Date: string;
     readonly WorkHours: number;
     readonly Text: string;
+    readonly CommitHash: string;
     readonly Status: TaskStatusEnum | null;
     readonly TaskIndex: number | null;
     readonly Files: FileModel[] | null;

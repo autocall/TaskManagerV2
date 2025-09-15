@@ -11,6 +11,7 @@ public class CreateCommentViewModel {
     public decimal WorkHours { get; set; }
     [Required]
     public string Text { get; set; }
+    public string CommitHash { get; set; }
     [NotDefault]
     public int TaskId { get; set; }
     [NotDefault]
@@ -27,6 +28,7 @@ public class UpdateCommentViewModel {
     public decimal WorkHours { get; set; }
     [Required]
     public string Text { get; set; }
+    public string CommitHash { get; set; }
     [NotDefault]
     public int TaskId { get; set; }
     [NotDefault]

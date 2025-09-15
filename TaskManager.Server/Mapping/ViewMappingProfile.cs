@@ -23,8 +23,10 @@ public class ViewMappingProfile : Profile {
         CreateMap<CreateTaskViewModel, CreateTaskDto>();
         CreateMap<UpdateTaskViewModel, UpdateTaskDto>();
 
-        CreateMap<CreateCommentViewModel, CreateCommentDto>();
-        CreateMap<UpdateCommentViewModel, UpdateCommentDto>();
+        CreateMap<CreateCommentViewModel, CreateCommentDto>()
+            .ForMember(dest => dest.CommitHash, opt => opt.MapFrom(src => String.IsNullOrWhiteSpace(src.CommitHash) == false ? src.CommitHash : null));
+        CreateMap<UpdateCommentViewModel, UpdateCommentDto>()
+            .ForMember(dest => dest.CommitHash, opt => opt.MapFrom(src => String.IsNullOrWhiteSpace(src.CommitHash) == false ? src.CommitHash : null));
 
         CreateMap<FilterViewModel, FilterDto>();
     }

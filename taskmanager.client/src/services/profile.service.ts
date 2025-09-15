@@ -34,4 +34,26 @@ export default class profileService {
                 return Response.fail<any>(exception);
             });
     }
+
+    public getGitHubToken(): Promise<Response<{ Token: string }>> {
+        return this.rep
+            .getGitHubToken()
+            .then((response) => {
+                return Response.success<{ Token: string }>({ Token: response.data.Token });
+            })
+            .catch((exception) => {
+                return Response.fail<{ Token: string }>(exception);
+            });
+    }
+
+    public setGitHubToken(token: string): Promise<Response<any>> {
+        return this.rep
+            .setGitHubToken(token)
+            .then((response) => {
+                return Response.success<any>(response.data);
+            })
+            .catch((exception) => {
+                return Response.fail<any>(exception);
+            });
+    }
 }

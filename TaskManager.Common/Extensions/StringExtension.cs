@@ -4,6 +4,11 @@ public static class StringExtension {
         if (string.IsNullOrEmpty(value)) return value;
         return value.Length <= maxLength ? value : value.Substring(0, maxLength);
     }
+    public static string TruncateToken(this string value) {
+        if (string.IsNullOrEmpty(value)) return value;
+        var maxLength = 20;
+        return value.Length <= maxLength ? value : value.Substring(0, maxLength) + "...";
+    }
     public static string ToString(TimeSpan ts) {
         if (ts < TimeSpan.Zero) {
             return $"-{ToString(-ts)}";

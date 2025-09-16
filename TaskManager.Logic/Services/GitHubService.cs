@@ -10,11 +10,10 @@ public class GitHubService : BaseService {
 
     private GitHubWebService WebService => Host.GetService<GitHubWebService>();
 
-    public GitHubService(ServicesHost host) : base(host) {
-    }
+    public GitHubService(ServicesHost host) : base(host) { }
 
     public async Task<GitHubCommitDto> GetCommitAsync(int taskId, string commitHash, int userId, int companyId) {
-        if (commitHash == null) {
+        if (String.IsNullOrEmpty(commitHash)) {
             return null;
         }
         var user = await Host.UserManager.FindByIdAsync(userId.ToString());

@@ -119,20 +119,19 @@ const Report: React.FC = () => {
                             </b>
                             <div style={{ margin: "0 0 1em 0" }}>
                                 {Object.entries(state.report!.KindHours).map(([k, h]) => (
-                                    <>
-                                        <span
-                                            style={{
-                                                background: getTaskKindColor(parseInt(k) as TaskKindEnum),
-                                                color: "white",
-                                                fontWeight: "bold",
-                                                fontSize: "0.8em",
-                                                padding: "0 0.4em",
-                                                borderRadius: "0.375rem",
-                                                display: "inline-block",
-                                            }}>
-                                            {getTaskKindDescription(parseInt(k) as TaskKindEnum)} {h}h
-                                        </span>{" "}
-                                    </>
+                                    <span
+                                        style={{
+                                            background: getTaskKindColor(parseInt(k) as TaskKindEnum),
+                                            color: "white",
+                                            fontWeight: "bold",
+                                            fontSize: "0.8em",
+                                            padding: "0 0.4em",
+                                            borderRadius: "0.375rem",
+                                            display: "inline-block",
+                                            marginRight: "0.5em",
+                                        }}>
+                                        {getTaskKindDescription(parseInt(k) as TaskKindEnum)} {h}h
+                                    </span>
                                 ))}
                             </div>
                             <hr
@@ -175,7 +174,7 @@ const Report: React.FC = () => {
                                                                 <div style={{ fontSize: "1.2em" }}>{c.Text}</div>
                                                                 {c.CommitHash && (
                                                                     <span style={{ fontSize: "0.8em", color: "grey" }}>
-                                                                        {" "}GitHub code lines: {c.CommitAdditions}(+), {c.CommitDeletions}(-)
+                                                                        GitHub {c.CommitAdditions}(+), {c.CommitDeletions}(-)
                                                                     </span>
                                                                 )}
                                                             </li>

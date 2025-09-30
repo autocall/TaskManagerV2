@@ -56,16 +56,18 @@ const Overview: React.FC = () => {
         await load();
     }, [dispatch, filterTextTrigger, filterKind, filterStatus, filterProjectId, filterDate]);
     // [scroll:2]: restores the scroll position
-    useEffect(() => {
-        if  (!state.loading) {
-            if (scrollRef.current && scrollPosition) {
-                scrollRef.current.scrollTop = scrollPosition;
-                setScrollPosition(null);
+    useEffect(
+        () => {
+            if (!state.loading) {
+                if (scrollRef.current && scrollPosition) {
+                    scrollRef.current.scrollTop = scrollPosition;
+                    setScrollPosition(null);
+                }
             }
-        }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [state.loading]);
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [state.loading],
+    );
 
     const load = async () => {
         // [scroll:3]: saves the scroll position
@@ -344,6 +346,7 @@ const Overview: React.FC = () => {
                                             onClick={() => {
                                                 setFilterDate("");
                                                 setFilterText("");
+                                                setFilterTextTrigger("");
                                                 setFilterKind(null);
                                                 setFilterStatus(null);
                                                 setFilterProjectId(null);

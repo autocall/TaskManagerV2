@@ -10,7 +10,7 @@ public class GitHubWebService : BaseWebService {
     public GitHubWebService(ServicesHost host) { }
 
     // GET https://api.github.com/repos/{owner}/{repo}/commits/{commit_sha}
-    public async Task<ApiResult<GitHubCommitResponse>> GetCommintAsync(
+    public async Task<ApiResult<GitHubCommitResponse>> GetCommitAsync(
             string owner, string repo, string sha, string token, CancellationToken ct = default) {
         try {
             using var req = new HttpRequestMessage(HttpMethod.Get, GetCommit(owner, repo, sha));

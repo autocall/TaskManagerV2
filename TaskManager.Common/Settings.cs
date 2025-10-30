@@ -10,4 +10,8 @@ public partial interface Settings {
     public const int CurrentCalendarWeeks = 6;
     [FrontendAccessible]
     public const int YearMonths = 12;
+
+    public static string[] GitHubApi_IgnoredFilePatterns => [
+        ".designer.cs"
+    ];
 }

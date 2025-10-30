@@ -11,13 +11,13 @@ public class TmDbContextSeed {
     public static async Task SeedAsync(LinqToDbContext context, UserManager<TmUser> userManager, RoleManager<TmRole> roleManager) {
         // Reduces contention in tempdb by forcing uniform extent allocations instead of mixed extents,
         // improving performance in high-concurrency environments.
-        await context.ExecuteAsync("DBCC TRACEON(1118,-1)");
+        await context.ExecuteAsync("DBCC TRACEON(1118,-1)"); // (compat 130+) on by default.
         // Dynamically adjusts auto-updated statistics thresholds based on table size, making statistics updates more frequent for large tables.
         await context.ExecuteAsync("DBCC TRACEON(2371,-1)");
         // Disables the automatic clearing of the procedure cache when statistics are updated, preventing sudden performance drops due to recompilations.
         await context.ExecuteAsync("DBCC TRACEON(3979,-1)");
         // Enables a set of optimizer hotfixes that improve query performance, especially for newer SQL Server versions.
-        await context.ExecuteAsync("DBCC TRACEON(4199,-1)");
+        await context.ExecuteAsync("DBCC TRACEON(4199,-1)"); // (compat 130+) on by default.
 
         var roles = Enum.GetValues(typeof(RoleEnum)).Cast<RoleEnum>();
         foreach (var role in roles) {

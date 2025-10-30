@@ -48,7 +48,6 @@ public class CommentService : BaseService {
 
     public async Task<CommentDto> UpdateAsync(UpdateCommentDto dto, GitHubCommitDto commit, int userId, int companyId) {
         var inModel = Mapper.Map<Comment>(dto);
-        Console.WriteLine(JsonExtension.Serialize(commit));
         Mapper.Map(commit, inModel);
         await Rep(companyId).UpdateAsync<ICommentUpdateMap>(inModel, userId);
         return await this.GetAsync(dto.Id, companyId);

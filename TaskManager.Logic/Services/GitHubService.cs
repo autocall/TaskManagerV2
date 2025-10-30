@@ -35,11 +35,18 @@ public class GitHubService : BaseService {
         if (project.GitHubRepo == null) {
             throw new InfoException($"Undefined 'GitHub Repo' for the project '{project.Name}'");
         }
-        var response = await this.WebService.GetCommintAsync(user.GitHubOwner, project.GitHubRepo, commitHash, user.GitHubToken);
+        var response = await this.WebService.GetCommitAsync(user.GitHubOwner, project.GitHubRepo, commitHash, user.GitHubToken);
         if (response.Success == false) {
             throw new InfoException($"[Code:{(int)response.StatusCode}] {response.ErrorMessage}");
         }
-        var dto = Mapper.Map<GitHubCommitDto>(response.Data);
+        // total lines from the filtered list
+        var filteredFiles = response.Data.Files
+            .Where(f => !Settings.GitHubApi_IgnoredFilePatterns.Any(e => f.Filename.EndsWith(e, StringComparison.OrdinalIgnoreCase))).ToList();
+
+        var dto = new GitHubCommitDto() {
+            CommitAdditions = filteredFiles.Sum(x => x.Additions),
+            CommitDeletions = filteredFiles.Sum(x => x.Deletions),
+        };
         return dto;
     }
 }

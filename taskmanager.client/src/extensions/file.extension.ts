@@ -6,6 +6,7 @@ export default class fileExtension {
                 return "bi-file-earmark-pdf text-danger"; // Красный цвет для PDF
             case "jpg":
             case "png":
+            case "jfif":
             case "jpeg":
                 return "bi-file-earmark-image text-primary"; // Синий для изображений
             case "txt":

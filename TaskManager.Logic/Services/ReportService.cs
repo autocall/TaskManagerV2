@@ -17,7 +17,7 @@ public class ReportService : BaseService {
         var commentDtos = new List<ReportCommentDto>();
         var taskDtos = new List<ReportTaskDto>();
         var projectDtos = new List<ReportProjectDto>();
-        foreach (var comment in comments.OrderByDescending(x => x.CreatedDateTime)) {
+        foreach (var comment in comments.OrderBy(x => x.CreatedDateTime)) {
             commentDtos.Add(Mapper.Map<ReportCommentDto>(Mapper.Map<CommentDto>(comment)));
         }
         foreach (var task in tasks) {

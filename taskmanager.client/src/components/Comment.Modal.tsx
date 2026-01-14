@@ -159,7 +159,8 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
                                             <Field name="CommitHash" placeholder="SHA-1" className="form-control" />
                                         </FormGroup>
                                     )}
-                                    <FormGroup label="Text" error={touched.Text && (errors.Text ?? state.errors.Text)}>
+                                    {/* Without touched */}
+                                    <FormGroup label="Text" error={errors.Text ?? state.errors.Text}>
                                         <Field as="textarea" name="Text" placeholder="Text" className="form-control" rows={4} />
                                     </FormGroup>
                                     {/* Files */}

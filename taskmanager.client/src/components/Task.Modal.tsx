@@ -240,7 +240,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ modalData, onClose }) => {
                                         </ButtonGroup>
                                     </FormGroup>
                                     <FormGroup label="Description" error={touched.Description && (errors.Description ?? state.errors.Description)}>
-                                        <Field as="textarea" name="Description" placeholder="Description" className="form-control" rows={3} />
+                                        <Field as="textarea" name="Description" placeholder="Description" className="form-control" rows={5} />
                                     </FormGroup>
                                     {/* Files */}
                                     <Button variant="primary" size="sm" className="me-3" onClick={() => fileRef.current?.click()}>

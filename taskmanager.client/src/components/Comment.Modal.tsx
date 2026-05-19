@@ -161,7 +161,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ modalData, onClose }) => {
                                     )}
                                     {/* Without touched */}
                                     <FormGroup label="Text" error={errors.Text ?? state.errors.Text}>
-                                        <Field as="textarea" name="Text" placeholder="Text" className="form-control" rows={4} />
+                                        <Field as="textarea" name="Text" placeholder="Text" className="form-control" rows={5} />
                                     </FormGroup>
                                     {/* Files */}
                                     <Button variant="primary" size="sm" className="me-3" onClick={() => fileRef.current?.click()}>

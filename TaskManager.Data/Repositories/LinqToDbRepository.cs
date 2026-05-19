@@ -70,7 +70,6 @@ public class LinqToDbRepository<T> : IRepository<T> where T : BaseEntity {
         await Connection.BulkCopyAsync(models);
     }
 
-
     public virtual async Task<int> UpdateAsync<TMap>(T newModel, int userId) where TMap : IBaseUpdateMap {
         IUpdatable<T> query = Table()
             .Where(e => e.Id == newModel.Id)

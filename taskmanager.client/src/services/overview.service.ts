@@ -19,6 +19,8 @@ export default class overviewService {
     public static projects: ProjectModel[] | null = null;
     /** using in modal */
     public static categories: CategoryModel[] | null = null;
+    /** using in user filter */
+    public static users: UserModel[] | null = null;
 
     constructor(test: testContainer | null) {
         this.rep = new overviewRepository(test);
@@ -29,10 +31,11 @@ export default class overviewService {
         filterKindId: TaskKindEnum | null,
         filterStatus: TaskStatusEnum | null,
         filterProjectId: number | null,
+        filterUserId: number | null,
         filterDate: string,
     ): Promise<Response<CategoryModel[]>> {
         return this.rep
-            .get(filterText, filterKindId, filterStatus, filterProjectId, filterDate)
+            .get(filterText, filterKindId, filterStatus, filterProjectId, filterUserId, filterDate)
             .then((response) => {
                 let categories = (response.data.categories as any[]).map((e: any) => new CategoryModel(e));
                 let projects = (response.data.projects as any[]).map((e: any) => new ProjectModel(e));
@@ -43,6 +46,7 @@ export default class overviewService {
 
                 overviewService.projects = (response.data.projects as any[]).map((e) => new ProjectModel(e));
                 overviewService.categories = (response.data.categories as any[]).map((e) => new CategoryModel(e));
+                if (!filterUserId) overviewService.users = users;
 
                 let models = this.merge(categories, projects, tasks, comments, users, files);
                 return Response.success<CategoryModel[]>(models);

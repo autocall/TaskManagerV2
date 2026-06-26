@@ -7,5 +7,6 @@ public class FilterViewModel {
     public TaskKindEnum? Kind { get; set; }
     public TaskStatusEnum? Status { get; set; }
     public int? ProjectId { get; set; }
+    public int? UserId { get; set; }
     public DateOnly? Date { get; set; }
 }

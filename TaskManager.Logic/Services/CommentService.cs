@@ -68,8 +68,8 @@ public class CommentService : BaseService {
         var nowDate = DateOnly.FromDateTime(now);
         var firstDayOfWeek = calendarService.GetFirstDayOfWeek(nowDate, FirstDayOfWeek);
         var lastDayOfWeek = firstDayOfWeek.AddDays(7);
-        var todayHours = await Rep(companyId).GetAll(false).Where(x => x.Date == nowDate).SumAsync(x => x.WorkHours);
-        var weekHours = await Rep(companyId).GetAll(false).Where(x => x.Date >= firstDayOfWeek && x.Date <= lastDayOfWeek).SumAsync(x => x.WorkHours);
+        var todayHours = await Rep(companyId).GetAll(false).Where(x => x.Date == nowDate && x.CreatedById == userId).SumAsync(x => x.WorkHours);
+        var weekHours = await Rep(companyId).GetAll(false).Where(x => x.Date >= firstDayOfWeek && x.Date <= lastDayOfWeek && x.CreatedById == userId).SumAsync(x => x.WorkHours);
         return new StatisticDto() {
             TodayHours = todayHours,
             WeekHours = weekHours,

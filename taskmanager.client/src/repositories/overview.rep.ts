@@ -29,6 +29,7 @@ export default class overviewRepository {
         filterKindId: TaskKindEnum | null,
         filterStatus: TaskStatusEnum | null,
         filterProjectId: number | null,
+        filterUserId: number | null,
         filterDate: string,
     ) {
         let action = "get";
@@ -44,6 +45,9 @@ export default class overviewRepository {
         }
         if (filterProjectId) {
             query = { ...query, ProjectId: filterProjectId };
+        }
+        if (filterUserId) {
+            query = { ...query, UserId: filterUserId };
         }
         if (filterDate) {
             query = { ...query, Date: filterDate };

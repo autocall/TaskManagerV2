@@ -1,4 +1,4 @@
-import { Alert, Button, ButtonGroup, Card, Col, Form, InputGroup, Row, Spinner, ToggleButton } from "react-bootstrap";
+import { Alert, Button, ButtonGroup, Card, Col, Form, InputGroup, Row, Spinner } from "react-bootstrap";
 import Calendar from "./Calendar.Current";
 import "bootstrap/dist/css/bootstrap.css";
 import Divider from "./shared/divider";
@@ -25,8 +25,9 @@ import TaskModel from "../services/models/task.model";
 import taskService from "../services/task.service";
 import { TaskColumnEnum } from "../enums/task.column.enum";
 import { getTaskStatusDescription, TaskStatusEnum } from "../enums/task.status.enum";
-import { getOverviewTaskKinds, getTaskKindDescription, getTaskKindVariant, TaskKindEnum } from "../enums/task.kind.enum";
+import { getOverviewTaskKinds, getTaskKindDescription, TaskKindEnum } from "../enums/task.kind.enum";
 import ProjectModel from "../services/models/project.model";
+import UserModel from "../services/models/user.model";
 import CommentModel from "../services/models/comment.model";
 import CommentModal from "./Comment.Modal";
 import commentService from "../services/comment.service";
@@ -41,11 +42,22 @@ const Overview: React.FC = () => {
     const [modalTaskData, setModalTaskData] = useState<TaskModel | null>(null);
     const [modalCommentData, setModalCommentData] = useState<CommentModel | null>(null);
     const [projects, setProjects] = useState<ProjectModel[] | null>(null);
+    const [users, setUsers] = useState<UserModel[] | null>(null);
     const [filterText, setFilterText] = useState<string>("");
     const [filterTextTrigger, setFilterTextTrigger] = useState<string>("filterText");
     const [filterKind, setFilterKind] = useState<TaskKindEnum | null>(null);
-    const [filterStatus, setFilterStatus] = useState<TaskStatusEnum | null>(null);
-    const [filterProjectId, setFilterProjectId] = useState<number | null>(null);
+    const [filterStatus, setFilterStatus] = useState<TaskStatusEnum | null>(() => {
+        const saved = localStorage.getItem("filter-status");
+        return saved ? parseInt(saved) as TaskStatusEnum : null;
+    });
+    const [filterProjectId, setFilterProjectId] = useState<number | null>(() => {
+        const saved = localStorage.getItem("filter-project-id");
+        return saved ? parseInt(saved) : null;
+    });
+    const [filterUserId, setFilterUserId] = useState<number | null>(() => {
+        const saved = localStorage.getItem("filter-user-id");
+        return saved ? parseInt(saved) : null;
+    });
     const [filterDate, setFilterDate] = useState<string>("");
     const [scrollPosition, setScrollPosition] = useState<number | null>(null); // [scroll:1: hides the container during scroll restory
     const { confirm, ConfirmDialog } = useConfirm();
@@ -54,7 +66,7 @@ const Overview: React.FC = () => {
 
     useAsyncEffect(async () => {
         await load();
-    }, [dispatch, filterTextTrigger, filterKind, filterStatus, filterProjectId, filterDate]);
+    }, [dispatch, filterTextTrigger, filterKind, filterStatus, filterProjectId, filterUserId, filterDate]);
     // [scroll:2]: restores the scroll position
     useEffect(
         () => {
@@ -79,8 +91,9 @@ const Overview: React.FC = () => {
 
         let service = new overviewService(testHelper.getTestContainer(search));
         dispatch(gettingOverviewAction());
-        let response = await service.get(filterText, filterKind, filterStatus, filterProjectId, filterDate);
+        let response = await service.get(filterText, filterKind, filterStatus, filterProjectId, filterUserId, filterDate);
         setProjects(overviewService.projects);
+        if (overviewService.users) setUsers(overviewService.users);
         dispatch(gotOverviewAction(response));
     };
     const handleTaskAdd = () => {
@@ -280,29 +293,30 @@ const Overview: React.FC = () => {
                                         </InputGroup>
                                     </Col>
                                     <Col xs="auto" className="mb-2">
-                                        <ButtonGroup>
+                                        <Form.Select
+                                            className={!filterKind ? "text-muted" : ""}
+                                            value={filterKind || ""}
+                                            onChange={(e) => setFilterKind(parseInt(e.target.value) as TaskKindEnum || null)}>
+                                            <option value="">Filter Kind</option>
                                             {getOverviewTaskKinds()
                                                 .filter((k) => Number(k))
                                                 .map((kind) => (
-                                                    <ToggleButton
-                                                        key={"filter-kind" + kind}
-                                                        id={"filter-kind" + kind}
-                                                        type="radio"
-                                                        variant={filterKind == kind ? getTaskKindVariant(filterKind) : "outline-secondary"}
-                                                        name="radio"
-                                                        value={kind}
-                                                        checked={filterKind == kind}
-                                                        onClick={(e) => (filterKind == kind ? setFilterKind(null) : setFilterKind(kind))}>
+                                                    <option key={"filter-kind" + kind} value={kind}>
                                                         {getTaskKindDescription(kind)}
-                                                    </ToggleButton>
+                                                    </option>
                                                 ))}
-                                        </ButtonGroup>
+                                        </Form.Select>
                                     </Col>
                                     <Col xs="auto" className="mb-2">
                                         <Form.Select
                                             className={!filterProjectId ? "text-muted" : ""}
                                             value={filterProjectId || ""}
-                                            onChange={(e) => setFilterProjectId(parseInt(e.target.value))}>
+                                            onChange={(e) => {
+                                                const id = parseInt(e.target.value) || null;
+                                                setFilterProjectId(id);
+                                                if (id) localStorage.setItem("filter-project-id", String(id));
+                                                else localStorage.removeItem("filter-project-id");
+                                            }}>
                                             <option value="">Filter Project</option>
                                             {projects?.map((project) => (
                                                 <option key={"filter-project" + project.Id} value={project.Id}>
@@ -313,9 +327,32 @@ const Overview: React.FC = () => {
                                     </Col>
                                     <Col xs="auto" className="mb-2">
                                         <Form.Select
+                                            className={!filterUserId ? "text-muted" : ""}
+                                            value={filterUserId || ""}
+                                            onChange={(e) => {
+                                                const id = parseInt(e.target.value) || null;
+                                                setFilterUserId(id);
+                                                if (id) localStorage.setItem("filter-user-id", String(id));
+                                                else localStorage.removeItem("filter-user-id");
+                                            }}>
+                                            <option value="">Filter User</option>
+                                            {users?.map((user) => (
+                                                <option key={"filter-user" + user.Id} value={user.Id}>
+                                                    {user.UserName}
+                                                </option>
+                                            ))}
+                                        </Form.Select>
+                                    </Col>
+                                    <Col xs="auto" className="mb-2">
+                                        <Form.Select
                                             className={!filterStatus ? "text-muted" : ""}
                                             value={filterStatus || ""}
-                                            onChange={(e) => setFilterStatus(parseInt(e.target.value) as TaskStatusEnum)}>
+                                            onChange={(e) => {
+                                                const val = parseInt(e.target.value) as TaskStatusEnum || null;
+                                                setFilterStatus(val);
+                                                if (val) localStorage.setItem("filter-status", String(val));
+                                                else localStorage.removeItem("filter-status");
+                                            }}>
                                             <option value="">Filter Status</option>
                                             {(Object.values(TaskStatusEnum) as TaskStatusEnum[])
                                                 .filter((k) => Number(k))
@@ -339,7 +376,7 @@ const Overview: React.FC = () => {
                                     <Col xs="auto" className="mb-2">
                                         <Button
                                             variant={
-                                                filterText || filterKind || filterStatus || filterProjectId || filterDate
+                                                filterText || filterKind || filterStatus || filterProjectId || filterUserId || filterDate
                                                     ? "danger"
                                                     : "outline-secondary"
                                             }
@@ -349,7 +386,11 @@ const Overview: React.FC = () => {
                                                 setFilterTextTrigger("");
                                                 setFilterKind(null);
                                                 setFilterStatus(null);
+                                                localStorage.removeItem("filter-status");
                                                 setFilterProjectId(null);
+                                                localStorage.removeItem("filter-project-id");
+                                                setFilterUserId(null);
+                                                localStorage.removeItem("filter-user-id");
                                             }}>
                                             Reset
                                         </Button>

@@ -87,8 +87,8 @@ const Projects: React.FC = () => {
                             <tr key={project.Id}>
                                 <td>{project.Id}</td>
                                 <td>{project.Name}</td>
-                                <td>{project.GitHubRepo}</td>
                                 <td>{project.DefaultColumn}</td>
+                                <td>{project.GitHubRepo}</td>
                                 <td>{stringExtension.dateToShort(project.CreatedDateTime)}</td>
                                 <td
                                     css={css`

@@ -27,7 +27,10 @@ public class TaskService : BaseService {
             query = query.Where(x => x.Status != (byte)TaskStatusEnum.Canceled && x.Status != (byte)TaskStatusEnum.Closed);
         }
         if (filter.ProjectId.HasValue) {
-            query = query.Where(x => x.ProjectId == filter.ProjectId.Value);
+            query = query.Where(x => x.ProjectId == filter.ProjectId.Value || x.ProjectId == null);
+        }
+        if (filter.UserId.HasValue) {
+            query = query.Where(x => x.CreatedById == filter.UserId.Value);
         }
         if (filter.Date.HasValue) {
             var timeZone = await this.Host.GetService<ProfileService>().GetTimeZoneAsync(companyId);

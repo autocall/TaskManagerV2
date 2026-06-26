@@ -58,10 +58,14 @@ const OverviewComment: React.FC<OverviewCommentProps> = ({ comment, currentUser,
                     </span>
                 </div>
                 <div className="extra-link">
-                    <Link to="#" onClick={() => handleEdit(comment)}>
-                        Edit
-                    </Link>{" "}
-                    |{" "}
+                    {comment.CreatedById === Number(currentUser!.UserId) && (
+                        <>
+                            <Link to="#" onClick={() => handleEdit(comment)}>
+                                Edit
+                            </Link>{" "}
+                            |{" "}
+                        </>
+                    )}
                     <Link to="#" onClick={() => handleDelete(comment)}>
                         Delete
                     </Link>

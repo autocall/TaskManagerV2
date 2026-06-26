@@ -47,5 +47,5 @@ export function getTaskKindColor(kind: TaskKindEnum | null): string {
 }
 
 export function getOverviewTaskKinds(): TaskKindEnum[] {
-    return [TaskKindEnum.Task, TaskKindEnum.Fix, TaskKindEnum.Bug, TaskKindEnum.Feature];
+    return [TaskKindEnum.Task, TaskKindEnum.Fix, TaskKindEnum.Bug, TaskKindEnum.Feature, TaskKindEnum.Support];
 }

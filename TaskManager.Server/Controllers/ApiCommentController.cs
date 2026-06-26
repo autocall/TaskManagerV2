@@ -69,6 +69,10 @@ public class ApiCommentController : BaseFileController {
         if (validationResults.Any())
             return BadRequest(validationResults);
 
+        var existing = await this.CommentService.GetAsync(model.Id, base.GetCompanyId());
+        if (existing.CreatedById != base.GetUserId())
+            return base.JsonFail(System.Net.HttpStatusCode.Forbidden, "You can only edit your own comments");
+
         var inputDto = Mapper.Map<UpdateCommentDto>(model);
         var gitHubCommitDto = await this.GitHubService.GetCommitAsync(model.TaskId, model.CommitHash, base.GetUserId(), base.GetCompanyId());
         var outputDto = await this.CommentService.UpdateAsync(inputDto, gitHubCommitDto, base.GetUserId(), base.GetCompanyId());

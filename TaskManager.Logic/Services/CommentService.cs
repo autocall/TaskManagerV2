@@ -15,10 +15,9 @@ public class CommentService : BaseService {
 
     public async Task<List<CommentDto>> GetAllAsync(IQueryable<int> taskIdsQuery, FilterDto filter, int companyId) {
         var query = Rep(companyId).GetAll(false)
-            .Where(x => taskIdsQuery.Contains(x.TaskId));
-        if (filter.Date.HasValue) {
-            query = query.Where(x => x.Date == filter.Date.Value);
-        }
+            .Where(x => taskIdsQuery.Contains(x.TaskId)
+                || (filter.UserId.HasValue && x.CreatedById == filter.UserId.Value)
+                || (filter.Date.HasValue && x.Date == filter.Date.Value));
         var models = await query.OrderBy(x => x.Date).ThenBy(x => x.CreatedDateTime).ToListAsync();
         return Mapper.Map<List<CommentDto>>(models);
     }

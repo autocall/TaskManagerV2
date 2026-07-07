@@ -310,6 +310,7 @@ const Overview: React.FC = () => {
                                     <Col xs="auto" className="mb-2">
                                         <Form.Select
                                             className={!filterProjectId ? "text-muted" : ""}
+                                            style={{ width: "160px" }}
                                             value={filterProjectId || ""}
                                             onChange={(e) => {
                                                 const id = parseInt(e.target.value) || null;
@@ -328,6 +329,7 @@ const Overview: React.FC = () => {
                                     <Col xs="auto" className="mb-2">
                                         <Form.Select
                                             className={!filterUserId ? "text-muted" : ""}
+                                            style={{ width: "160px" }}
                                             value={filterUserId || ""}
                                             onChange={(e) => {
                                                 const id = parseInt(e.target.value) || null;

@@ -25,9 +25,11 @@ public class OverviewService : BaseService {
         var tasks = await taskService.GetAllAsync(filter, companyId);
         var tasksQuery = await taskService.GetAllQueryAsync(filter, companyId);
         var comments = await commentService.GetAllAsync(tasksQuery.Select(x => x.Id), filter, companyId);
-        var userIds = tasks.SelectMany(x => new int[] { x.CreatedById, x.ModifiedById })
-            .Union(comments.SelectMany(x => new int[] { x.CreatedById, x.ModifiedById })).Distinct().ToList();
-        var users = await userService.GetByIdsAsync(userIds);
+        var missingTaskIds = comments.Select(x => x.TaskId).Except(tasks.Select(x => x.Id)).ToList();
+        if (missingTaskIds.Count > 0) {
+            tasks.AddRange(await taskService.GetByIdsAsync(missingTaskIds, companyId));
+        }
+        var users = await userService.GetAllAsync(companyId);
         var objectIds = tasks.Select(x => x.Id).Union(comments.Select(x => x.Id)).ToList();
         var files = await fileService.GetByIdsAsync(companyId, objectIds);
 

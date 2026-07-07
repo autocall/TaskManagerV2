@@ -46,7 +46,7 @@ export default class overviewService {
 
                 overviewService.projects = (response.data.projects as any[]).map((e) => new ProjectModel(e));
                 overviewService.categories = (response.data.categories as any[]).map((e) => new CategoryModel(e));
-                if (!filterUserId) overviewService.users = users;
+                overviewService.users = users;
 
                 let models = this.merge(categories, projects, tasks, comments, users, files);
                 return Response.success<CategoryModel[]>(models);

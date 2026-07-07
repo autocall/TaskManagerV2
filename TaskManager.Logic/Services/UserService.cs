@@ -9,4 +9,9 @@ public class UserService : BaseService {
         var users = await Host.UserManager.Users.Where(x => userIds.Contains(x.Id)).ToListAsync();
         return Mapper.Map<List<TmUserDto>>(users);
     }
+
+    public async Task<List<TmUserDto>> GetAllAsync(int companyId) {
+        var users = await Host.UserManager.Users.Where(x => x.CompanyId == companyId).ToListAsync();
+        return Mapper.Map<List<TmUserDto>>(users);
+    }
 }

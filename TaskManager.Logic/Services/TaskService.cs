@@ -54,6 +54,11 @@ public class TaskService : BaseService {
         return Mapper.Map<TaskDto>(model);
     }
 
+    public async Task<List<TaskDto>> GetByIdsAsync(List<int> ids, int companyId) {
+        var models = await Rep(companyId).GetAll(false).Where(x => ids.Contains(x.Id)).ToListAsync();
+        return Mapper.Map<List<TaskDto>>(models);
+    }
+
     public async Task<TaskDto> CreateAsync(CreateTaskDto dto, int userId, int companyId) {
         var model = new Task1();
         Mapper.Map(dto, model);
